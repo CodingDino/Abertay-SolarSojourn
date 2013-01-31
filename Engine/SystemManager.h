@@ -4,21 +4,21 @@
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
 // SystemManager
-//		Contains management classes for game objects, graphics, and input.
-//		Runs main game loop and calls sub loops.
+//      Contains management classes for game objects, graphics, and input.
+//      Runs main game loop and calls sub loops.
 #pragma once
 
 // TODO: Make this singleton
 
 
 // |----------------------------------------------------------------------------|
-// |						Pre-Processing Directives							|
+// |                        Pre-Processing Directives                           |
 // |----------------------------------------------------------------------------|
 #define WIN32_LEAN_AND_MEAN
 
 
 // |----------------------------------------------------------------------------|
-// |								Includes									|
+// |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include <windows.h>
 //#include "inputclass.h"
@@ -31,78 +31,78 @@
 
 
 // |----------------------------------------------------------------------------|
-// |							Class: SystemClass								|
+// |                            Class: SystemClass                              |
 // |----------------------------------------------------------------------------|
 class SystemManager
 {
 public:
 
-	//|-------------------------------Public Functions--------------------------|
+    //|-------------------------------Public Functions--------------------------|
 
-	// Constructors and Destructors
-	SystemManager();
-	SystemManager(const SystemManager&);
-	~SystemManager();
+    // Constructors and Destructors
+    SystemManager();
+    SystemManager(const SystemManager&);
+    ~SystemManager();
 
-	// Initialize all data members
-	bool Initialize();
+    // Initialize all data members
+    bool Initialize();
 
-	// Release all data members
-	void Shutdown();
+    // Release all data members
+    void Shutdown();
 
-	// Run the game (contains main game loop)
-	void Run();
+    // Run the game (contains main game loop)
+    void Run();
 
-	// Handles system messages
-	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
-
-private:
-
-	//|-------------------------------Private Functions-------------------------|
-
-	// Processes each frame (calles input, game, render frame functions)
-	bool Frame();
-
-	// Performs Windows initialization tasks
-	void InitializeWindows(int& screenWidth, int& screenHeight);
-
-	// Performs Windows shutdown tasks
-	void ShutdownWindows();
+    // Handles system messages
+    LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
 private:
 
-	// Windows parameters
-	LPCWSTR m_applicationName;
-	HINSTANCE m_hinstance;
-	HWND m_hwnd;
+    //|-------------------------------Private Functions-------------------------|
 
-	// Input handler
-	//InputClass* m_Input;
+    // Processes each frame (calles input, game, render frame functions)
+    bool Frame();
 
-	// Graphics handler
-	//GraphicsClass* m_Graphics;	
-	
-	// Timing classes
-	//FpsClass* m_Fps;
-	//CpuClass* m_Cpu;
-	//TimerClass* m_Timer;
+    // Performs Windows initialization tasks
+    void InitializeWindows(int& screenWidth, int& screenHeight);
 
-	// Player position
-	//PositionClass* m_Position;
+    // Performs Windows shutdown tasks
+    void ShutdownWindows();
 
-	// Sound
-	//SoundClass* m_Sound;
+private:
+
+    // Windows parameters
+    LPCWSTR m_applicationName;
+    HINSTANCE m_hinstance;
+    HWND m_hwnd;
+
+    // Input handler
+    //InputClass* m_Input;
+
+    // Graphics handler
+    //GraphicsClass* m_Graphics;    
+    
+    // Timing classes
+    //FpsClass* m_Fps;
+    //CpuClass* m_Cpu;
+    //TimerClass* m_Timer;
+
+    // Player position
+    //PositionClass* m_Position;
+
+    // Sound
+    //SoundClass* m_Sound;
 };
 
 
 // |----------------------------------------------------------------------------|
-// |								 Globals									|
+// |                                 Globals                                    |
 // |----------------------------------------------------------------------------|
 static SystemManager* ApplicationHandle = 0;
 
 
 // |----------------------------------------------------------------------------|
-// |							Function Prototypes								|
+// |                           Function Prototypes                              |
 // |----------------------------------------------------------------------------|
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
