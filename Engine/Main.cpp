@@ -94,7 +94,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	result = system->Initialize();
 	if(result)
 	{
-		System->Run();
+		system->Run();
 	}
 
 	// Shutdown and release the system object.
