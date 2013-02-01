@@ -29,6 +29,9 @@
     <ClCompile Include="GraphicsManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="D3DManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -41,6 +44,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
