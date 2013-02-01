@@ -12,6 +12,8 @@
 // |----------------------------------------------------------------------------|
 #include "D3DManager.h"
 
+D3DManager* D3DManager::s_instance = 0;
+
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
@@ -46,6 +48,17 @@ D3DManager::D3DManager(const D3DManager& other)
 // |----------------------------------------------------------------------------|
 D3DManager::~D3DManager()
 {
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                              GetInstance                                   |
+// |----------------------------------------------------------------------------|
+D3DManager* D3DManager::GetInstance()
+{
+    if (s_instance == 0)
+        s_instance = new D3DManager;
+    return s_instance;
 }
 
 
@@ -533,6 +546,10 @@ void D3DManager::Shutdown()
         m_swapChain->Release();
         m_swapChain = 0;
     }
+    
+    // Kill instance
+    delete s_instance;
+    s_instance = 0;
 
     return;
 }

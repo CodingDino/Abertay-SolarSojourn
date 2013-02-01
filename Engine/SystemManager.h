@@ -8,8 +8,6 @@
 //      Runs main game loop and calls sub loops.
 #pragma once
 
-// TODO: Make this singleton
-
 
 // |----------------------------------------------------------------------------|
 // |                        Pre-Processing Directives                           |
@@ -22,7 +20,7 @@
 // |----------------------------------------------------------------------------|
 #include <windows.h>
 //#include "inputclass.h"
-//#include "graphicsclass.h"
+#include "GraphicsManager.h"
 //#include "fpsclass.h"
 //#include "cpuclass.h"
 //#include "timerclass.h"
@@ -39,10 +37,8 @@ public:
 
     //|-------------------------------Public Functions--------------------------|
 
-    // Constructors and Destructors
-    SystemManager();
-    SystemManager(const SystemManager&);
-    ~SystemManager();
+    // Returns instance
+    static SystemManager* GetInstance();
 
     // Initialize all data members
     bool Initialize();
@@ -60,6 +56,11 @@ private:
 
     //|-------------------------------Private Functions-------------------------|
 
+    // Constructors and Destructors
+    SystemManager();
+    SystemManager(const SystemManager&);
+    ~SystemManager();
+
     // Processes each frame (calles input, game, render frame functions)
     bool Frame();
 
@@ -71,6 +72,9 @@ private:
 
 private:
 
+    // Singleton instance
+    static SystemManager* s_instance;
+
     // Windows parameters
     LPCWSTR m_applicationName;
     HINSTANCE m_hinstance;
@@ -80,7 +84,7 @@ private:
     //InputClass* m_Input;
 
     // Graphics handler
-    //GraphicsClass* m_Graphics;    
+    GraphicsManager* m_Graphics;    
     
     // Timing classes
     //FpsClass* m_Fps;

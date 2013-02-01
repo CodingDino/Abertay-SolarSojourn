@@ -14,12 +14,13 @@
 // |----------------------------------------------------------------------------|
 #include "Coord.h"
 #include "Util.h"
+#include "D3DManager.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                                 Globals                                    |
 // |----------------------------------------------------------------------------|
-const bool FULL_SCREEN = true;
+const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
@@ -34,12 +35,10 @@ class GraphicsManager
 public:
 
     //|-------------------------------Public Functions--------------------------|
-
-    // Constructors and Destructors
-    GraphicsManager();
-    GraphicsManager(const GraphicsManager&);
-    ~GraphicsManager();
     
+    // Returns instance
+    static GraphicsManager* GetInstance();
+
     // Creates and initializes all data members, sets initial graphics state
     bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
 
@@ -54,6 +53,11 @@ private:
 
     //|-------------------------------Private Functions-------------------------|
 
+    // Constructors and Destructors
+    GraphicsManager();
+    GraphicsManager(const GraphicsManager&);
+    ~GraphicsManager();
+
     // Calls render functions in order
     bool Render(int mouseX, int mouseY, Coord camera_position);
 
@@ -64,7 +68,7 @@ private:
     bool EndRender();
 
     // Renders the passed in model using the given transforms
-    // bool ModelRender(ModelClass& to_render, D3DXMATRIX scale, 
+    //bool ModelRender(ModelClass& to_render, D3DXMATRIX scale, 
     //    D3DXMATRIX translate, D3DXMATRIX rotate);
 
     // Renders the passed in bitmap using the given transforms
@@ -73,9 +77,12 @@ private:
 private:
 
     //|-----------------------------Private Data Members------------------------|
+    
+    // Singleton instance
+    static GraphicsManager* s_instance;
 
     // DirectX object
-    // D3DClass* m_D3D;
+    D3DManager* m_D3D;
 
     // Camera
     // TODO: Should this be a game object?
@@ -86,7 +93,7 @@ private:
     // TextureShaderClass* m_TextureShader;
 
     // Matrices
-    // D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix, baseViewMatrix;
+    D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix, baseViewMatrix;
 
     // Screen
     int m_screen;

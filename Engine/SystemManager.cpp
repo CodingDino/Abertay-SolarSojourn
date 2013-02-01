@@ -13,13 +13,14 @@
 // |----------------------------------------------------------------------------|
 #include "SystemManager.h"
 
+SystemManager* SystemManager::s_instance = 0;
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
-SystemManager::SystemManager() 
+SystemManager::SystemManager() :
     //m_Input(0),
-    //m_Graphics(0),
+    m_Graphics(0)
     //m_Fps(0),
     //m_Cpu(0),
     //m_Timer(0),
@@ -42,6 +43,17 @@ SystemManager::SystemManager(const SystemManager& other)
 // |----------------------------------------------------------------------------|
 SystemManager::~SystemManager()
 {
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                              GetInstance                                   |
+// |----------------------------------------------------------------------------|
+SystemManager* SystemManager::GetInstance()
+{
+    if (s_instance == 0)
+        s_instance = new SystemManager;
+    return s_instance;
 }
 
 
@@ -77,18 +89,18 @@ bool SystemManager::Initialize()
     //}
 
     // Create the graphics object.  This object will handle rendering all the graphics for this application.
-    //m_Graphics = new GraphicsClass;
-    //if(!m_Graphics)
-    //{
-    //    return false;
-    //}
+    m_Graphics = GraphicsManager::GetInstance();
+    if(!m_Graphics)
+    {
+        return false;
+    }
 
     // Initialize the graphics object.
-    //result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
-    //if(!result)
-    //{
-    //    return false;
-    //}
+    result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
+    if(!result)
+    {
+        return false;
+    }
 
     // Create the fps object.
     //m_Fps = new FpsClass;
@@ -186,13 +198,12 @@ void SystemManager::Shutdown()
     //    m_Fps = 0;
     //}
 
-    //// Release the graphics object.
-    //if(m_Graphics)
-    //{
-    //    m_Graphics->Shutdown();
-    //    delete m_Graphics;
-    //    m_Graphics = 0;
-    //}
+    // Release the graphics object.
+    if(m_Graphics)
+    {
+        m_Graphics->Shutdown();
+        m_Graphics = 0;
+    }
 
     //// Release the input object.
     //if(m_Input)
@@ -213,6 +224,10 @@ void SystemManager::Shutdown()
     // Shutdown the window.
     ShutdownWindows();
     
+    // Kill instance
+    delete s_instance;
+    s_instance = 0;
+
     return;
 }
 
@@ -411,24 +426,24 @@ void SystemManager::InitializeWindows(int& screenWidth, int& screenHeight)
     screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
     // Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-    //if(FULL_SCREEN)
-    //{
-    //    // If full screen set the screen to maximum size of the users desktop and 32bit.
-    //    memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-    //    dmScreenSettings.dmSize       = sizeof(dmScreenSettings);
-    //    dmScreenSettings.dmPelsWidth  = (unsigned long)screenWidth;
-    //    dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
-    //    dmScreenSettings.dmBitsPerPel = 32;            
-    //    dmScreenSettings.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+    if(FULL_SCREEN)
+    {
+        // If full screen set the screen to maximum size of the users desktop and 32bit.
+        memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+        dmScreenSettings.dmSize       = sizeof(dmScreenSettings);
+        dmScreenSettings.dmPelsWidth  = (unsigned long)screenWidth;
+        dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
+        dmScreenSettings.dmBitsPerPel = 32;            
+        dmScreenSettings.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
-    //    // Change the display settings to full screen.
-    //    ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+        // Change the display settings to full screen.
+        ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 
-    //    // Set the position of the window to the top left corner.
-    //    posX = posY = 0;
-    //}
-    //else
-    //{
+        // Set the position of the window to the top left corner.
+        posX = posY = 0;
+    }
+    else
+    {
         // If windowed then set it to 800x600 resolution.
         screenWidth  = 800;
         screenHeight = 600;
@@ -436,7 +451,7 @@ void SystemManager::InitializeWindows(int& screenWidth, int& screenHeight)
         // Place the window in the middle of the screen.
         posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;
         posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
-    //}
+    }
 
     // Create the window with the screen settings and get the handle to it.
     m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName, 

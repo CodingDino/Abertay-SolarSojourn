@@ -12,6 +12,8 @@
 // |----------------------------------------------------------------------------|
 #include "GraphicsManager.h"
 
+GraphicsManager* GraphicsManager::s_instance = 0;
+
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
@@ -40,6 +42,17 @@ GraphicsManager::~GraphicsManager()
 
 
 // |----------------------------------------------------------------------------|
+// |                              GetInstance                                   |
+// |----------------------------------------------------------------------------|
+GraphicsManager* GraphicsManager::GetInstance()
+{
+    if (s_instance == 0)
+        s_instance = new GraphicsManager;
+    return s_instance;
+}
+
+
+// |----------------------------------------------------------------------------|
 // |                              Initialize                                    |
 // |----------------------------------------------------------------------------|
 bool GraphicsManager::Initialize(int screen_width, int screen_height, HWND hwnd)
@@ -51,19 +64,19 @@ bool GraphicsManager::Initialize(int screen_width, int screen_height, HWND hwnd)
     m_screen_height = screen_height;
 
     // Create the Direct3D object.
-    //m_D3D = new D3DClass;
-    //if(!m_D3D)
-    //{
-    //    return false;
-    //}
+    m_D3D = D3DManager::GetInstance();
+    if(!m_D3D)
+    {
+        return false;
+    }
 
     // Initialize the Direct3D object.
-    //result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
-    //if(!result)
-    //{
-    //    MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
-    //    return false;
-    //}
+    result = m_D3D->Initialize(screen_width, screen_height, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+    if(!result)
+    {
+        MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
+        return false;
+    }
 
     // Create the camera object.
     //m_Camera = new CameraClass;
@@ -137,13 +150,16 @@ void GraphicsManager::Shutdown()
     //    m_Camera = 0;
     //}
 
-    //// Release the D3D object.
-    //if(m_D3D)
-    //{
-    //    m_D3D->Shutdown();
-    //    delete m_D3D;
-    //    m_D3D = 0;
-    //}
+    // Release the D3D object.
+    if(m_D3D)
+    {
+        m_D3D->Shutdown();
+        m_D3D = 0;
+    }
+    
+    // Kill instance
+    delete s_instance;
+    s_instance = 0;
 
     return;
 }
@@ -258,7 +274,7 @@ bool GraphicsManager::Render(int mouseX, int mouseY, Coord camera_position)
 bool GraphicsManager::BeginRender()
 {
     // Clear the buffers to begin the scene.
-    //m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+    m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Generate the view matrix based on the camera's position.
     //m_Camera->Render();
@@ -279,7 +295,7 @@ bool GraphicsManager::BeginRender()
 bool GraphicsManager::EndRender()
 {
     // Present the rendered scene to the screen.
-    //m_D3D->EndScene();
+    m_D3D->EndScene();
 
     return true;
 }

@@ -34,11 +34,9 @@ class D3DManager
 public:
 
     //|-------------------------------Public Functions--------------------------|
-
-    // Constructors and Destructors
-    D3DManager();
-    D3DManager(const D3DManager&);
-    ~D3DManager();
+    
+    // Returns instance
+    static D3DManager* GetInstance();
 
     // Initializes the DirectX interface
     bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, 
@@ -72,10 +70,22 @@ public:
     // Culling modification
     void TurnOnBackCulling();
     void TurnOffBackCulling();
+    
+private:
+
+    //|-------------------------------Private Functions-------------------------|
+    
+    // Constructors and Destructors
+    D3DManager();
+    D3DManager(const D3DManager&);
+    ~D3DManager();
 
 private:
 
     //|-----------------------------Private Data Members------------------------|
+    
+    // Singleton instance
+    static D3DManager* s_instance;
 
     // Vsync setting
     bool m_vsync_enabled;
