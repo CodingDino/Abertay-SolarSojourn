@@ -97,9 +97,9 @@ private:
 
     // Screen
     int m_screen;
-    float m_screen_counter;
+    float m_screenCounter;
 
     // Screen dimmensions
-    int m_screen_width;
-    int m_screen_height;
+    int m_screenWidth;
+    int m_screenHeight;
 };

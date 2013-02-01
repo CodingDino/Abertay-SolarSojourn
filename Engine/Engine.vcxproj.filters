@@ -32,6 +32,9 @@
     <ClCompile Include="D3DManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -47,6 +50,9 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="D3DManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -20,7 +20,7 @@ SystemManager* SystemManager::s_instance = 0;
 // |----------------------------------------------------------------------------|
 SystemManager::SystemManager() :
     //m_Input(0),
-    m_Graphics(0)
+    m_graphics(0)
     //m_Fps(0),
     //m_Cpu(0),
     //m_Timer(0),
@@ -89,14 +89,14 @@ bool SystemManager::Initialize()
     //}
 
     // Create the graphics object.  This object will handle rendering all the graphics for this application.
-    m_Graphics = GraphicsManager::GetInstance();
-    if(!m_Graphics)
+    m_graphics = GraphicsManager::GetInstance();
+    if(!m_graphics)
     {
         return false;
     }
 
     // Initialize the graphics object.
-    result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
+    result = m_graphics->Initialize(screenWidth, screenHeight, m_hwnd);
     if(!result)
     {
         return false;
@@ -199,10 +199,10 @@ void SystemManager::Shutdown()
     //}
 
     // Release the graphics object.
-    if(m_Graphics)
+    if(m_graphics)
     {
-        m_Graphics->Shutdown();
-        m_Graphics = 0;
+        m_graphics->Shutdown();
+        m_graphics = 0;
     }
 
     //// Release the input object.

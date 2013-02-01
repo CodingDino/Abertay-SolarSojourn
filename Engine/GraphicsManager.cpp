@@ -20,7 +20,7 @@ GraphicsManager* GraphicsManager::s_instance = 0;
 // |----------------------------------------------------------------------------|
 GraphicsManager::GraphicsManager() :
     m_screen(0),
-    m_screen_counter(0)
+    m_screenCounter(0)
 {
 }
 
@@ -55,13 +55,13 @@ GraphicsManager* GraphicsManager::GetInstance()
 // |----------------------------------------------------------------------------|
 // |                              Initialize                                    |
 // |----------------------------------------------------------------------------|
-bool GraphicsManager::Initialize(int screen_width, int screen_height, HWND hwnd)
+bool GraphicsManager::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
     bool result;
 
     // Record screen dimmensions
-    m_screen_width = screen_width;
-    m_screen_height = screen_height;
+    m_screenWidth = screenWidth;
+    m_screenHeight = screenHeight;
 
     // Create the Direct3D object.
     m_D3D = D3DManager::GetInstance();
@@ -71,7 +71,7 @@ bool GraphicsManager::Initialize(int screen_width, int screen_height, HWND hwnd)
     }
 
     // Initialize the Direct3D object.
-    result = m_D3D->Initialize(screen_width, screen_height, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+    result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
     if(!result)
     {
         MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
@@ -174,12 +174,12 @@ bool GraphicsManager::Frame(int mouseX, int mouseY, int fps, int cpu, float fram
     bool result;
 
     // Swap out bitmaps if needed
-    if (transfer && m_screen_counter >= 1000)
+    if (transfer && m_screenCounter >= 1000)
     {
-        m_screen_counter = 0;
+        m_screenCounter = 0;
         m_screen++;
     }
-    m_screen_counter += frameTime;
+    m_screenCounter += frameTime;
 
     // Set the position of the camera.
     // m_Camera->SetPosition(camera_position.x, camera_position.y, camera_position.z-300.0f);

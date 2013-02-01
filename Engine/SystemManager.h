@@ -72,6 +72,8 @@ private:
 
 private:
 
+    //|-----------------------------Private Data Members------------------------|
+
     // Singleton instance
     static SystemManager* s_instance;
 
@@ -84,7 +86,7 @@ private:
     //InputClass* m_Input;
 
     // Graphics handler
-    GraphicsManager* m_Graphics;    
+    GraphicsManager* m_graphics;    
     
     // Timing classes
     //FpsClass* m_Fps;
