@@ -10,8 +10,11 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include "Util.h"
-#include <Windows.h>
 
+
+// |----------------------------------------------------------------------------|
+// |                                debug_log                                   |
+// |----------------------------------------------------------------------------|
 void debug_log(const char* msg, DEBUG_TYPE type, int level) 
 { 
     if (level <= DEBUG_MODE[type])
@@ -21,6 +24,10 @@ void debug_log(const char* msg, DEBUG_TYPE type, int level)
     }
 }
 
+
+// |----------------------------------------------------------------------------|
+// |                               debug_popup                                  |
+// |----------------------------------------------------------------------------|
 void debug_popup(const char* msg, HWND hwnd, DEBUG_TYPE type, int level) 
 { 
     if (level <= DEBUG_MODE[type])

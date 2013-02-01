@@ -26,6 +26,9 @@
     <ClCompile Include="Coord.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -36,6 +39,9 @@
     </ClInclude>
     <ClInclude Include="Coord.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
