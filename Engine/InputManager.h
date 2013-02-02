@@ -14,6 +14,7 @@
 // |                        Pre-Processing Directives                           |
 // |----------------------------------------------------------------------------|
 #define DIRECTINPUT_VERSION 0x0800
+#define KEY_PRESSED 0x80
 
 
 // |----------------------------------------------------------------------------|
@@ -60,6 +61,9 @@ public:
     bool Frame();
 
     // Key press checks
+    bool GetButtonDown(BUTTON_IDENT toCheck);
+    bool GetButtonPressed(BUTTON_IDENT toCheck);
+    bool GetButtonReleased(BUTTON_IDENT toCheck);
 
     // Gets mouse position
     void GetMouseLocation(int& mouseX, int& mouseY);
@@ -96,6 +100,7 @@ private:
 
     // States for mouse and keyboard
     unsigned char m_keyboardState[256];
+    unsigned char m_keyboardStateLast[256];
     DIMOUSESTATE m_mouseState;
 
     // screen dimensions for use with mouse
@@ -103,4 +108,7 @@ private:
 
     // mouse coordinates
     int m_mouseX, m_mouseY;
+
+    // Keybindings
+    int m_keybindings[NUM_BUTTONS];
 };

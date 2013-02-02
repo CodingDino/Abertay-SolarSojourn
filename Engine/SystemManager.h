@@ -19,7 +19,7 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include <windows.h>
-//#include "inputclass.h"
+#include "InputManager.h"
 #include "GraphicsManager.h"
 //#include "fpsclass.h"
 //#include "cpuclass.h"
@@ -83,7 +83,7 @@ private:
     HWND m_hwnd;
 
     // Input handler
-    //InputClass* m_Input;
+    InputManager* m_input;
 
     // Graphics handler
     GraphicsManager* m_graphics;    

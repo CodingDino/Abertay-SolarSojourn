@@ -74,19 +74,19 @@ bool SystemManager::Initialize()
     InitializeWindows(screenWidth, screenHeight);
 
     // Create the input object.  This object will be used to handle reading the keyboard input from the user.
-    //m_Input = new InputClass;
-    //if(!m_Input)
-    //{
-    //    return false;
-    //}
+    m_input = InputManager::GetInstance();
+    if(!m_input)
+    {
+        return false;
+    }
 
     // Initialize the input object.
-    //result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
-    //if(!result)
-    //{
-    //    MessageBox(m_hwnd, L"Could not initialize the input object.", L"Error", MB_OK);
-    //    return false;
-    //}
+    result = m_input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
+    if(!result)
+    {
+        MessageBox(m_hwnd, L"Could not initialize the input object.", L"Error", MB_OK);
+        return false;
+    }
 
     // Create the graphics object.  This object will handle rendering all the graphics for this application.
     m_graphics = GraphicsManager::GetInstance();
@@ -205,13 +205,12 @@ void SystemManager::Shutdown()
         m_graphics = 0;
     }
 
-    //// Release the input object.
-    //if(m_Input)
-    //{
-    //    m_Input->Shutdown();
-    //    delete m_Input;
-    //    m_Input = 0;
-    //}
+    // Release the input object.
+    if(m_input)
+    {
+        m_input->Shutdown();
+        m_input = 0;
+    }
 
     //// Release the sound object.
     //if(m_Sound)
@@ -271,10 +270,10 @@ void SystemManager::Run()
         }
 
         // Check if the user pressed escape and wants to quit.
-        //if(m_Input->IsEscapePressed() == true)
-        //{
-        //    done = true;
-        //}
+        if(m_input->GetButtonPressed(BUTTON_EXIT))
+        {
+            done = true;
+        }
 
     }
 
@@ -294,11 +293,11 @@ bool SystemManager::Frame()
     //Coord camera_rotation;
 
     // Do the input processing.
-    //result = m_Input->Frame();
-    //if(!result)
-    //{
-    //    return false;
-    //}
+    result = m_input->Frame();
+    if(!result)
+    {
+        return false;
+    }
 
     // Set the frame time for calculating the updated position.
     //m_Position->SetFrameTime(m_Timer->GetTime());

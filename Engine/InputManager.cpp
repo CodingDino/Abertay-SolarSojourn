@@ -17,13 +17,13 @@ InputManager* InputManager::s_instance = 0;
 
 
 // |----------------------------------------------------------------------------|
-// |                           Default Constructor                                |
+// |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
-InputManager::InputManager()
+InputManager::InputManager() :
+    m_directInput(0),
+    m_keyboard(0),
+    m_mouse(0)
 {
-    m_directInput = 0;
-    m_keyboard = 0;
-    m_mouse = 0;
 }
 
 
@@ -36,7 +36,7 @@ InputManager::InputManager(const InputManager& other)
 
 
 // |----------------------------------------------------------------------------|
-// |                             Deconstructor                                    |
+// |                             Deconstructor                                  |
 // |----------------------------------------------------------------------------|
 InputManager::~InputManager()
 {
@@ -61,6 +61,8 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
 {
     HRESULT result;
 
+    // Set default keybindings
+    m_keybindings[BUTTON_EXIT] = DIK_ESCAPE;
 
     // Store the screen size which will be used for positioning the mouse cursor.
     m_screenWidth = screenWidth;
@@ -69,6 +71,13 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
     // Initialize the location of the mouse on the screen.
     m_mouseX = 0;
     m_mouseY = 0;
+
+    // Initialize keyboard states to 0
+    for (int i=0; i < 256; ++i)
+    {
+        m_keyboardState[i] = 0;
+        m_keyboardStateLast[i] = 0;
+    }
 
     // Initialize the main direct input interface.
     result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
@@ -138,7 +147,7 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
 
 
 // |----------------------------------------------------------------------------|
-// |                              Shutdown                                        |
+// |                              Shutdown                                      |
 // |----------------------------------------------------------------------------|
 void InputManager::Shutdown()
 {
@@ -164,6 +173,10 @@ void InputManager::Shutdown()
         m_directInput->Release();
         m_directInput = 0;
     }
+    
+    // Kill instance
+    delete s_instance;
+    s_instance = 0;
 
     return;
 }
@@ -205,6 +218,11 @@ bool InputManager::ReadKeyboard()
 {
     HRESULT result;
 
+    // Copy previous keyboard state
+    for (int i=0; i < 256; ++i)
+    {
+        m_keyboardStateLast[i] = m_keyboardState[i];
+    }
 
     // Read the keyboard device.
     result = m_keyboard->GetDeviceState(sizeof(m_keyboardState), (LPVOID)&m_keyboardState);
@@ -226,7 +244,7 @@ bool InputManager::ReadKeyboard()
 
 
 // |----------------------------------------------------------------------------|
-// |                              ReadMouse                                        |
+// |                              ReadMouse                                     |
 // |----------------------------------------------------------------------------|
 bool InputManager::ReadMouse()
 {
@@ -253,7 +271,7 @@ bool InputManager::ReadMouse()
 
 
 // |----------------------------------------------------------------------------|
-// |                             ProcessInput                                    |
+// |                             ProcessInput                                   |
 // |----------------------------------------------------------------------------|
 void InputManager::ProcessInput()
 {
@@ -271,6 +289,7 @@ void InputManager::ProcessInput()
     return;
 }
 
+
 // |----------------------------------------------------------------------------|
 // |                           GetMouseLocation                                 |
 // |----------------------------------------------------------------------------|
@@ -280,3 +299,42 @@ void InputManager::GetMouseLocation(int& mouseX, int& mouseY)
     mouseY = m_mouseY;
     return;
 }
+
+
+// |----------------------------------------------------------------------------|
+// |                           GetButtonDown                                    |
+// |----------------------------------------------------------------------------|
+bool InputManager::GetButtonDown(BUTTON_IDENT toCheck)
+{
+    unsigned char state = m_keyboardState[(m_keybindings[toCheck])];
+    if (state & KEY_PRESSED)
+        return true;
+    else return false;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                           GetButtonPressed                                 |
+// |----------------------------------------------------------------------------|
+bool InputManager::GetButtonPressed(BUTTON_IDENT toCheck)
+{
+    unsigned char state = m_keyboardState[(m_keybindings[toCheck])];
+    unsigned char stateLast = m_keyboardStateLast[(m_keybindings[toCheck])];
+    if ( (state & KEY_PRESSED) && !(stateLast & KEY_PRESSED) )
+        return true;
+    else return false;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                           GetButtonReleased                                 |
+// |----------------------------------------------------------------------------|
+bool InputManager::GetButtonReleased(BUTTON_IDENT toCheck)
+{
+    unsigned char state = m_keyboardState[(m_keybindings[toCheck])];
+    unsigned char stateLast = m_keyboardStateLast[(m_keybindings[toCheck])];
+    if ( !(state & KEY_PRESSED) && (stateLast & KEY_PRESSED) )
+        return true;
+    else return false;
+}
+
