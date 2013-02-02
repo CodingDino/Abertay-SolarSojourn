@@ -288,7 +288,7 @@ bool SystemManager::Frame()
 {
     bool result;
     int mouseX, mouseY;
-    bool keyDown;
+    //bool keyDown;
     //Coord camera_position;
     //Coord camera_rotation;
 
@@ -351,8 +351,8 @@ bool SystemManager::Frame()
     //m_Position->GetRotation(camera_rotation.x, camera_rotation.y, camera_rotation.z);
     //m_Position->GetPosition(camera_position.x, camera_position.y, camera_position.z);
 
-    //// Get the location of the mouse from the input object,
-    //m_Input->GetMouseLocation(mouseX, mouseY);
+    // Get the location of the mouse from the input object,
+    m_input->GetMouseLocation(mouseX, mouseY);
 
     //// Update the system timers.
     //m_Timer->Frame();
