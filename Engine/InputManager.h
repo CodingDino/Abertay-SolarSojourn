@@ -26,6 +26,7 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include <dinput.h>
+#include "Util.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -50,7 +51,7 @@ public:
     static InputManager* GetInstance();
     
     // Initializes mouse and keyboard settings
-    bool Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight);
+    bool Initialize(HINSTANCE hinstance, int screenWidth, int screenHeight);
     
     // Performs shutdown, deallocation, and cleanup for input objects
     void Shutdown();

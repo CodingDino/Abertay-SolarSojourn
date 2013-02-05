@@ -55,5 +55,8 @@
     <ClInclude Include="InputManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="ColorShader.h">
+      <Filter>Shader Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

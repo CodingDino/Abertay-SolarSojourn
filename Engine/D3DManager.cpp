@@ -65,7 +65,7 @@ D3DManager* D3DManager::GetInstance()
 // |----------------------------------------------------------------------------|
 // |                              Initialize                                    |
 // |----------------------------------------------------------------------------|
-bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, 
+bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, bool fullscreen, 
                           float screenDepth, float screenNear)
 {
     HRESULT result;
@@ -96,6 +96,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateDXGIFactory failed.");
         return false;
     }
 
@@ -103,6 +104,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = factory->EnumAdapters(0, &adapter);
     if(FAILED(result))
     {
+        DebugPopup(L"EnumAdapters failed.");
         return false;
     }
 
@@ -110,6 +112,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = adapter->EnumOutputs(0, &adapterOutput);
     if(FAILED(result))
     {
+        DebugPopup(L"EnumOutputs failed.");
         return false;
     }
 
@@ -117,6 +120,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
     if(FAILED(result))
     {
+        DebugPopup(L"GetDisplayModeList failed.");
         return false;
     }
 
@@ -124,6 +128,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     displayModeList = new DXGI_MODE_DESC[numModes];
     if(!displayModeList)
     {
+        DebugPopup(L"displayModeList not initialized.");
         return false;
     }
 
@@ -131,6 +136,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
     if(FAILED(result))
     {
+        DebugPopup(L"GetDisplayModeList failed.");
         return false;
     }
 
@@ -152,6 +158,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = adapter->GetDesc(&adapterDesc);
     if(FAILED(result))
     {
+        DebugPopup(L"GetDesc failed.");
         return false;
     }
 
@@ -162,6 +169,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
     if(error != 0)
     {
+        DebugPopup(L"wcstombs_s failed.");
         return false;
     }
 
@@ -210,7 +218,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
     // Set the handle for the window to render to.
-    swapChainDesc.OutputWindow = hwnd;
+    swapChainDesc.OutputWindow = windowHandle;
 
     // Turn multisampling off.
     swapChainDesc.SampleDesc.Count = 1;
@@ -244,6 +252,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
                                            D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
     if(FAILED(result))
     {
+        DebugPopup(L"D3D11CreateDeviceAndSwapChain failed.");
         return false;
     }
 
@@ -251,6 +260,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
     if(FAILED(result))
     {
+        DebugPopup(L"GetBuffer failed.");
         return false;
     }
 
@@ -258,6 +268,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &m_renderTargetView);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateRenderTargetView failed.");
         return false;
     }
 
@@ -285,6 +296,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateTexture2D failed.");
         return false;
     }
 
@@ -316,6 +328,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateDepthStencilState failed.");
         return false;
     }
 
@@ -334,6 +347,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateDepthStencilView failed.");
         return false;
     }
 
@@ -356,6 +370,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterState);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateRasterizerState failed.");
         return false;
     }
 
@@ -378,6 +393,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_device->CreateRasterizerState(&rasterDescCullingDisabled, &m_cullingDisabledRasterState);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateRasterizerState failed.");
         return false;
     }
     
@@ -429,6 +445,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_device->CreateDepthStencilState(&depthDisabledStencilDesc, &m_depthDisabledStencilState);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateDepthStencilState failed.");
         return false;
     }
 
@@ -452,6 +469,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_device->CreateBlendState(&blendStateDescription, &m_alphaEnableBlendingState);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateBlendState failed.");
         return false;
     }
 
@@ -462,6 +480,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
     result = m_device->CreateBlendState(&blendStateDescription, &m_alphaDisableBlendingState);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateBlendState failed.");
         return false;
     }
 

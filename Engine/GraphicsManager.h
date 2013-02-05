@@ -13,7 +13,6 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include "Coord.h"
-#include "Util.h"
 #include "D3DManager.h"
 
 
@@ -40,7 +39,7 @@ public:
     static GraphicsManager* GetInstance();
 
     // Creates and initializes all data members, sets initial graphics state
-    bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
+    bool Initialize(int screenWidth, int screenHeight);
 
     // Performs shutdown, deallocation, and cleanup for data members
     void Shutdown();

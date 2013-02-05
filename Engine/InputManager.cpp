@@ -57,7 +57,7 @@ InputManager* InputManager::GetInstance()
 // |----------------------------------------------------------------------------|
 // |                              Initialize                                    |
 // |----------------------------------------------------------------------------|
-bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
+bool InputManager::Initialize(HINSTANCE hinstance, int screenWidth, int screenHeight)
 {
     HRESULT result;
 
@@ -83,6 +83,7 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
     result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
     if(FAILED(result))
     {
+        DebugPopup(L"DirectInput8Create failed.");
         return false;
     }
 
@@ -90,6 +91,7 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
     result = m_directInput->CreateDevice(GUID_SysKeyboard, &m_keyboard, NULL);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateDevice for keyboard failed.");
         return false;
     }
 
@@ -97,13 +99,15 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
     result = m_keyboard->SetDataFormat(&c_dfDIKeyboard);
     if(FAILED(result))
     {
+        DebugPopup(L"SetDataFormat for keyboard failed.");
         return false;
     }
 
     // Set the cooperative level of the keyboard to not share with other programs.
-    result = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+    result = m_keyboard->SetCooperativeLevel(windowHandle, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
     if(FAILED(result))
     {
+        DebugPopup(L"SetCooperativeLevel for keyboard failed.");
         return false;
     }
 
@@ -111,6 +115,7 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
     result = m_keyboard->Acquire();
     if(FAILED(result))
     {
+        DebugPopup(L"Acquire for keyboard failed.");
         return false;
     }
 
@@ -118,6 +123,7 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
     result = m_directInput->CreateDevice(GUID_SysMouse, &m_mouse, NULL);
     if(FAILED(result))
     {
+        DebugPopup(L"CreateDevice for mouse failed.");
         return false;
     }
 
@@ -125,13 +131,15 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
     result = m_mouse->SetDataFormat(&c_dfDIMouse);
     if(FAILED(result))
     {
+        DebugPopup(L"SetDataFormat for mouse failed.");
         return false;
     }
 
     // Set the cooperative level of the mouse to share with other programs.
-    result = m_mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+    result = m_mouse->SetCooperativeLevel(windowHandle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
     if(FAILED(result))
     {
+        DebugPopup(L"SetCooperativeLevel for mouse failed.");
         return false;
     }
 
@@ -139,6 +147,7 @@ bool InputManager::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
     result = m_mouse->Acquire();
     if(FAILED(result))
     {
+        DebugPopup(L"Acquire for mouse failed.");
         return false;
     }
 

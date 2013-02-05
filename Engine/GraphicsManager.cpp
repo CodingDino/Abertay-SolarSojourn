@@ -55,7 +55,7 @@ GraphicsManager* GraphicsManager::GetInstance()
 // |----------------------------------------------------------------------------|
 // |                              Initialize                                    |
 // |----------------------------------------------------------------------------|
-bool GraphicsManager::Initialize(int screenWidth, int screenHeight, HWND hwnd)
+bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
 {
     bool result;
 
@@ -67,14 +67,15 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight, HWND hwnd)
     m_D3D = D3DManager::GetInstance();
     if(!m_D3D)
     {
+        DebugPopup(L"D3DManager GetInstance failed.");
         return false;
     }
 
     // Initialize the Direct3D object.
-    result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+    result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
     if(!result)
     {
-        MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
+        DebugPopup(L"Could not initialize Direct3D.");
         return false;
     }
 

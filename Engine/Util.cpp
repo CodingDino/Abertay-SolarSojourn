@@ -15,7 +15,7 @@
 // |----------------------------------------------------------------------------|
 // |                                debug_log                                   |
 // |----------------------------------------------------------------------------|
-void debug_log(const char* msg, DEBUG_TYPE type, int level) 
+void DebugLog(const char* msg, DEBUG_TYPE type, int level) 
 { 
     if (level <= DEBUG_MODE[type])
     {
@@ -28,10 +28,10 @@ void debug_log(const char* msg, DEBUG_TYPE type, int level)
 // |----------------------------------------------------------------------------|
 // |                               debug_popup                                  |
 // |----------------------------------------------------------------------------|
-void debug_popup(const char* msg, HWND hwnd, DEBUG_TYPE type, int level) 
+void DebugPopup(const wchar_t* msg, DEBUG_TYPE type, int level) 
 { 
     if (level <= DEBUG_MODE[type])
     {
-        MessageBox(hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
+        MessageBox(windowHandle, msg, L"Error", MB_OK);
     }
 }

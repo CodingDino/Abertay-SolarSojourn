@@ -24,6 +24,7 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 #include <d3dx10math.h>
+#include "Util.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -39,7 +40,7 @@ public:
     static D3DManager* GetInstance();
 
     // Initializes the DirectX interface
-    bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, 
+    bool Initialize(int screenWidth, int screenHeight, bool vsync, bool fullscreen, 
                     float screenDepth, float screenNear);
 
     // Performs shutdown, deallocation, and cleanup for DirectX objects
@@ -107,7 +108,6 @@ private:
     ID3D11DepthStencilState* m_depthDisabledStencilState;
     ID3D11BlendState* m_alphaEnableBlendingState;
     ID3D11BlendState* m_alphaDisableBlendingState;
-
 
     // Matrices
     D3DXMATRIX m_projectionMatrix;

@@ -51,6 +51,7 @@ public:
 
     // Handles system messages
     LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+    
 
 private:
 
@@ -80,7 +81,6 @@ private:
     // Windows parameters
     LPCWSTR m_applicationName;
     HINSTANCE m_hinstance;
-    HWND m_hwnd;
 
     // Input handler
     InputManager* m_input;

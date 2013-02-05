@@ -77,14 +77,15 @@ bool SystemManager::Initialize()
     m_input = InputManager::GetInstance();
     if(!m_input)
     {
+        DebugPopup(L"Could not get instance of InputManager. Aborting.");
         return false;
     }
 
     // Initialize the input object.
-    result = m_input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
+    result = m_input->Initialize(m_hinstance, screenWidth, screenHeight);
     if(!result)
     {
-        MessageBox(m_hwnd, L"Could not initialize the input object.", L"Error", MB_OK);
+        DebugPopup(L"Could not initialize InputManager. Aborting.");
         return false;
     }
 
@@ -92,13 +93,15 @@ bool SystemManager::Initialize()
     m_graphics = GraphicsManager::GetInstance();
     if(!m_graphics)
     {
+        DebugPopup(L"Could not get instance of GraphicsManager. Aborting.");
         return false;
     }
 
     // Initialize the graphics object.
-    result = m_graphics->Initialize(screenWidth, screenHeight, m_hwnd);
+    result = m_graphics->Initialize(screenWidth, screenHeight);
     if(!result)
     {
+        DebugPopup(L"Could not initialize GraphicsManager. Aborting.");
         return false;
     }
 
@@ -133,7 +136,7 @@ bool SystemManager::Initialize()
     //result = m_Timer->Initialize();
     //if(!result)
     //{
-    //    MessageBox(m_hwnd, L"Could not initialize the Timer object.", L"Error", MB_OK);
+    //    MessageBox(s_hwnd, L"Could not initialize the Timer object.", L"Error", MB_OK);
     //    return false;
     //}
 
@@ -152,10 +155,10 @@ bool SystemManager::Initialize()
     //}
  
     // Initialize the sound object.
-    //result = m_Sound->Initialize(m_hwnd);
+    //result = m_Sound->Initialize(s_hwnd);
     //if(!result)
     //{
-    //    MessageBox(m_hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
+    //    MessageBox(s_hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
     //    return false;
     //}
     //m_Sound->StartMusic();
@@ -453,14 +456,14 @@ void SystemManager::InitializeWindows(int& screenWidth, int& screenHeight)
     }
 
     // Create the window with the screen settings and get the handle to it.
-    m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName, 
+    windowHandle = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName, 
                             WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
                             posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
 
     // Bring the window up on the screen and set it as main focus.
-    ShowWindow(m_hwnd, SW_SHOW);
-    SetForegroundWindow(m_hwnd);
-    SetFocus(m_hwnd);
+    ShowWindow(windowHandle, SW_SHOW);
+    SetForegroundWindow(windowHandle);
+    SetFocus(windowHandle);
 
     // Hide the mouse cursor.
     ShowCursor(false);
@@ -484,8 +487,8 @@ void SystemManager::ShutdownWindows()
     //}
 
     // Remove the window.
-    DestroyWindow(m_hwnd);
-    m_hwnd = NULL;
+    DestroyWindow(windowHandle);
+    windowHandle = NULL;
 
     // Remove the application instance.
     UnregisterClass(m_applicationName, m_hinstance);
