@@ -59,8 +59,6 @@ private:
 
     // Constructors and Destructors
     SystemManager();
-    SystemManager(const SystemManager&);
-    ~SystemManager();
 
     // Processes each frame (calles input, game, render frame functions)
     bool Frame();

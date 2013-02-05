@@ -20,23 +20,8 @@ GraphicsManager* GraphicsManager::s_instance = 0;
 // |----------------------------------------------------------------------------|
 GraphicsManager::GraphicsManager() :
     m_screen(0),
-    m_screenCounter(0)
-{
-}
-
-    
-// |----------------------------------------------------------------------------|
-// |                            Copy Constructor                                |
-// |----------------------------------------------------------------------------|
-GraphicsManager::GraphicsManager(const GraphicsManager& other)
-{
-}
-
-
-// |----------------------------------------------------------------------------|
-// |                             Deconstructor                                  |
-// |----------------------------------------------------------------------------|
-GraphicsManager::~GraphicsManager()
+    m_screenCounter(0),
+    m_colorShader(0)
 {
 }
 
@@ -95,6 +80,12 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     //m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
     // Create the shader objects.
+    m_colorShader = new ColorShader;
+    if(!m_colorShader)
+    {
+        DebugPopup(L"Could not create ColorShader.");
+        return false;
+    }
     //m_LightShader = new LightShaderClass;
     //if(!m_LightShader)
     //{
@@ -106,8 +97,13 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     //    return false;
     //}
     
-
-    // Initialize the light shader object.
+    // Initialize the shader objects.
+    result = m_colorShader->Initialize(m_D3D->GetDevice());
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize ColorShader.");
+        return false;
+    }
     //result = m_LightShader->Initialize(m_D3D->GetDevice(), hwnd);
     //if(!result)
     //{
@@ -130,7 +126,13 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
 // |----------------------------------------------------------------------------|
 void GraphicsManager::Shutdown()
 {
-    //// Release the shader objects.
+    // Release the shader objects.
+    if(m_colorShader)
+    {
+        m_colorShader->Shutdown();
+        delete m_colorShader;
+        m_colorShader = 0;
+    }
     //if(m_LightShader)
     //{
     //    m_LightShader->Shutdown();

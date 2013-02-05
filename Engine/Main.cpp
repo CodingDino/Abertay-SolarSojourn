@@ -79,6 +79,9 @@
 #include "SystemManager.h"
 
 
+// |----------------------------------------------------------------------------|
+// |                                 WinMain                                    |
+// |----------------------------------------------------------------------------|
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
     SystemManager* system;

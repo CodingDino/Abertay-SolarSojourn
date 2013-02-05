@@ -35,6 +35,12 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Shader Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorShader.cpp">
+      <Filter>Shader Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -56,6 +62,9 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="ColorShader.h">
+      <Filter>Shader Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
       <Filter>Shader Files</Filter>
     </ClInclude>
   </ItemGroup>

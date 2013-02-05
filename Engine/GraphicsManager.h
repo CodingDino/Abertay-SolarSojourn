@@ -14,6 +14,7 @@
 // |----------------------------------------------------------------------------|
 #include "Coord.h"
 #include "D3DManager.h"
+#include "ColorShader.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -54,8 +55,6 @@ private:
 
     // Constructors and Destructors
     GraphicsManager();
-    GraphicsManager(const GraphicsManager&);
-    ~GraphicsManager();
 
     // Calls render functions in order
     bool Render(int mouseX, int mouseY, Coord camera_position);
@@ -88,6 +87,7 @@ private:
     // CameraClass* m_Camera;
 
     // Shaders
+    ColorShader* m_colorShader;
     // LightShaderClass* m_LightShader;
     // TextureShaderClass* m_TextureShader;
 

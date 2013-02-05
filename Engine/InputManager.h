@@ -73,8 +73,6 @@ private:
 
     // Constructors and Destructors
     InputManager();
-    InputManager(const InputManager&);
-    ~InputManager();
 
     // Read the current state of the keyboard
     bool ReadKeyboard();

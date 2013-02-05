@@ -78,8 +78,6 @@ private:
     
     // Constructors and Destructors
     D3DManager();
-    D3DManager(const D3DManager&);
-    ~D3DManager();
 
 private:
 
