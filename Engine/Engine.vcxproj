@@ -96,8 +96,10 @@
     <ClInclude Include="Coord.h" />
     <ClInclude Include="D3DManager.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicsManager.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Screen.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Util.h" />

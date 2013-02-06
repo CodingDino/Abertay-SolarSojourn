@@ -12,6 +12,7 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include "Util.h"
+#include "Screen.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -31,6 +32,9 @@ public:
 
     // Performs shutdown, deallocation, and cleanup
     void Shutdown();
+
+    // Processes game logic each frame
+    bool Frame();
     
 private:
 
@@ -38,6 +42,9 @@ private:
     
     // Constructors and Destructors
     GameManager();
+    
+	// Sets the current screen to the supplied screen index.
+	int ChangeScreen(SCREEN nextScreen);
 
 private:
 
@@ -45,5 +52,9 @@ private:
     
     // Singleton instance
     static GameManager* s_instance;
+
+	// Screens
+	Screen* m_currentScreen;
+	Screen** m_screens;
 
 };
