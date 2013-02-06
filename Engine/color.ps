@@ -3,20 +3,24 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// ColorShader
-//      Wraps and interacts with vertex and pixel shader.
+// color.ps
+//      Pixel shader for handling simple colored shapes with no lighting/texture
 
 
 // |----------------------------------------------------------------------------|
-// |								Includes									|
+// |						     Type Definitions					   			|
 // |----------------------------------------------------------------------------|
-#include "ColorShader.h"
-
-
-// |----------------------------------------------------------------------------|
-// |						   Default Constructor								|
-// |----------------------------------------------------------------------------|
-ColorShader::ColorShader() :
-    Shader("ColorVertexShader", "ColorPixelShader", L"../Engine/color.vs", L"../Engine/color.ps")
+struct PixelInputType
 {
+    float4 position : SV_POSITION;
+    float4 color : COLOR;
+};
+
+
+// |----------------------------------------------------------------------------|
+// |						      Pixel Shader				    	   			|
+// |----------------------------------------------------------------------------|
+float4 ColorPixelShader(PixelInputType input) : SV_TARGET
+{
+    return input.color;
 }
