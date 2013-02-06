@@ -44,6 +44,9 @@
     <ClCompile Include="ColorShader.cpp">
       <Filter>Shader Files\ColorShader</Filter>
     </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -69,6 +72,9 @@
     </ClInclude>
     <ClInclude Include="ColorShader.h">
       <Filter>Shader Files\ColorShader</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
