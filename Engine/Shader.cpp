@@ -15,7 +15,7 @@
 
 
 // |----------------------------------------------------------------------------|
-// |                           Default Constructor                                |
+// |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
 Shader::Shader() :
     m_vertexShader(0),
@@ -31,7 +31,7 @@ Shader::Shader() :
 
 
 // |----------------------------------------------------------------------------|
-// |                               Constructor                                     |
+// |                               Constructor                                  |
 // |----------------------------------------------------------------------------|
 Shader::Shader(const char* vertexShaderName, const char* pixelShaderName,
     WCHAR* vertexShaderFile, WCHAR* pixelShaderFile) :
@@ -68,7 +68,7 @@ bool Shader::Initialize(ID3D11Device* device)
 
 
 // |----------------------------------------------------------------------------|
-// |                              Shutdown                                        |
+// |                              Shutdown                                      |
 // |----------------------------------------------------------------------------|
 void Shader::Shutdown()
 {
@@ -80,7 +80,7 @@ void Shader::Shutdown()
 
 
 // |----------------------------------------------------------------------------|
-// |                               Render                                        |
+// |                               Render                                       |
 // |----------------------------------------------------------------------------|
 bool Shader::Render(ID3D11DeviceContext* deviceContext, 
     int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
@@ -104,7 +104,7 @@ bool Shader::Render(ID3D11DeviceContext* deviceContext,
 
 
 // |----------------------------------------------------------------------------|
-// |                             InitializeShader                                |
+// |                             InitializeShader                               |
 // |----------------------------------------------------------------------------|
 bool Shader::InitializeShader(ID3D11Device* device,    WCHAR* vsFilename, 
     WCHAR* psFilename)
@@ -274,7 +274,7 @@ void Shader::ShutdownShader()
 }
 
 // |----------------------------------------------------------------------------|
-// |                          OutputShaderErrorMessage                            |
+// |                          OutputShaderErrorMessage                          |
 // |----------------------------------------------------------------------------|
 void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* shaderFilename)
 {
@@ -312,7 +312,7 @@ void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* shaderFil
 
 
 // |----------------------------------------------------------------------------|
-// |                            SetShaderParameters                                |
+// |                            SetShaderParameters                             |
 // |----------------------------------------------------------------------------|
 bool Shader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
                          D3DXMATRIX projectionMatrix)
