@@ -25,6 +25,6 @@ public:
     //|-------------------------------Public Functions--------------------------|
     
     // Constructors and Destructors
-	ColorShader();
+    ColorShader();
 
 };

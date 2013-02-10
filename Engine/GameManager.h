@@ -43,8 +43,8 @@ private:
     // Constructors and Destructors
     GameManager();
     
-	// Sets the current screen to the supplied screen index.
-	int ChangeScreen(SCREEN nextScreen);
+    // Sets the current screen to the supplied screen index.
+    int ChangeScreen(SCREEN nextScreen);
 
 private:
 
@@ -53,8 +53,8 @@ private:
     // Singleton instance
     static GameManager* s_instance;
 
-	// Screens
-	Screen* m_currentScreen;
-	Screen** m_screens;
+    // Screens
+    Screen* m_currentScreen;
+    Screen** m_screens;
 
 };
