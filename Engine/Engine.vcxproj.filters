@@ -21,7 +21,7 @@
     <Filter Include="Screens">
       <UniqueIdentifier>{6623ff23-415d-4457-9cb4-d41fbee1b879}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Materials">
+    <Filter Include="Graphics">
       <UniqueIdentifier>{8c6e99a5-146b-4c36-b87e-e949fb8eae31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -57,7 +57,13 @@
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Materials</Filter>
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,7 +101,13 @@
       <Filter>Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Materials</Filter>
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
