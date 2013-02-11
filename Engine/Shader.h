@@ -8,6 +8,11 @@
 //      shaders.
 #pragma once
 
+// TODO: Move color-specific code to color shader
+// TODO: Finish setting up color buffer
+// TODO: Set color buffer on render
+// TODO: Render using correct vertex buffer format
+// TODO: Check over render function to be sure it's correct.
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
@@ -30,6 +35,13 @@ protected:
     //|-------------------------------Type Definitions--------------------------|
 
     struct MatrixBufferType
+    {
+        D3DXMATRIX world;
+        D3DXMATRIX view;
+        D3DXMATRIX projection;
+    };
+
+    struct ColorBufferType
     {
         D3DXMATRIX world;
         D3DXMATRIX view;

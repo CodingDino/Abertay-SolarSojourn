@@ -13,7 +13,6 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 #include <fstream>
-//#include "Texture.h"
 #include "Util.h"
 using namespace std;
 
@@ -30,17 +29,17 @@ private:
     // Holds a single vertex position, texture, and normal
     struct VertexType
     {
-        D3DXVECTOR3 position;
-        D3DXVECTOR2 texture;
-        D3DXVECTOR3 normal;
+        D3DXVECTOR3 position;   // Vertex position in 3d space
+        D3DXVECTOR2 texture;    // Texture coordinate for 2D texture
+        D3DXVECTOR3 normal;     // Normal vector for this vertex
     };
 
     // Holds vertex information, to be passed to shaders
     struct ModelType
     {
-        float x, y, z;
-        float tu, tv;
-        float nx, ny, nz;
+        float x, y, z;          // Vertex position in 3d space
+        float tu, tv;           // Texture coordinate for 2D texture
+        float nx, ny, nz;       // Normal vector for this vertex
     };
 
 public:

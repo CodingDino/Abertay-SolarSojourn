@@ -113,7 +113,7 @@ bool Shader::InitializeShader(ID3D11Device* device,    WCHAR* vsFilename,
     ID3D10Blob* errorMessage;
     ID3D10Blob* vertexShaderBuffer;
     ID3D10Blob* pixelShaderBuffer;
-    D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
+    D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
     unsigned int numElements;
     D3D11_BUFFER_DESC matrixBufferDesc;
 
@@ -181,22 +181,30 @@ bool Shader::InitializeShader(ID3D11Device* device,    WCHAR* vsFilename,
     }
 
     // Create the vertex input layout description.
-    // This setup needs to match the VertexType stucture in the ModelClass and in the shader.
-    polygonLayout[0].SemanticName = "POSITION";
-    polygonLayout[0].SemanticIndex = 0;
-    polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-    polygonLayout[0].InputSlot = 0;
-    polygonLayout[0].AlignedByteOffset = 0;
-    polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-    polygonLayout[0].InstanceDataStepRate = 0;
+    // This setup needs to match the VertexType stucture in the Model and in the shader.
+	polygonLayout[0].SemanticName = "POSITION";
+	polygonLayout[0].SemanticIndex = 0;
+	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[0].InputSlot = 0;
+	polygonLayout[0].AlignedByteOffset = 0;
+	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[0].InstanceDataStepRate = 0;
 
-    polygonLayout[1].SemanticName = "COLOR";
-    polygonLayout[1].SemanticIndex = 0;
-    polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-    polygonLayout[1].InputSlot = 0;
-    polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-    polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-    polygonLayout[1].InstanceDataStepRate = 0;
+	polygonLayout[1].SemanticName = "TEXCOORD";
+	polygonLayout[1].SemanticIndex = 0;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	polygonLayout[1].InputSlot = 0;
+	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[1].InstanceDataStepRate = 0;
+
+	polygonLayout[2].SemanticName = "NORMAL";
+	polygonLayout[2].SemanticIndex = 0;
+	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[2].InputSlot = 0;
+	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[2].InstanceDataStepRate = 0;
 
     // Get a count of the elements in the layout.
     numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
@@ -232,7 +240,23 @@ bool Shader::InitializeShader(ID3D11Device* device,    WCHAR* vsFilename,
         DebugPopup(L"Could not CreateBuffer from device.");
         return false;
     }
+   
+	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
+	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
+	colorBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	colorBufferDesc.ByteWidth = sizeof(LightBufferType);
+	colorBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	colorBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	colorBufferDesc.MiscFlags = 0;
+	colorBufferDesc.StructureByteStride = 0;
 
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	result = device->CreateBuffer(&lightBufferDesc, NULL, &m_lightBuffer);
+	if(FAILED(result))
+	{
+		MessageBox(hwnd, psFilename, L"CreateBuffer (lightBuffer) failed.", MB_OK);
+		return false;
+	}
     return true;
 }
 
@@ -314,8 +338,9 @@ void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* shaderFil
 // |----------------------------------------------------------------------------|
 // |                            SetShaderParameters                             |
 // |----------------------------------------------------------------------------|
-bool Shader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-                         D3DXMATRIX projectionMatrix)
+bool Shader::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
+        D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
+        D3DXMATRIX projectionMatrix)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
