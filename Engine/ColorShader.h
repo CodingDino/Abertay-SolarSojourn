@@ -19,6 +19,20 @@
 // |----------------------------------------------------------------------------|
 class ColorShader: public Shader
 {
+protected:
+
+    //|-------------------------------Type Definitions--------------------------|
+    struct VSBufferType
+    {
+        D3DXMATRIX world;
+        D3DXMATRIX view;
+        D3DXMATRIX projection;
+    };
+
+    struct PSBufferType
+    {
+		D3DXVECTOR4 color;
+    };
 
 public:
 
@@ -26,5 +40,22 @@ public:
     
     // Constructors and Destructors
     ColorShader();
+
+    // Renders the provided matrices to the DX device
+    virtual bool Render(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, 
+        D3DXMATRIX, D3DXVECTOR4);
+    
+protected:
+
+    //|-----------------------------Protected Functions------------------------|
+
+    // Passes information to shaders
+    virtual bool SetShaderParameters(ID3D11DeviceContext* deviceContext, 
+        D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix,
+        D3DXVECTOR4 color);
+    virtual bool SetVSBuffer(ID3D11DeviceContext* deviceContext, 
+        D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix);
+    virtual bool SetPSBuffer(ID3D11DeviceContext* deviceContext, 
+        D3DXVECTOR4 color);
 
 };

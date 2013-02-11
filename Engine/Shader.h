@@ -34,18 +34,14 @@ protected:
 
     //|-------------------------------Type Definitions--------------------------|
 
-    struct MatrixBufferType
+    struct VSBufferType
     {
-        D3DXMATRIX world;
-        D3DXMATRIX view;
-        D3DXMATRIX projection;
+		D3DXVECTOR4 filler;
     };
 
-    struct ColorBufferType
+    struct PSBufferType
     {
-        D3DXMATRIX world;
-        D3DXMATRIX view;
-        D3DXMATRIX projection;
+		D3DXVECTOR4 filler;
     };
 
 public:
@@ -57,33 +53,33 @@ public:
     Shader(const char*, const char*, WCHAR*, WCHAR*);
     
     // Initializes the shaders
-    bool Initialize(ID3D11Device*);
+    virtual bool Initialize(ID3D11Device*);
 
     // Performs shutdown, deallocation, and cleanup for shaders
-    void Shutdown();
-
-    // Renders the provided matrices to the DX device
-    bool Render(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX);
+    virtual void Shutdown();
     
 protected:
 
     //|-----------------------------Protected Functions------------------------|
 
     // Initializes shaders
-    bool InitializeShader(ID3D11Device*, WCHAR*, WCHAR*);
+    virtual bool InitializeShader(ID3D11Device*, WCHAR*, WCHAR*);
+
+    // Initialize input layout
+    virtual bool InitializeInputLayout(ID3D11Device* device, ID3D10Blob* vertexShaderBuffer);
+
+    // Initialize the buffers to be used with the shaders
+    virtual bool InitializeVertexShaderBuffers(ID3D11Device* device);
+    virtual bool InitializePixelShaderBuffers(ID3D11Device* device);
     
     // Performs shutdown, deallocation, and cleanup for shaders
-    void ShutdownShader();
+    virtual void ShutdownShader();
 
     // Relays messages from shaders
-    void OutputShaderErrorMessage(ID3D10Blob*, WCHAR*);
-
-    // Passes information to shaders
-    bool SetShaderParameters(ID3D11DeviceContext* deviceContext, 
-        D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix);
+    virtual void OutputShaderErrorMessage(ID3D10Blob*, WCHAR*);
 
     // Renders shader to device
-    void RenderShader(ID3D11DeviceContext*, int);
+    virtual void RenderShader(ID3D11DeviceContext*, int);
 
 protected:
 
@@ -105,5 +101,6 @@ protected:
     ID3D11InputLayout* m_layout;
 
     // Buffers
-    ID3D11Buffer* m_matrixBuffer;
+    ID3D11Buffer* m_vsBuffer;
+    ID3D11Buffer* m_psBuffer;
 };

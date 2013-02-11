@@ -29,34 +29,34 @@ public:
     Screen();
     
     // Initializes the screen
-    bool Initialize();
+    virtual bool Initialize();
 
     // Performs shutdown, deallocation, and cleanup
-    void Shutdown();
+    virtual void Shutdown();
     
     // The logic function, which will be called by the main game loop.
     // TO BE IMPLEMENTED BY SUB CLASS
-    bool virtual Frame() = 0;
+    virtual bool Frame() = 0;
     
     // Called when the screen is loaded.
     // TO BE IMPLEMENTED BY SUB CLASS
-    bool virtual OnLoad() = 0;
+    virtual bool OnLoad() = 0;
     
     // Called when switching to a different screen
     // TO BE IMPLEMENTED BY SUB CLASS
-    bool virtual OnExit() = 0;
+    virtual bool OnExit() = 0;
     
     // Returns whether the screen is done (ready to close) or not.
-    bool virtual IsDone() { return m_done; }
+    virtual bool IsDone() { return m_done; }
     
     // Tells the game class what screen to load after this one
-    SCREEN virtual GetNextScreen()  { return m_nextScreen; }
+    virtual SCREEN GetNextScreen()  { return m_nextScreen; }
     
     // Sets the screen that will be loaded after this one
-    void virtual SetNextScreen(SCREEN nextScreen) { m_nextScreen = nextScreen; }
+    virtual void SetNextScreen(SCREEN nextScreen) { m_nextScreen = nextScreen; }
     
     // Sets whether the screen will quit or not
-    void virtual SetDone(bool done) { m_done = done; }
+    virtual void SetDone(bool done) { m_done = done; }
 
 protected:
 

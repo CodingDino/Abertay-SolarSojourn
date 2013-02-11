@@ -21,7 +21,8 @@ Shader::Shader() :
     m_vertexShader(0),
     m_pixelShader(0),
     m_layout(0),
-    m_matrixBuffer(0),
+    m_vsBuffer(0),
+    m_psBuffer(0),
     m_vertexShaderName("VertexShader"),
     m_pixelShaderName("PixelShader"),
     m_vertexShaderFile(L"../Engine/shader.vs"),
@@ -38,7 +39,8 @@ Shader::Shader(const char* vertexShaderName, const char* pixelShaderName,
     m_vertexShader(0),
     m_pixelShader(0),
     m_layout(0),
-    m_matrixBuffer(0),
+    m_vsBuffer(0),
+    m_psBuffer(0),
     m_vertexShaderName(vertexShaderName),
     m_pixelShaderName(pixelShaderName),
     m_vertexShaderFile(vertexShaderFile),
@@ -80,30 +82,6 @@ void Shader::Shutdown()
 
 
 // |----------------------------------------------------------------------------|
-// |                               Render                                       |
-// |----------------------------------------------------------------------------|
-bool Shader::Render(ID3D11DeviceContext* deviceContext, 
-    int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-    D3DXMATRIX projectionMatrix)
-{
-    bool result;
-
-    // Set the shader parameters that it will use for rendering.
-    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
-    if(!result)
-    {
-        DebugPopup(L"SetShaderParameters failed.");
-        return false;
-    }
-
-    // Now render the prepared buffers with the shader.
-    RenderShader(deviceContext, indexCount);
-
-    return true;
-}
-
-
-// |----------------------------------------------------------------------------|
 // |                             InitializeShader                               |
 // |----------------------------------------------------------------------------|
 bool Shader::InitializeShader(ID3D11Device* device,    WCHAR* vsFilename, 
@@ -113,9 +91,6 @@ bool Shader::InitializeShader(ID3D11Device* device,    WCHAR* vsFilename,
     ID3D10Blob* errorMessage;
     ID3D10Blob* vertexShaderBuffer;
     ID3D10Blob* pixelShaderBuffer;
-    D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
-    unsigned int numElements;
-    D3D11_BUFFER_DESC matrixBufferDesc;
 
     // Initialize the pointers this function will use to null.
     errorMessage = 0;
@@ -180,6 +155,37 @@ bool Shader::InitializeShader(ID3D11Device* device,    WCHAR* vsFilename,
         return false;
     }
 
+    // Initialize input layout
+    InitializeInputLayout(device, vertexShaderBuffer);
+
+    // Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
+    vertexShaderBuffer->Release();
+    vertexShaderBuffer = 0;
+
+    pixelShaderBuffer->Release();
+    pixelShaderBuffer = 0;
+
+    // Initialize vertex shader buffers
+    if (! InitializeVertexShaderBuffers(device) )
+        return false;
+    
+    // Initialize pixel shader buffers
+    if (! InitializePixelShaderBuffers(device) )
+        return false;
+
+    return true;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                           InitializeInputLayout                            |
+// |----------------------------------------------------------------------------|
+bool Shader::InitializeInputLayout(ID3D11Device* device, ID3D10Blob* vertexShaderBuffer) 
+{
+    HRESULT result;
+    D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+    unsigned int numElements;
+    
     // Create the vertex input layout description.
     // This setup needs to match the VertexType stucture in the Model and in the shader.
 	polygonLayout[0].SemanticName = "POSITION";
@@ -218,59 +224,79 @@ bool Shader::InitializeShader(ID3D11Device* device,    WCHAR* vsFilename,
         return false;
     }
 
-    // Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
-    vertexShaderBuffer->Release();
-    vertexShaderBuffer = 0;
-
-    pixelShaderBuffer->Release();
-    pixelShaderBuffer = 0;
-
-    // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-    matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
-    matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    matrixBufferDesc.MiscFlags = 0;
-    matrixBufferDesc.StructureByteStride = 0;
-
-    // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-    result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
-    if(FAILED(result))
-    {
-        DebugPopup(L"Could not CreateBuffer from device.");
-        return false;
-    }
-   
-	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
-	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
-	colorBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	colorBufferDesc.ByteWidth = sizeof(LightBufferType);
-	colorBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	colorBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	colorBufferDesc.MiscFlags = 0;
-	colorBufferDesc.StructureByteStride = 0;
-
-	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&lightBufferDesc, NULL, &m_lightBuffer);
-	if(FAILED(result))
-	{
-		MessageBox(hwnd, psFilename, L"CreateBuffer (lightBuffer) failed.", MB_OK);
-		return false;
-	}
     return true;
 }
 
+
+// |----------------------------------------------------------------------------|
+// |                       InitializeVertexShaderBuffers                        |
+// |----------------------------------------------------------------------------|
+bool Shader::InitializeVertexShaderBuffers(ID3D11Device* device)
+{
+    HRESULT result;
+    D3D11_BUFFER_DESC vsBufferDesc;
+
+    // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+    vsBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    vsBufferDesc.ByteWidth = sizeof(VSBufferType);
+    vsBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    vsBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    vsBufferDesc.MiscFlags = 0;
+    vsBufferDesc.StructureByteStride = 0;
+
+    // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+    result = device->CreateBuffer(&vsBufferDesc, NULL, &m_vsBuffer);
+    if(FAILED(result))
+    {
+        DebugPopup(L"Could not create vsBuffer from device.");
+        return false;
+    }
+
+    return true;
+}
+
+// |----------------------------------------------------------------------------|
+// |                       InitializePixelShaderBuffers                         |
+// |----------------------------------------------------------------------------|
+bool Shader::InitializePixelShaderBuffers(ID3D11Device* device)
+{
+    HRESULT result;
+    D3D11_BUFFER_DESC psBufferDesc;
+
+    // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+    psBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    psBufferDesc.ByteWidth = sizeof(PSBufferType);
+    psBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    psBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    psBufferDesc.MiscFlags = 0;
+    psBufferDesc.StructureByteStride = 0;
+
+    // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+    result = device->CreateBuffer(&psBufferDesc, NULL, &m_psBuffer);
+    if(FAILED(result))
+    {
+        DebugPopup(L"Could not create psBuffer from device.");
+        return false;
+    }
+
+    return true;
+}
 
 // |----------------------------------------------------------------------------|
 // |                              ShutdownShader                                |
 // |----------------------------------------------------------------------------|
 void Shader::ShutdownShader()
 {
-    // Release the matrix constant buffer.
-    if(m_matrixBuffer)
+    // Release the vs and ps constant buffers.
+    if(m_vsBuffer)
     {
-        m_matrixBuffer->Release();
-        m_matrixBuffer = 0;
+        m_vsBuffer->Release();
+        m_vsBuffer = 0;
+    }
+    if(m_psBuffer)
+    {
+        m_psBuffer->Release();
+        m_psBuffer = 0;
     }
 
     // Release the layout.
@@ -333,52 +359,6 @@ void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* shaderFil
 
     return;
 }
-
-
-// |----------------------------------------------------------------------------|
-// |                            SetShaderParameters                             |
-// |----------------------------------------------------------------------------|
-bool Shader::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
-        D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-        D3DXMATRIX projectionMatrix)
-{
-    HRESULT result;
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    unsigned int bufferNumber;
-    MatrixBufferType* t_matrix_buffer;
-
-    // Transpose the matrices to prepare them for the shader.
-    D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
-    D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
-    D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
-
-    // Lock the matrix constant buffer so it can be written to.
-    result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    if(FAILED(result))
-    {
-        return false;
-    }
-
-    // Get a pointer to the data in the constant buffer.
-    t_matrix_buffer = (MatrixBufferType*)mappedResource.pData;
-
-    // Copy the matrices into the constant buffer.
-    t_matrix_buffer->world = worldMatrix;
-    t_matrix_buffer->view = viewMatrix;
-    t_matrix_buffer->projection = projectionMatrix;
-
-    // Unlock the constant buffer.
-    deviceContext->Unmap(m_matrixBuffer, 0);
-
-    // Set the position of the constant buffer in the vertex shader.
-    bufferNumber = 0;
-
-    // Now set the constant buffer in the vertex shader with the updated values.
-    deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
-
-    return true;
-}
-
 
 // |----------------------------------------------------------------------------|
 // |                                RenderShader                                |
