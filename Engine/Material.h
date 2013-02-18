@@ -11,11 +11,20 @@
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
+#include <d3d11.h>
+#include <d3dx10math.h>
+#include <d3dx11async.h>
 #include "Util.h"
 
 
 // |----------------------------------------------------------------------------|
-// |                              Class: Shader                                 |
+// |                            Forward Declarations                            |
+// |----------------------------------------------------------------------------|
+class Shader;
+
+
+// |----------------------------------------------------------------------------|
+// |                              Class: Material                               |
 // |----------------------------------------------------------------------------|
 class Material
 {
@@ -33,7 +42,12 @@ public:
     // Performs shutdown, deallocation, and cleanup
     void Shutdown();
 
+    // Setter Functions
+    void SetShader(Shader* shader) {m_shader = shader;}
+    void SetTint(D3DXVECTOR4 tint) {m_tint = tint;}
+
     // Getter Functions
+    Shader* GetShader() {return m_shader;}
     D3DXVECTOR4 GetTint() {return m_tint;}
     
 protected:
@@ -43,6 +57,7 @@ protected:
 protected:
 
     //|---------------------------Protected Data Members-----------------------|
+    Shader* m_shader;
     D3DXVECTOR4 m_tint;
 
 };
