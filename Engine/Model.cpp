@@ -249,7 +249,7 @@ bool Model::LoadModel(char* filename)
 	}
 
 	// Read in the vertex count.
-	fin >> m_vertexCount; // THIS IS WHERE IT BREAKS
+	fin >> m_vertexCount;
 
 	// Set the number of indices to be the same as the vertex count.
 	m_indexCount = m_vertexCount;

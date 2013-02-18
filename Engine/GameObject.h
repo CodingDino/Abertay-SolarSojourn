@@ -15,6 +15,9 @@
 // |----------------------------------------------------------------------------|
 #include "Util.h"
 #include "Coord.h"
+#include "Material.h"
+#include "Model.h"
+#include "Texture.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -35,18 +38,21 @@ public:
     // Setter functions
     void virtual SetPosition(Coord position);
     void virtual SetRotation(Coord rotation);
+    void virtual SetVelocity(Coord velocity);
+    void virtual SetAngVelocity(Coord angVelocity);
     
 protected:
     
     //|---------------------------Protected Data Members-----------------------|
-    Coord m_position;        // Position of the object
-    Coord m_velocity;        // Velocity of the object (updates the position in the Frame function)
-    Coord m_rotation;        // Angle of rotation
+    Coord m_position;           // Position of the object
+    Coord m_velocity;           // Velocity of the object (updates the position in the Frame function)
+    Coord m_rotation;           // Angle of rotation
+    Coord m_angVelocity;        // Angular velocity
 
     // Graphics
-    //Model* m_model;            // Model for the object
-    //Texture* m_texture;       // Texture for the object
-    //Material* m_material;     // Material for the object
+    Model* m_model;             // Model for the object
+    Texture* m_texture;         // Texture for the object
+    Material* m_material;       // Material for the object
     LAYER m_layer;              // Layer the object should be rendered on
 
 };
