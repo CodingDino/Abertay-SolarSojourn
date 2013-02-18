@@ -20,21 +20,6 @@ ColorShader::ColorShader() :
     Shader("ColorVertexShader", "ColorPixelShader", L"../Engine/color.vs", L"../Engine/color.ps")
 {
 }
-    
-
-// |----------------------------------------------------------------------------|
-// |                            SetShaderParameters                             |
-// |----------------------------------------------------------------------------|
-bool ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
-        D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-        D3DXMATRIX projectionMatrix, D3DXVECTOR4 color)
-{
-    // Set up vertex and pixel buffers
-    SetVSBuffer(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
-    SetPSBuffer(deviceContext, color);
-
-    return true;
-} 
 
 
 // |----------------------------------------------------------------------------|
@@ -42,7 +27,7 @@ bool ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 // |----------------------------------------------------------------------------|
 bool ColorShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-        D3DXMATRIX projectionMatrix)
+        D3DXMATRIX projectionMatrix, Material* material)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -84,8 +69,8 @@ bool ColorShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
 // |----------------------------------------------------------------------------|
 // |                               SetPSBuffer                                  |
 // |----------------------------------------------------------------------------|
-bool ColorShader::SetPSBuffer(ID3D11DeviceContext* deviceContext, 
-        D3DXVECTOR4 color)
+bool ColorShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
+        Material* material)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -103,7 +88,7 @@ bool ColorShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 	t_psbuffer = (PSBufferType*)mappedResource.pData;
 
 	// Copy the color into the constant buffer.
-	t_psbuffer->color = color;
+	t_psbuffer->color = material->GetTint();
 
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_psBuffer, 0);
@@ -113,31 +98,6 @@ bool ColorShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 
 	// Finally set the light constant buffer in the pixel shader with the updated values.
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_psBuffer);
-
-    return true;
-}
-
-
-// |----------------------------------------------------------------------------|
-// |                               Render                                       |
-// |----------------------------------------------------------------------------|
-bool ColorShader::Render(ID3D11DeviceContext* deviceContext, 
-    int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-    D3DXMATRIX projectionMatrix, D3DXVECTOR4 color)
-{
-    bool result;
-
-    // Set the shader parameters that it will use for rendering.
-    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, 
-        projectionMatrix, color);
-    if(!result)
-    {
-        DebugPopup(L"SetShaderParameters failed.");
-        return false;
-    }
-
-    // Now render the prepared buffers with the shader.
-    RenderShader(deviceContext, indexCount);
 
     return true;
 }

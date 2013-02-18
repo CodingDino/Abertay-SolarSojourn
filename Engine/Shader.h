@@ -22,6 +22,7 @@
 #include <d3dx11async.h>
 #include <fstream>
 #include "Util.h"
+#include "Material.h"
 using namespace std;
 
 
@@ -57,6 +58,10 @@ public:
 
     // Performs shutdown, deallocation, and cleanup for shaders
     virtual void Shutdown();
+
+    // Renders the provided matrices to the DX device
+    virtual bool Render(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, 
+        D3DXMATRIX, Material* material);
     
 protected:
 
@@ -80,6 +85,16 @@ protected:
 
     // Renders shader to device
     virtual void RenderShader(ID3D11DeviceContext*, int);
+
+    // Passes information to shaders
+    virtual bool SetShaderParameters(ID3D11DeviceContext* deviceContext, 
+        D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix,
+        Material* material);
+    virtual bool SetVSBuffer(ID3D11DeviceContext* deviceContext, 
+        D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix,
+        Material* material) = 0;
+    virtual bool SetPSBuffer(ID3D11DeviceContext* deviceContext,
+        Material* material) = 0;
 
 protected:
 

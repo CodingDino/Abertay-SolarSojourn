@@ -32,6 +32,9 @@ public:
 
     // Performs shutdown, deallocation, and cleanup
     void Shutdown();
+
+    // Getter Functions
+    D3DXVECTOR4 GetTint() {return m_tint;}
     
 protected:
 
@@ -40,5 +43,6 @@ protected:
 protected:
 
     //|---------------------------Protected Data Members-----------------------|
+    D3DXVECTOR4 m_tint;
 
 };
