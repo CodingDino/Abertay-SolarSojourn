@@ -25,25 +25,26 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 #include "Util.h"
+#include "Singleton.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                            Class: D3DManager                               |
 // |----------------------------------------------------------------------------|
-class D3DManager
+class D3DManager : public Singleton<D3DManager>
 {
 public:
 
     //|-------------------------------Public Functions--------------------------|
     
-    // Returns instance
-    static D3DManager* GetInstance();
-
-    // Initializes the DirectX interface
+	// Constructors and Destructors
+	D3DManager();
+	D3DManager(const D3DManager&);
+	~D3DManager();
+    
+    // Initialization and shutdown
     bool Initialize(int screenWidth, int screenHeight, bool vsync, bool fullscreen, 
                     float screenDepth, float screenNear);
-
-    // Performs shutdown, deallocation, and cleanup for DirectX objects
     void Shutdown();
     
     // clears the buffers in preparation for scene rendering
@@ -75,16 +76,10 @@ public:
 private:
 
     //|-------------------------------Private Functions-------------------------|
-    
-    // Constructors and Destructors
-    D3DManager();
 
 private:
 
     //|-----------------------------Private Data Members------------------------|
-    
-    // Singleton instance
-    static D3DManager* s_instance;
 
     // Vsync setting
     bool m_vsync_enabled;

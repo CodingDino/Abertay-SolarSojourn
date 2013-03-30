@@ -112,6 +112,9 @@
     <ClInclude Include="Graphic.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">

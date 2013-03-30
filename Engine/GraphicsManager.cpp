@@ -49,7 +49,7 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     m_screenHeight = screenHeight;
 
     // Create the Direct3D object.
-    m_D3D = D3DManager::GetInstance();
+    m_D3D = new D3DManager();
     if(!m_D3D)
     {
         DebugPopup(L"D3DManager GetInstance failed.");
@@ -157,6 +157,7 @@ void GraphicsManager::Shutdown()
     if(m_D3D)
     {
         m_D3D->Shutdown();
+        delete m_D3D;
         m_D3D = 0;
     }
     

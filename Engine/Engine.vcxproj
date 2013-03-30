@@ -107,6 +107,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Util.h" />
