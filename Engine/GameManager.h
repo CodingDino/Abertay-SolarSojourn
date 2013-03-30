@@ -1,4 +1,4 @@
-// Solar Exploration Sim
+// Solar Sojourn
 // Developed a coursework for Abertay University
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
@@ -13,24 +13,25 @@
 // |----------------------------------------------------------------------------|
 #include "Util.h"
 #include "Screen.h"
+#include "Singleton.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                            Class: GameManager                              |
 // |----------------------------------------------------------------------------|
-class GameManager
+class GameManager : public Singleton<GameManager>
 {
 public:
 
     //|-------------------------------Public Functions--------------------------|
     
-    // Returns instance
-    static GameManager* GetInstance();
-
-    // Initializes the DirectX interface
+	// Constructors and Destructors
+	GameManager();
+	GameManager(const GameManager&);
+	~GameManager();
+    
+    // Initialization and shutdown
     bool Initialize();
-
-    // Performs shutdown, deallocation, and cleanup
     void Shutdown();
 
     // Processes game logic each frame
@@ -40,9 +41,6 @@ private:
 
     //|-------------------------------Private Functions-------------------------|
     
-    // Constructors and Destructors
-    GameManager();
-    
     // Sets the current screen to the supplied screen index.
     int ChangeScreen(SCREEN nextScreen);
 
@@ -50,9 +48,6 @@ private:
 
     //|-----------------------------Private Data Members------------------------|
     
-    // Singleton instance
-    static GameManager* s_instance;
-
     // Screens
     Screen* m_currentScreen;
     Screen** m_screens;

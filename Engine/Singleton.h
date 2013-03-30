@@ -23,18 +23,24 @@ template <typename T> class Singleton
 public:
 
 	//|-------------------------------Public Functions--------------------------|
-
-	// Sets up the one and only instance
+    
+	// Constructors and Destructors
 	Singleton()
 	{
+	    // Sets up the one and only instance
 		assert(!ms_Singleton);
 
 		ms_Singleton = static_cast<T*>(this);
 	}
-
-	// Destroys the one and only instance
+	Singleton(const Singleton&)
+    {
+	    // This should always fail, just putting it here for completeness.
+		assert(!ms_Singleton);
+		ms_Singleton = static_cast<T*>(this);
+    }
 	~Singleton()
 	{
+	    // Destroys the one and only instance
 		assert(ms_Singleton);
 		ms_Singleton = 0;
 	}

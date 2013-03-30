@@ -12,11 +12,6 @@
 // |----------------------------------------------------------------------------|
 #include "GameManager.h"
 
-// |----------------------------------------------------------------------------|
-// |                                 Globals                                    |
-// |----------------------------------------------------------------------------|
-GameManager* GameManager::s_instance = 0;
-
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
@@ -29,13 +24,18 @@ GameManager::GameManager() :
 
 
 // |----------------------------------------------------------------------------|
-// |                              GetInstance                                   |
+// |						    Copy Constructor								|
 // |----------------------------------------------------------------------------|
-GameManager* GameManager::GetInstance()
+GameManager::GameManager(const GameManager& other)
 {
-    if (s_instance == 0)
-        s_instance = new GameManager;
-    return s_instance;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |						     Deconstructor									|
+// |----------------------------------------------------------------------------|
+GameManager::~GameManager()
+{
 }
 
 
@@ -74,10 +74,6 @@ void GameManager::Shutdown()
         m_screens = 0;
     }
     m_currentScreen = 0;
-    
-    // Kill instance
-    delete s_instance;
-    s_instance = 0;
 
     return;
 }
