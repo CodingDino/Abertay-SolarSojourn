@@ -12,8 +12,6 @@
 // |----------------------------------------------------------------------------|
 #include "GraphicsManager.h"
 
-GraphicsManager* GraphicsManager::s_instance = 0;
-
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
@@ -27,13 +25,18 @@ GraphicsManager::GraphicsManager() :
 
 
 // |----------------------------------------------------------------------------|
-// |                              GetInstance                                   |
+// |						    Copy Constructor								|
 // |----------------------------------------------------------------------------|
-GraphicsManager* GraphicsManager::GetInstance()
+GraphicsManager::GraphicsManager(const GraphicsManager& other)
 {
-    if (s_instance == 0)
-        s_instance = new GraphicsManager;
-    return s_instance;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |						     Deconstructor									|
+// |----------------------------------------------------------------------------|
+GraphicsManager::~GraphicsManager()
+{
 }
 
 
@@ -160,10 +163,6 @@ void GraphicsManager::Shutdown()
         delete m_D3D;
         m_D3D = 0;
     }
-    
-    // Kill instance
-    delete s_instance;
-    s_instance = 0;
 
     return;
 }

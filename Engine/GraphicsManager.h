@@ -15,6 +15,7 @@
 #include "Coord.h"
 #include "D3DManager.h"
 #include "ColorShader.h"
+#include "Singleton.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -30,19 +31,19 @@ const int NUM_MODELS=20;
 // |----------------------------------------------------------------------------|
 // |                          Class: GraphicsManager                            |
 // |----------------------------------------------------------------------------|
-class GraphicsManager
+class GraphicsManager : public Singleton<GraphicsManager>
 {
 public:
 
     //|-------------------------------Public Functions--------------------------|
     
-    // Returns instance
-    static GraphicsManager* GetInstance();
-
-    // Creates and initializes all data members, sets initial graphics state
+	// Constructors and Destructors
+	GraphicsManager();
+	GraphicsManager(const GraphicsManager&);
+	~GraphicsManager();
+    
+    // Initialization and shutdown
     bool Initialize(int screenWidth, int screenHeight);
-
-    // Performs shutdown, deallocation, and cleanup for data members
     void Shutdown();
 
     // Frame-by-frame graphics processing
@@ -52,9 +53,6 @@ public:
 private:
 
     //|-------------------------------Private Functions-------------------------|
-
-    // Constructors and Destructors
-    GraphicsManager();
 
     // Calls render functions in order
     bool Render(int mouseX, int mouseY, Coord camera_position);
@@ -75,9 +73,6 @@ private:
 private:
 
     //|-----------------------------Private Data Members------------------------|
-    
-    // Singleton instance
-    static GraphicsManager* s_instance;
 
     // DirectX object
     D3DManager* m_D3D;

@@ -79,7 +79,7 @@ bool SystemManager::Initialize()
     }
 
     // Create the graphics object.  This object will handle rendering all the graphics for this application.
-    m_graphics = GraphicsManager::GetInstance();
+    m_graphics = new GraphicsManager();
     if(!m_graphics)
     {
         DebugPopup(L"Could not get instance of GraphicsManager. Aborting.");
@@ -194,6 +194,7 @@ void SystemManager::Shutdown()
     if(m_graphics)
     {
         m_graphics->Shutdown();
+        delete m_graphics;
         m_graphics = 0;
     }
 
