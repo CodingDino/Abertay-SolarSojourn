@@ -15,12 +15,6 @@
 
 
 // |----------------------------------------------------------------------------|
-// |                                 Globals                                    |
-// |----------------------------------------------------------------------------|
-SystemManager* SystemManager::s_instance = 0;
-
-
-// |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
 SystemManager::SystemManager() :
@@ -36,13 +30,18 @@ SystemManager::SystemManager() :
 
 
 // |----------------------------------------------------------------------------|
-// |                              GetInstance                                   |
+// |						    Copy Constructor								|
 // |----------------------------------------------------------------------------|
-SystemManager* SystemManager::GetInstance()
+SystemManager::SystemManager(const SystemManager& other)
 {
-    if (s_instance == 0)
-        s_instance = new SystemManager;
-    return s_instance;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |						     Deconstructor									|
+// |----------------------------------------------------------------------------|
+SystemManager::~SystemManager()
+{
 }
 
 
@@ -63,7 +62,7 @@ bool SystemManager::Initialize()
     InitializeWindows(screenWidth, screenHeight);
 
     // Create the input object.  This object will be used to handle reading the keyboard input from the user.
-    m_input = InputManager::GetInstance();
+    m_input = new InputManager();
     if(!m_input)
     {
         DebugPopup(L"Could not get instance of InputManager. Aborting.");
@@ -202,6 +201,7 @@ void SystemManager::Shutdown()
     if(m_input)
     {
         m_input->Shutdown();
+        delete m_input;
         m_input = 0;
     }
 
@@ -215,10 +215,6 @@ void SystemManager::Shutdown()
 
     // Shutdown the window.
     ShutdownWindows();
-    
-    // Kill instance
-    delete s_instance;
-    s_instance = 0;
 
     return;
 }

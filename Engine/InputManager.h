@@ -27,6 +27,7 @@
 // |----------------------------------------------------------------------------|
 #include <dinput.h>
 #include "Util.h"
+#include "Singleton.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -41,19 +42,19 @@ enum BUTTON_IDENT {
 // |----------------------------------------------------------------------------|
 // |                           Class: InputClass                                |
 // |----------------------------------------------------------------------------|
-class InputManager
+class InputManager : public Singleton<InputManager>
 {
 public:
 
     //|-------------------------------Public Functions--------------------------|
-
-    // Returns instance
-    static InputManager* GetInstance();
     
-    // Initializes mouse and keyboard settings
+	// Constructors and Destructors
+	InputManager();
+	InputManager(const InputManager&);
+	~InputManager();
+    
+    // Initialization and shutdown
     bool Initialize(HINSTANCE hinstance, int screenWidth, int screenHeight);
-    
-    // Performs shutdown, deallocation, and cleanup for input objects
     void Shutdown();
     
     // Gets input and processes it
@@ -71,9 +72,6 @@ private:
 
     //|-------------------------------Private Functions-------------------------|
 
-    // Constructors and Destructors
-    InputManager();
-
     // Read the current state of the keyboard
     bool ReadKeyboard();
 
@@ -86,9 +84,6 @@ private:
 private:
 
     //|-----------------------------Private Data Members------------------------|
-
-    // Singleton instance
-    static InputManager* s_instance;
 
     // Pointers to mouse, keyboard, input
     IDirectInput8* m_directInput;

@@ -89,7 +89,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
     
     
     // Create the system object.
-    system = SystemManager::GetInstance();
+    system = new SystemManager();
     if(!system)
     {
         return 0;
@@ -104,6 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
     // Shutdown and release the system object.
     system->Shutdown();
+    delete system;
     system = 0;
 
     return 0;

@@ -19,6 +19,7 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include <windows.h>
+#include "Singleton.h"
 #include "InputManager.h"
 #include "GraphicsManager.h"
 //#include "fpsclass.h"
@@ -31,19 +32,19 @@
 // |----------------------------------------------------------------------------|
 // |                            Class: SystemManager                            |
 // |----------------------------------------------------------------------------|
-class SystemManager
+class SystemManager : public Singleton<SystemManager>
 {
 public:
 
     //|-------------------------------Public Functions--------------------------|
-
-    // Returns instance
-    static SystemManager* GetInstance();
-
-    // Initialize all data members
+    
+	// Constructors and Destructors
+	SystemManager();
+	SystemManager(const SystemManager&);
+	~SystemManager();
+    
+    // Initialization and shutdown
     bool Initialize();
-
-    // Release all data members
     void Shutdown();
 
     // Run the game (contains main game loop)
@@ -57,9 +58,6 @@ private:
 
     //|-------------------------------Private Functions-------------------------|
 
-    // Constructors and Destructors
-    SystemManager();
-
     // Processes each frame (calles input, game, render frame functions)
     bool Frame();
 
@@ -72,9 +70,6 @@ private:
 private:
 
     //|-----------------------------Private Data Members------------------------|
-
-    // Singleton instance
-    static SystemManager* s_instance;
 
     // Windows parameters
     LPCWSTR m_applicationName;

@@ -15,12 +15,6 @@
 
 
 // |----------------------------------------------------------------------------|
-// |                                 Globals                                    |
-// |----------------------------------------------------------------------------|
-InputManager* InputManager::s_instance = 0;
-
-
-// |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
 InputManager::InputManager() :
@@ -32,13 +26,18 @@ InputManager::InputManager() :
 
 
 // |----------------------------------------------------------------------------|
-// |                              GetInstance                                   |
+// |						    Copy Constructor								|
 // |----------------------------------------------------------------------------|
-InputManager* InputManager::GetInstance()
+InputManager::InputManager(const InputManager& other)
 {
-    if (s_instance == 0)
-        s_instance = new InputManager;
-    return s_instance;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |						     Deconstructor									|
+// |----------------------------------------------------------------------------|
+InputManager::~InputManager()
+{
 }
 
 
@@ -170,10 +169,6 @@ void InputManager::Shutdown()
         m_directInput->Release();
         m_directInput = 0;
     }
-    
-    // Kill instance
-    delete s_instance;
-    s_instance = 0;
 
     return;
 }
