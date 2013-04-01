@@ -50,18 +50,18 @@ public:
     bool Frame(int mouseX, int mouseY, int fps, int cpu, float frameTime, 
         Coord camera_rotation, Coord camera_position, bool transfer);
 
+    // Rendering setup (starts scene, gets world, view, and projection matrix)
+    bool BeginRender();
+
+    // Rendering cleanup (ends the scene)
+    bool EndRender();
+
 private:
 
     //|-------------------------------Private Functions-------------------------|
 
     // Calls render functions in order
     bool Render(int mouseX, int mouseY, Coord camera_position);
-
-    // Rendering setup (starts scene, gets world, view, and projection matrix)
-    bool BeginRender();
-
-    // Rendering cleanup (ends the scene)
-    bool EndRender();
 
     // Renders the passed in model using the given transforms
     //bool ModelRender(ModelClass& to_render, D3DXMATRIX scale, 

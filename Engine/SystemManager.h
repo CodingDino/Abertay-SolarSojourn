@@ -22,11 +22,8 @@
 #include "Singleton.h"
 #include "InputManager.h"
 #include "GraphicsManager.h"
-//#include "fpsclass.h"
-//#include "cpuclass.h"
-//#include "timerclass.h"
-//#include "positionclass.h"
-//#include "soundclass.h"
+#include "GameManager.h"
+//#include "SoundManager.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -75,22 +72,17 @@ private:
     LPCWSTR m_applicationName;
     HINSTANCE m_hinstance;
 
-    // Input handler
+    // Input Manager
     InputManager* m_input;
 
-    // Graphics handler
-    GraphicsManager* m_graphics;    
-    
-    // Timing classes
-    //FpsClass* m_Fps;
-    //CpuClass* m_Cpu;
-    //TimerClass* m_Timer;
+    // Graphics Manager
+    GraphicsManager* m_graphics;  
 
-    // Player position
-    //PositionClass* m_Position;
+    // Sound Manager
+    //SoundManager* m_sound;
 
-    // Sound
-    //SoundClass* m_Sound;
+    // Game Manager
+    GameManager* m_game;
 };
 
 

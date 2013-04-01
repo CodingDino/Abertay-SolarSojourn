@@ -18,13 +18,10 @@
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
 SystemManager::SystemManager() :
-    //m_Input(0),
-    m_graphics(0)
-    //m_Fps(0),
-    //m_Cpu(0),
-    //m_Timer(0),
-    //m_Position(0),
-    //m_Sound(0)
+    m_input(0),
+    m_graphics(0),
+    //m_sound(0),
+    m_game(0)
 {
 }
 
@@ -93,63 +90,37 @@ bool SystemManager::Initialize()
         return false;
     }
 
-    // Create the fps object.
-    //m_Fps = new FpsClass;
-    //if(!m_Fps)
-    //{
-    //    return false;
-    //}
-
-    // Initialize the fps object.
-    //m_Fps->Initialize();
-
-    // Create the cpu object.
-    //m_Cpu = new CpuClass;
-    //if(!m_Cpu)
-    //{
-    //    return false;
-    //}
-
-    // Initialize the cpu object.
-    //m_Cpu->Initialize();
-
-    // Create the timer object.
-    //m_Timer = new TimerClass;
-    //if(!m_Timer)
-    //{
-    //    return false;
-    //}
-
-    // Initialize the timer object.
-    //result = m_Timer->Initialize();
-    //if(!result)
-    //{
-    //    MessageBox(s_hwnd, L"Could not initialize the Timer object.", L"Error", MB_OK);
-    //    return false;
-    //}
-
-    // Create the position object.
-    //m_Position = new PositionClass;
-    //if(!m_Position)
-    //{
-    //    return false;
-    //}
-
     // Create the sound object.
-    //m_Sound = new SoundClass;
-    //if(!m_Sound)
+    //m_sound = new SoundManager;
+    //if(!m_sound)
     //{
     //    return false;
     //}
  
     // Initialize the sound object.
-    //result = m_Sound->Initialize(s_hwnd);
+    //result = m_sound->Initialize();
     //if(!result)
     //{
-    //    MessageBox(s_hwnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
+    //    DebugPopup(L"Could not initialize Direct Sound.", L"Error", MB_OK);
     //    return false;
     //}
-    //m_Sound->StartMusic();
+
+    // Create the game object.
+    m_game = new GameManager();
+    if(!m_game)
+    {
+        DebugPopup(L"Could not get instance of GameManager. Aborting.");
+        return false;
+    }
+
+    // Initialize the game object.
+    result = m_game->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize GraphicsManager. Aborting.");
+        return false;
+    }
+
     
     return true;
 }
@@ -160,35 +131,6 @@ bool SystemManager::Initialize()
 // |----------------------------------------------------------------------------|
 void SystemManager::Shutdown()
 {
-    //// Release the position object.
-    //if(m_Position)
-    //{
-    //    delete m_Position;
-    //    m_Position = 0;
-    //}
-
-    //// Release the timer object.
-    //if(m_Timer)
-    //{
-    //    delete m_Timer;
-    //    m_Timer = 0;
-    //}
-
-    //// Release the cpu object.
-    //if(m_Cpu)
-    //{
-    //    m_Cpu->Shutdown();
-    //    delete m_Cpu;
-    //    m_Cpu = 0;
-    //}
-
-    //// Release the fps object.
-    //if(m_Fps)
-    //{
-    //    delete m_Fps;
-    //    m_Fps = 0;
-    //}
-
     // Release the graphics object.
     if(m_graphics)
     {
@@ -206,12 +148,20 @@ void SystemManager::Shutdown()
     }
 
     //// Release the sound object.
-    //if(m_Sound)
+    //if(m_sound)
     //{
-    //    m_Sound->Shutdown();
-    //    delete m_Sound;
-    //    m_Sound = 0;
+    //    m_sound->Shutdown();
+    //    delete m_sound;
+    //    m_sound = 0;
     //}
+
+    // Release the game object.
+    if(m_game)
+    {
+        m_game->Shutdown();
+        delete m_game;
+        m_game = 0;
+    }
 
     // Shutdown the window.
     ShutdownWindows();
@@ -276,10 +226,6 @@ void SystemManager::Run()
 bool SystemManager::Frame()
 {
     bool result;
-    int mouseX, mouseY;
-    //bool keyDown;
-    //Coord camera_position;
-    //Coord camera_rotation;
 
     // Do the input processing.
     result = m_input->Frame();
@@ -288,77 +234,21 @@ bool SystemManager::Frame()
         return false;
     }
 
-    // Set the frame time for calculating the updated position.
-    //m_Position->SetFrameTime(m_Timer->GetTime());
+    // Process game logic
+    result = m_game->Logic();
+    if(!result)
+    {
+        return false;
+    }
 
-    //// Use the input to determine camera position.
-    //// Rotate left
-    //keyDown = m_Input->IsAPressed();
-    //m_Position->TurnLeft(keyDown);
-    //// Rotate right
-    //keyDown = m_Input->IsDPressed();
-    //m_Position->TurnRight(keyDown);
-    //// Rotate up
-    //keyDown = m_Input->IsWPressed();
-    //m_Position->TurnUp(keyDown);
-    //// Rotate down
-    //keyDown = m_Input->IsSPressed();
-    //m_Position->TurnDown(keyDown);
-    //// Roll left
-    //keyDown = m_Input->IsQPressed();
-    //m_Position->RollLeft(keyDown);
-    //// Roll right
-    //keyDown = m_Input->IsEPressed();
-    //m_Position->RollRight(keyDown);
-    //// Move left
-    //keyDown = m_Input->IsLeftArrowPressed();
-    //m_Position->MoveLeft(keyDown);
-    //// Move right
-    //keyDown = m_Input->IsRightArrowPressed();
-    //m_Position->MoveRight(keyDown);
-    //// Move forward
-    //keyDown = m_Input->IsUpArrowPressed();
-    //m_Position->MoveForward(keyDown);
-    //// Move backwards
-    //keyDown = m_Input->IsDownArrowPressed();
-    //m_Position->MoveBackward(keyDown);
-    //// Move up
-    //keyDown = m_Input->IsSpacePressed();
-    //m_Position->MoveUp(keyDown);
-    //// Move down
-    //keyDown = m_Input->IsLeftControlPressed();
-    //m_Position->MoveDown(keyDown);
-
-    //// Sound effect
-    //if (m_Input->IsMPressed()) m_Sound->Mute();
-    //if (m_Input->IsNPressed()) m_Sound->UnMute();
-    //if (m_Input->IsMovementPressed()) m_Sound->StartShipEngine();
-    //else  m_Sound->StopShipEngine();
-    //m_Sound->Frame(m_Timer->GetTime());
-
-    //// Get coordinates and rotation from position object
-    //m_Position->GetRotation(camera_rotation.x, camera_rotation.y, camera_rotation.z);
-    //m_Position->GetPosition(camera_position.x, camera_position.y, camera_position.z);
-
-    // Get the location of the mouse from the input object,
-    m_input->GetMouseLocation(mouseX, mouseY);
-
-    //// Update the system timers.
-    //m_Timer->Frame();
-    //m_Fps->Frame();
-    //m_Cpu->Frame();
-
-    //// Decide if we need to transfer to a new screen
-    //bool transfer = m_Input->IsSpacePressed();
-
-    //// Do the frame processing for the graphics object.
-    //result = m_Graphics->Frame(mouseX, mouseY, m_Fps->GetFps(), 
-    //    m_Cpu->GetCpuPercentage(), m_Timer->GetTime(), camera_rotation, 
-    //    camera_position, transfer);
-    //if(!result)
-    //{
-    //    return false;
-    //}
+    // Process graphics
+	result = m_graphics->BeginRender()
+	      && m_game->Draw()
+	      && m_graphics->EndRender();
+    if(!result)
+    {
+        return false;
+    }
 
     return true;
 }
@@ -467,10 +357,10 @@ void SystemManager::ShutdownWindows()
     ShowCursor(true);
 
     // Fix the display settings if leaving full screen mode.
-    //if(FULL_SCREEN)
-    //{
-    //    ChangeDisplaySettings(NULL, 0);
-    //}
+    if(FULL_SCREEN)
+    {
+        ChangeDisplaySettings(NULL, 0);
+    }
 
     // Remove the window.
     DestroyWindow(windowHandle);

@@ -51,8 +51,8 @@ bool GameManager::Initialize()
     for (int i = 0 ; i < NUM_SCREENS; ++i) {
         m_screens[i] = NULL;
     }
-    //m_screens[TITLE] = new TitleScreen(assets);
-    m_currentScreen = m_screens[0];
+    m_screens[SCREEN_TITLE] = new TitleScreen();
+    m_currentScreen = m_screens[SCREEN_TITLE];
     result = m_currentScreen->OnLoad();
 
     return true;
@@ -80,17 +80,13 @@ void GameManager::Shutdown()
 
 
 // |----------------------------------------------------------------------------|
-// |                               Frame                                        |
+// |                               Logic                                        |
 // |----------------------------------------------------------------------------|
-bool GameManager::Frame()
+bool GameManager::Logic()
 {
     bool result;
 
-    // Call screen frame
-    result = m_currentScreen->Frame();
-    if (!result)
-        return false;
-
+    // Check if we need to change screens
     if (m_currentScreen->IsDone()) {
 
         // Perform onExit functions for the old screen
@@ -115,6 +111,27 @@ bool GameManager::Frame()
         }
 
     }
+    
+    // Perform game logic for current screen
+    result = m_currentScreen->Logic();
+    if (!result)
+        return false;
+
+    return true;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                               Draw                                        |
+// |----------------------------------------------------------------------------|
+bool GameManager::Draw()
+{
+    bool result;
+
+    // Send game objects in screen to be rendered
+    result = m_currentScreen->Draw();
+    if (!result)
+        return false;
 
     return true;
 }

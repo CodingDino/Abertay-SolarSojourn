@@ -13,6 +13,7 @@
 // |----------------------------------------------------------------------------|
 #include "Util.h"
 #include "Screen.h"
+#include "TitleScreen.h"
 #include "Singleton.h"
 
 
@@ -35,7 +36,10 @@ public:
     void Shutdown();
 
     // Processes game logic each frame
-    bool Frame();
+    bool Logic();
+
+    // Send game objects to be rendered
+    bool Draw();
     
 private:
 

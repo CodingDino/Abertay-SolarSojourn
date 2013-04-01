@@ -22,9 +22,9 @@ extern HWND windowHandle;
 // |----------------------------------------------------------------------------|
 // |                                Constants                                   |
 // |----------------------------------------------------------------------------|
-enum DEBUG_TYPE {           DB_GENERAL, DB_COLLISION,   DB_GRAPHICS,   NUM_DEBUGS};
-const int DEBUG_MODE[] = {  1,          1,              1 };
-enum SCREEN {SCREEN_TITLE, SCREEN_HOW_TO, SCREEN_OVERWORLD, NUM_SCREENS, 
+enum DEBUG_TYPE {           DB_GENERAL, DB_COLLISION,   DB_LOGIC,   DB_GRAPHICS,   NUM_DEBUGS};
+const int DEBUG_MODE[] = {  1,          1,              1,          1 };
+enum SCREEN {SCREEN_TITLE, SCREEN_HOWTO, SCREEN_OVERWORLD, NUM_SCREENS, 
     SCREEN_QUIT};
 enum LAYER {LAYER_BACKGROUND, LAYER_OVERLAY, NUM_LAYERS};
 
