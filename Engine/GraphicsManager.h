@@ -7,8 +7,6 @@
 //      Overall control of graphics and rendering, holds model objects and other graphics objects
 #pragma once
 
-// TODO: Make this singleton
-
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|

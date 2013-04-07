@@ -13,7 +13,6 @@
 // |----------------------------------------------------------------------------|
 #include "Shader.h"
 
-
 // |----------------------------------------------------------------------------|
 // |                            Class: SystemManager                            |
 // |----------------------------------------------------------------------------|
@@ -48,8 +47,8 @@ protected:
     // Passes information to shaders
     virtual bool SetVSBuffer(ID3D11DeviceContext* deviceContext, 
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix,
-        Material* material);
+        Graphic* graphic);
     virtual bool SetPSBuffer(ID3D11DeviceContext* deviceContext,
-        Material* material);
+        Graphic* graphic);
 
 };

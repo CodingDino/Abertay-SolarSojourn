@@ -22,19 +22,20 @@
 #include <d3dx11async.h>
 #include <fstream>
 #include "Util.h"
+#include "Singleton.h"
 using namespace std;
 
 
 // |----------------------------------------------------------------------------|
 // |                            Forward Declarations                            |
 // |----------------------------------------------------------------------------|
-class Material;
+class Graphic;
 
 
 // |----------------------------------------------------------------------------|
 // |                              Class: Shader                                 |
 // |----------------------------------------------------------------------------|
-class Shader
+class Shader : public Singleton<Shader>
 {
 protected:
 
@@ -57,16 +58,16 @@ public:
     // Constructors and Destructors
     Shader();
     Shader(const char*, const char*, WCHAR*, WCHAR*);
+    virtual ~Shader() {}
     
-    // Initializes the shaders
+    // Initialization and shutdown
     virtual bool Initialize(ID3D11Device*);
-
-    // Performs shutdown, deallocation, and cleanup for shaders
     virtual void Shutdown();
 
     // Renders the provided matrices to the DX device
     virtual bool Render(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, 
-        D3DXMATRIX, Material* material);
+        D3DXMATRIX, Graphic* graphic);
+    // TODO: Take in graphic instead of material
     
 protected:
 
@@ -94,12 +95,12 @@ protected:
     // Passes information to shaders
     virtual bool SetShaderParameters(ID3D11DeviceContext* deviceContext, 
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix,
-        Material* material);
+        Graphic* graphic);
     virtual bool SetVSBuffer(ID3D11DeviceContext* deviceContext, 
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix,
-        Material* material) = 0;
+        Graphic* graphic) = 0;
     virtual bool SetPSBuffer(ID3D11DeviceContext* deviceContext,
-        Material* material) = 0;
+        Graphic* graphic) = 0;
 
 protected:
 

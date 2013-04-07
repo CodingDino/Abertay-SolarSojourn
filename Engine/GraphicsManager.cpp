@@ -17,9 +17,12 @@
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
 GraphicsManager::GraphicsManager() :
+    m_D3D(0),
+    m_colorShader(0),
     m_screen(0),
     m_screenCounter(0),
-    m_colorShader(0)
+    m_screenWidth(0),
+    m_screenHeight(0)
 {
 }
 

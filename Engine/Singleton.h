@@ -38,7 +38,7 @@ public:
 		assert(!ms_Singleton);
 		ms_Singleton = static_cast<T*>(this);
     }
-	~Singleton()
+	virtual ~Singleton()
 	{
 	    // Destroys the one and only instance
 		assert(ms_Singleton);

@@ -50,7 +50,7 @@ public:
     Model();
 
     // Initialize the model, reads in a vertex and texture file
-    bool Initialize(ID3D11Device* device, char* modelFilename, WCHAR* textureFilename);
+    bool Initialize(ID3D11Device* device, char* modelFilename);
 
     // Releases data associated with the model
     void Shutdown();

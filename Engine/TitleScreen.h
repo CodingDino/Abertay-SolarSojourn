@@ -27,7 +27,7 @@ public:
 	// Constructors and Destructors
 	TitleScreen();
 	TitleScreen(const TitleScreen&);
-	~TitleScreen();
+	virtual ~TitleScreen();
 
     // Initialization and shutdown
 	bool virtual Initialize();

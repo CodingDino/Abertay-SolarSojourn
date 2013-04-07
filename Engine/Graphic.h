@@ -39,7 +39,9 @@ public:
     void Render(ID3D11DeviceContext* deviceContext);
 
     // Getter functions
-    int GetIndexCount();
+    Model* GetModel() { return m_model; }
+    Texture* GetTexture() { return m_texture; }
+    Material* GetMaterial() { return m_material; }
 
 private:
 

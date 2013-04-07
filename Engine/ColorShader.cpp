@@ -11,7 +11,7 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include "ColorShader.h"
-#include "Material.h"
+#include "Graphic.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -28,7 +28,7 @@ ColorShader::ColorShader() :
 // |----------------------------------------------------------------------------|
 bool ColorShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-        D3DXMATRIX projectionMatrix, Material* material)
+        D3DXMATRIX projectionMatrix, Graphic* graphic)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -71,7 +71,7 @@ bool ColorShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
 // |                               SetPSBuffer                                  |
 // |----------------------------------------------------------------------------|
 bool ColorShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
-        Material* material)
+        Graphic* graphic)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -89,7 +89,7 @@ bool ColorShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 	t_psbuffer = (PSBufferType*)mappedResource.pData;
 
 	// Copy the color into the constant buffer.
-	t_psbuffer->color = material->GetTint();
+	t_psbuffer->color = graphic->GetMaterial()->GetTint();
 
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_psBuffer, 0);

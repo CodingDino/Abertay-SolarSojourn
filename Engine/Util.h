@@ -26,7 +26,6 @@ enum DEBUG_TYPE {           DB_GENERAL, DB_COLLISION,   DB_LOGIC,   DB_GRAPHICS,
 const int DEBUG_MODE[] = {  1,          1,              1,          1 };
 enum SCREEN {SCREEN_TITLE, SCREEN_HOWTO, SCREEN_OVERWORLD, NUM_SCREENS, 
     SCREEN_QUIT};
-enum LAYER {LAYER_BACKGROUND, LAYER_OVERLAY, NUM_LAYERS};
 
 
 // |----------------------------------------------------------------------------|

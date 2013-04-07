@@ -27,7 +27,7 @@ Model::Model() :
 // |----------------------------------------------------------------------------|
 // |						      Initialize									|
 // |----------------------------------------------------------------------------|
-bool Model::Initialize(ID3D11Device* device, char* modelFilename, WCHAR* textureFilename)
+bool Model::Initialize(ID3D11Device* device, char* modelFilename)
 {
 	bool result;
 
