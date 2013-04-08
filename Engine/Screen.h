@@ -60,6 +60,7 @@ public:
 	// The draw function, which will be called by the main game loop.
 	bool virtual Draw()
     { 
+	    DebugLog ("Screen: Draw() called.", DB_GRAPHICS, 10);
         bool result = true;
         if (m_backgroundObjects)
             for (int i = 0; i < m_numBackgroundObjects; ++ i) 

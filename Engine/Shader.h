@@ -23,6 +23,7 @@
 #include <fstream>
 #include "Util.h"
 #include "Singleton.h"
+#include "D3DManager.h"
 using namespace std;
 
 
@@ -57,17 +58,16 @@ public:
     
     // Constructors and Destructors
     Shader();
-    Shader(const char*, const char*, WCHAR*, WCHAR*);
-    virtual ~Shader() {}
+    Shader(const Shader&);
+    virtual ~Shader();
     
     // Initialization and shutdown
-    virtual bool Initialize(ID3D11Device*);
+    virtual bool Initialize(const char*, const char*, WCHAR*, WCHAR*);
     virtual void Shutdown();
 
     // Renders the provided matrices to the DX device
     virtual bool Render(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, 
         D3DXMATRIX, Graphic* graphic);
-    // TODO: Take in graphic instead of material
     
 protected:
 

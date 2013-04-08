@@ -17,9 +17,10 @@
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
-ColorShader::ColorShader() :
-    Shader("ColorVertexShader", "ColorPixelShader", L"../Engine/color.vs", L"../Engine/color.ps")
+bool ColorShader::Initialize()
 {
+    // Set up the shader files
+    return Shader::Initialize("ColorVertexShader", "ColorPixelShader", L"../Engine/color.vs", L"../Engine/color.ps");
 }
 
 
@@ -30,6 +31,7 @@ bool ColorShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
         D3DXMATRIX projectionMatrix, Graphic* graphic)
 {
+	DebugLog ("ColorShader::SetVSBuffer() called.", DB_GRAPHICS, 10);
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     unsigned int bufferNumber;
@@ -73,6 +75,7 @@ bool ColorShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
 bool ColorShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
         Graphic* graphic)
 {
+	DebugLog ("ColorShader::SetPSBuffer() called.", DB_GRAPHICS, 10);
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     unsigned int bufferNumber;

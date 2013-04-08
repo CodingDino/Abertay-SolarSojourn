@@ -35,6 +35,7 @@ bool Model::Initialize(ID3D11Device* device, char* modelFilename)
 	result = LoadModel(modelFilename);
 	if(!result)
 	{
+        DebugLog("Could not load model file.");
 		return false;
 	}
 

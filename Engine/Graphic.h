@@ -14,6 +14,7 @@
 #include "Model.h"
 #include "Texture.h"
 #include "Material.h"
+#include "GraphicsManager.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -28,20 +29,25 @@ public:
     
     // Constructors and Destructors
     Graphic();
-
-    // Initialize the graphic, reads in a vertex and texture file
-    bool Initialize(ID3D11Device* device, char* modelFilename, WCHAR* textureFilename);
-
-    // Releases data associated with the model
+    Graphic(const Graphic&);
+    virtual ~Graphic();
+    
+    // Initialization and shutdown
+    bool Initialize();
     void Shutdown();
 
     // Renders the graphic to the supplied context
-    void Render(ID3D11DeviceContext* deviceContext);
+    void Render();
 
     // Getter functions
     Model* GetModel() { return m_model; }
     Texture* GetTexture() { return m_texture; }
     Material* GetMaterial() { return m_material; }
+
+    // Setter functions
+    void SetModel(Model* model) { m_model = model; }
+    void SetTexture(Texture* texture) { m_texture = texture; }
+    void SetMaterial(Material* material) { m_material = material; }
 
 private:
 

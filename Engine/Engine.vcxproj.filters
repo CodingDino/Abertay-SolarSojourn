@@ -8,12 +8,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Game Objects">
-      <UniqueIdentifier>{3ce96684-e8b1-4bdd-b7b2-714705ffd91b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Screens">
-      <UniqueIdentifier>{6623ff23-415d-4457-9cb4-d41fbee1b879}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{8c6e99a5-146b-4c36-b87e-e949fb8eae31}</UniqueIdentifier>
     </Filter>
@@ -23,6 +17,15 @@
     </Filter>
     <Filter Include="Graphics\Shader Files\ColorShader">
       <UniqueIdentifier>{2a8e335d-6382-4db8-bc8a-016162e99cc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{3ce96684-e8b1-4bdd-b7b2-714705ffd91b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Screens">
+      <UniqueIdentifier>{6623ff23-415d-4457-9cb4-d41fbee1b879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Objects">
+      <UniqueIdentifier>{18048128-84d1-4aaf-bd0f-7606bc91e52c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -66,10 +69,16 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="TitleScreen.cpp">
-      <Filter>Screens</Filter>
+      <Filter>Game\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphic.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Game Objects</Filter>
+      <Filter>Game\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,10 +110,7 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Screen.h">
-      <Filter>Screens</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Game Objects</Filter>
+      <Filter>Game\Screens</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Graphics</Filter>
@@ -122,7 +128,13 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="TitleScreen.h">
-      <Filter>Screens</Filter>
+      <Filter>Game\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Game\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,8 @@
 // |----------------------------------------------------------------------------|
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
-GameObject::GameObject()
+GameObject::GameObject() :
+    m_graphic(0)
 {
 	DebugLog ("GameObject: object instantiated.");
 }
@@ -53,6 +54,8 @@ bool GameObject::Initialize() {
 // |							    Shutdown									|
 // |----------------------------------------------------------------------------|
 bool GameObject::Shutdown() {
+    // TODO: Should we clean up graphic? Theoretically models and textures 
+    //       should all be in one place, rather than owned by individual game objects.
 
 	DebugLog ("GameObject: object shutdown.");
 	return true;
@@ -73,6 +76,9 @@ bool GameObject::Logic() {
 // |----------------------------------------------------------------------------|
 bool GameObject::Draw() {
 	DebugLog ("GameObject: Draw() called.", DB_GRAPHICS, 10);
+
+    if (m_graphic)
+        m_graphic->Render();
 
 	return true;
 }

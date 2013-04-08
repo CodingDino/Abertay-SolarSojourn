@@ -18,6 +18,7 @@
 // |----------------------------------------------------------------------------|
 GraphicsManager::GraphicsManager() :
     m_D3D(0),
+    m_Camera(0),
     m_colorShader(0),
     m_screen(0),
     m_screenCounter(0),
@@ -70,20 +71,26 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
         return false;
     }
 
-    // Create the camera object.
-    //m_Camera = new CameraClass;
-    //if(!m_Camera)
-    //{
-    //    return false;
-    //}
+    // Create and initialize the camera object.
+    m_Camera = new Camera;
+    if(!m_Camera)
+    {
+        return false;
+    }
+    result = m_Camera->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize Camera.");
+        return false;
+    }
 
     // Initialize a base view matrix with the camera for 2D user interface rendering.
-    //m_Camera->SetPosition(0.0f, 0.0f, -1.0f);
-    //m_Camera->Render();
-    //m_Camera->GetViewMatrix(baseViewMatrix);
+    m_Camera->SetPosition(Coord(0.0f, 0.0f, -1.0f));
+    m_Camera->Render();
+    m_Camera->GetViewMatrix(baseViewMatrix);
 
     // Set the initial position of the camera.
-    //m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+    m_Camera->SetPosition(Coord(0.0f, 0.0f, -10.0f));
 
     // Create the shader objects.
     m_colorShader = new ColorShader;
@@ -104,7 +111,7 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     //}
     
     // Initialize the shader objects.
-    result = m_colorShader->Initialize(m_D3D->GetDevice());
+    result = m_colorShader->Initialize();
     if(!result)
     {
         DebugPopup(L"Could not initialize ColorShader.");
@@ -152,12 +159,13 @@ void GraphicsManager::Shutdown()
     //    m_TextureShader = 0;
     //}
 
-    //// Release the camera object.
-    //if(m_Camera)
-    //{
-    //    delete m_Camera;
-    //    m_Camera = 0;
-    //}
+    // Release the camera object.
+    if(m_Camera)
+    {
+        m_Camera->Shutdown();
+        delete m_Camera;
+        m_Camera = 0;
+    }
 
     // Release the D3D object.
     if(m_D3D)
@@ -188,10 +196,10 @@ bool GraphicsManager::Frame(int mouseX, int mouseY, int fps, int cpu, float fram
     m_screenCounter += frameTime;
 
     // Set the position of the camera.
-    // m_Camera->SetPosition(camera_position.x, camera_position.y, camera_position.z-300.0f);
+    //m_Camera->SetPosition(camera_position.x, camera_position.y, camera_position.z-300.0f);
 
     // Set the rotation of the camera.
-    // m_Camera->SetRotation(camera_rotation.x, camera_rotation.y, camera_rotation.z);
+    //m_Camera->SetRotation(camera_rotation.x, camera_rotation.y, camera_rotation.z);
     
     // Render the graphics scene.
     result = Render(mouseX, mouseY, camera_position);
@@ -283,13 +291,13 @@ bool GraphicsManager::BeginRender()
     m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Generate the view matrix based on the camera's position.
-    //m_Camera->Render();
+    m_Camera->Render();
 
     // Get the world, view, and projection matrices from the camera and d3d objects.
-    //m_Camera->GetViewMatrix(viewMatrix);
-    //m_D3D->GetWorldMatrix(worldMatrix);
-    //m_D3D->GetProjectionMatrix(projectionMatrix);
-    //m_D3D->GetOrthoMatrix(orthoMatrix);
+    m_Camera->GetViewMatrix(viewMatrix);
+    m_D3D->GetWorldMatrix(worldMatrix);
+    m_D3D->GetProjectionMatrix(projectionMatrix);
+    m_D3D->GetOrthoMatrix(orthoMatrix);
 
     return true;
 }
@@ -304,6 +312,19 @@ bool GraphicsManager::EndRender()
     m_D3D->EndScene();
 
     return true;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |						     Deconstructor									|
+// |----------------------------------------------------------------------------|
+Shader* GraphicsManager::GetShader(const char* key)
+{
+    if (!strcmp(key, "Color"))
+    {
+        return m_colorShader;
+    }
+    else return 0;
 }
 
 

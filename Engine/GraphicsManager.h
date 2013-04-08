@@ -14,6 +14,8 @@
 #include "D3DManager.h"
 #include "ColorShader.h"
 #include "Singleton.h"
+#include "Camera.h"
+#include <cstring>
 
 
 // |----------------------------------------------------------------------------|
@@ -54,6 +56,16 @@ public:
     // Rendering cleanup (ends the scene)
     bool EndRender();
 
+    // Get matrices
+    D3DXMATRIX GetWorldMatrix() {return worldMatrix;}
+    D3DXMATRIX GetViewMatrix() {return viewMatrix;}
+    D3DXMATRIX GetProjectionMatrix() {return projectionMatrix;}
+    D3DXMATRIX GetOrthoMatrix() {return orthoMatrix;}
+    D3DXMATRIX GetBaseViewMatrix() {return baseViewMatrix;}
+
+    // Get shaders
+    Shader* GetShader(const char* key);
+
 private:
 
     //|-------------------------------Private Functions-------------------------|
@@ -76,8 +88,7 @@ private:
     D3DManager* m_D3D;
 
     // Camera
-    // TODO: Should this be a game object?
-    // CameraClass* m_Camera;
+    Camera* m_Camera;
 
     // Shaders
     ColorShader* m_colorShader;

@@ -52,6 +52,7 @@ bool GameManager::Initialize()
         m_screens[i] = NULL;
     }
     m_screens[SCREEN_TITLE] = new TitleScreen();
+    m_screens[SCREEN_TITLE]->Initialize();
     m_currentScreen = m_screens[SCREEN_TITLE];
     result = m_currentScreen->OnLoad();
 

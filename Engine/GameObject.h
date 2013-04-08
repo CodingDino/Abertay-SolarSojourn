@@ -15,9 +15,7 @@
 // |----------------------------------------------------------------------------|
 #include "Util.h"
 #include "Coord.h"
-#include "Material.h"
-#include "Model.h"
-#include "Texture.h"
+#include "Graphic.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -49,13 +47,15 @@ public:
     Coord virtual GetOrientation() {return m_orientation; }
     Coord virtual GetLinearVelocity() {return m_linearVelocity; }
     Coord virtual GetAngularVelocity() {return m_angularVelocity; }
+    Graphic* GetGraphic() {return m_graphic; }
 
     // Setter functions
     void virtual SetPosition(Coord position) {m_position = position;}
     void virtual SetOrientation(Coord orientation) {orientation = m_orientation;}
     void virtual SetLinearVelocity(Coord linearVelocity) {m_linearVelocity = linearVelocity;}
     void virtual SetAngularVelocity(Coord angularVelocity) {m_angularVelocity = angularVelocity;}
-    
+    void virtual SetGraphic(Graphic* graphic) {m_graphic = graphic; }
+
 protected:
     
     //|---------------------------Protected Data Members-----------------------|
@@ -65,8 +65,9 @@ protected:
     Coord m_angularVelocity;        // Angular velocity in pitch/s, yaw/s, roll/s
 
     // Graphics
-    Model* m_model;                 // Model for the object
-    Texture* m_texture;             // Texture for the object
-    Material* m_material;           // Material for the object
+    Graphic* m_graphic;
+    //Model* m_model;                 // Model for the object
+    //Texture* m_texture;             // Texture for the object
+    //Material* m_material;           // Material for the object
 
 };

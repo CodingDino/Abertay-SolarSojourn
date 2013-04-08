@@ -33,19 +33,17 @@ Shader::Shader() :
 
 
 // |----------------------------------------------------------------------------|
-// |                               Constructor                                  |
+// |						    Copy Constructor								|
 // |----------------------------------------------------------------------------|
-Shader::Shader(const char* vertexShaderName, const char* pixelShaderName,
-    WCHAR* vertexShaderFile, WCHAR* pixelShaderFile) :
-    m_vertexShader(0),
-    m_pixelShader(0),
-    m_layout(0),
-    m_vsBuffer(0),
-    m_psBuffer(0),
-    m_vertexShaderName(vertexShaderName),
-    m_pixelShaderName(pixelShaderName),
-    m_vertexShaderFile(vertexShaderFile),
-    m_pixelShaderFile(pixelShaderFile)
+Shader::Shader(const Shader& other)
+{
+}
+
+
+// |----------------------------------------------------------------------------|
+// |						     Deconstructor									|
+// |----------------------------------------------------------------------------|
+Shader::~Shader()
 {
 }
 
@@ -53,13 +51,18 @@ Shader::Shader(const char* vertexShaderName, const char* pixelShaderName,
 // |----------------------------------------------------------------------------|
 // |                              Initialize                                    |
 // |----------------------------------------------------------------------------|
-bool Shader::Initialize(ID3D11Device* device)
+bool Shader::Initialize(const char* vertexShaderName, const char* pixelShaderName,
+    WCHAR* vertexShaderFile, WCHAR* pixelShaderFile)
 {
     bool result;
-
-
+    
+    m_vertexShaderName = vertexShaderName;
+    m_pixelShaderName = pixelShaderName;
+    m_vertexShaderFile = vertexShaderFile;
+    m_pixelShaderFile = pixelShaderFile;
+    
     // Initialize the vertex and pixel shaders.
-    result = InitializeShader(device, m_vertexShaderFile, m_pixelShaderFile);
+    result = InitializeShader(D3DManager::GetRef()->GetDevice(), m_vertexShaderFile, m_pixelShaderFile);
     if(!result)
     {
         DebugPopup(L"InitializeShader failed.");
@@ -387,6 +390,7 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext* deviceContext,
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
         D3DXMATRIX projectionMatrix, Graphic* graphic)
 {
+	DebugLog ("Shader::SetShaderParameters() called.", DB_GRAPHICS, 10);
     // Set up vertex and pixel buffers
     SetVSBuffer(deviceContext, worldMatrix, viewMatrix, projectionMatrix, graphic);
     SetPSBuffer(deviceContext, graphic);
@@ -402,6 +406,7 @@ bool Shader::Render(ID3D11DeviceContext* deviceContext,
     int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
     D3DXMATRIX projectionMatrix, Graphic* graphic)
 {
+	DebugLog ("Shader::Render() called.", DB_GRAPHICS, 10);
     bool result;
 
     // Set the shader parameters that it will use for rendering.

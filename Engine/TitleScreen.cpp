@@ -46,6 +46,32 @@ bool TitleScreen::Initialize() {
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
 
+    m_numGameObjects = 1;
+    m_gameObjects = new GameObject*[1];
+    m_gameObjects[0] = new GameObject;
+    m_gameObjects[0]->Initialize();
+
+    // Set up material
+    Material* material = new Material;
+    material->SetTint(D3DXVECTOR4(1.0f,0.0f,0.0f,1.0f));
+    material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
+    
+    // Set up model
+    Model* model = new Model;
+    model->Initialize(D3DManager::GetRef()->GetDevice(),"../Engine/data/models/sphere.txt");
+
+    // Set up texture
+    Texture* texture = 0; // No texture needed for color shader
+
+    // Set up graphic
+    Graphic* graphic = new Graphic;
+    graphic->SetMaterial(material);
+    graphic->SetModel(model);
+    graphic->SetTexture(texture);
+
+    // Add graphic to game object
+    m_gameObjects[0]->SetGraphic(graphic);
+
 	DebugLog ("TitleScreen: object initialized.");
 	return true;
 }
@@ -67,7 +93,7 @@ bool TitleScreen::Shutdown() {
 // The logic function, which will be called by the main game loop.
 bool TitleScreen::Logic() {
 	DebugLog ("TitleScreen: Logic() called.", DB_LOGIC, 10);
-
+    Screen::Logic();
 	return true;
 }
 
@@ -77,7 +103,7 @@ bool TitleScreen::Logic() {
 // The draw function, which will be called by the main game loop.
 bool TitleScreen::Draw() {
 	DebugLog ("TitleScreen: Draw() called.", DB_GRAPHICS, 10);
-
+    Screen::Draw();
 	return true;
 }
 

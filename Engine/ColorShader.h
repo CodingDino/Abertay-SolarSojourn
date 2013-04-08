@@ -37,8 +37,8 @@ public:
 
     //|-------------------------------Public Functions--------------------------|
     
-    // Constructors and Destructors
-    ColorShader();
+    // Initialization and shutdown
+    virtual bool Initialize();
     
 protected:
 
