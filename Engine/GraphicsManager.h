@@ -13,6 +13,7 @@
 #include "Coord.h"
 #include "D3DManager.h"
 #include "ColorShader.h"
+#include "TextureShader.h"
 #include "Singleton.h"
 #include "Camera.h"
 #include <cstring>
@@ -92,8 +93,8 @@ private:
 
     // Shaders
     ColorShader* m_colorShader;
+    TextureShader* m_textureShader;
     // LightShaderClass* m_LightShader;
-    // TextureShaderClass* m_TextureShader;
 
     // Matrices
     D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix, baseViewMatrix;

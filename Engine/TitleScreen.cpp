@@ -54,14 +54,15 @@ bool TitleScreen::Initialize() {
     // Set up material
     Material* material = new Material;
     material->SetTint(D3DXVECTOR4(1.0f,0.0f,0.0f,1.0f));
-    material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
+    material->SetShader(GraphicsManager::GetRef()->GetShader("Texture"));
     
     // Set up model
     Model* model = new Model;
     model->Initialize(D3DManager::GetRef()->GetDevice(),"../Engine/data/models/sphere.txt");
 
     // Set up texture
-    Texture* texture = 0; // No texture needed for color shader
+    Texture* texture = new Texture;
+    texture->Initialize(D3DManager::GetRef()->GetDevice(),L"../Engine/data/textures/sun01.png");
 
     // Set up graphic
     Graphic* graphic = new Graphic;

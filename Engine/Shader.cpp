@@ -267,7 +267,7 @@ bool Shader::InitializePixelShaderBuffers(ID3D11Device* device)
     HRESULT result;
     D3D11_BUFFER_DESC psBufferDesc;
 
-    // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+    // Setup the description of the dynamic matrix constant buffer that is in the pixel shader.
     psBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     psBufferDesc.ByteWidth = sizeof(PSBufferType);
     psBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;

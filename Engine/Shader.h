@@ -22,7 +22,6 @@
 #include <d3dx11async.h>
 #include <fstream>
 #include "Util.h"
-#include "Singleton.h"
 #include "D3DManager.h"
 using namespace std;
 
@@ -36,18 +35,19 @@ class Graphic;
 // |----------------------------------------------------------------------------|
 // |                              Class: Shader                                 |
 // |----------------------------------------------------------------------------|
-class Shader : public Singleton<Shader>
+class Shader
 {
+
 protected:
 
     //|-------------------------------Type Definitions--------------------------|
 
-    struct VSBufferType
+    virtual struct VSBufferType
     {
 		D3DXVECTOR4 filler;
     };
 
-    struct PSBufferType
+    virtual struct PSBufferType
     {
 		D3DXVECTOR4 filler;
     };
@@ -124,4 +124,5 @@ protected:
     // Buffers
     ID3D11Buffer* m_vsBuffer;
     ID3D11Buffer* m_psBuffer;
+
 };

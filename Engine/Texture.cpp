@@ -33,6 +33,7 @@ bool Texture::Initialize(ID3D11Device* device, WCHAR* filename)
 	result = D3DX11CreateShaderResourceViewFromFile(device, filename, NULL, NULL, &m_texture, NULL);
 	if(FAILED(result))
 	{
+        DebugPopup(L"Could not find texture file.");
 		return false;
 	}
 
@@ -59,7 +60,7 @@ void Texture::Shutdown()
 // |----------------------------------------------------------------------------|
 // |						     GetTexture										|
 // |----------------------------------------------------------------------------|
-ID3D11ShaderResourceView* Texture::GetTexture()
+ID3D11ShaderResourceView* Texture::GetResource()
 {
 	return m_texture;
 }

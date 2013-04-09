@@ -27,6 +27,9 @@
     <Filter Include="Game\Objects">
       <UniqueIdentifier>{18048128-84d1-4aaf-bd0f-7606bc91e52c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Shader Files\TextureShader">
+      <UniqueIdentifier>{60099e98-e76a-487e-8e7d-93e1635f1293}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -79,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureShader.cpp">
+      <Filter>Graphics\Shader Files\TextureShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +142,9 @@
     <ClInclude Include="GameObject.h">
       <Filter>Game\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="TextureShader.h">
+      <Filter>Graphics\Shader Files\TextureShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">
@@ -143,6 +152,12 @@
     </None>
     <None Include="color.ps">
       <Filter>Graphics\Shader Files\ColorShader</Filter>
+    </None>
+    <None Include="texture.ps">
+      <Filter>Graphics\Shader Files\TextureShader</Filter>
+    </None>
+    <None Include="texture.vs">
+      <Filter>Graphics\Shader Files\TextureShader</Filter>
     </None>
   </ItemGroup>
 </Project>

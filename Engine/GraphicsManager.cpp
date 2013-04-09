@@ -20,6 +20,7 @@ GraphicsManager::GraphicsManager() :
     m_D3D(0),
     m_Camera(0),
     m_colorShader(0),
+    m_textureShader(0),
     m_screen(0),
     m_screenCounter(0),
     m_screenWidth(0),
@@ -99,12 +100,13 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
         DebugPopup(L"Could not create ColorShader.");
         return false;
     }
+    m_textureShader = new TextureShader;
+    if(!m_textureShader)
+    {
+        DebugPopup(L"Could not create TextureShader.");
+        return false;
+    }
     //m_LightShader = new LightShaderClass;
-    //if(!m_LightShader)
-    //{
-    //    return false;
-    //}
-    //m_TextureShader = new TextureShaderClass;
     //if(!m_LightShader)
     //{
     //    return false;
@@ -117,16 +119,16 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
         DebugPopup(L"Could not initialize ColorShader.");
         return false;
     }
+    result = m_textureShader->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize TextureShader.");
+        return false;
+    }
     //result = m_LightShader->Initialize(m_D3D->GetDevice(), hwnd);
     //if(!result)
     //{
     //    MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
-    //    return false;
-    //}
-    //result = m_TextureShader->Initialize(m_D3D->GetDevice(), hwnd);
-    //if(!result)
-    //{
-    //    MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
     //    return false;
     //}
 
@@ -146,17 +148,17 @@ void GraphicsManager::Shutdown()
         delete m_colorShader;
         m_colorShader = 0;
     }
+    if(m_textureShader)
+    {
+        m_textureShader->Shutdown();
+        delete m_textureShader;
+        m_textureShader = 0;
+    }
     //if(m_LightShader)
     //{
     //    m_LightShader->Shutdown();
     //    delete m_LightShader;
     //    m_LightShader = 0;
-    //}
-    //if(m_TextureShader)
-    //{
-    //    m_TextureShader->Shutdown();
-    //    delete m_TextureShader;
-    //    m_TextureShader = 0;
     //}
 
     // Release the camera object.
@@ -323,6 +325,10 @@ Shader* GraphicsManager::GetShader(const char* key)
     if (!strcmp(key, "Color"))
     {
         return m_colorShader;
+    }
+    else if (!strcmp(key, "Texture"))
+    {
+        return m_textureShader;
     }
     else return 0;
 }

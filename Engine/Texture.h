@@ -13,6 +13,7 @@
 // |----------------------------------------------------------------------------|
 #include <d3d11.h>
 #include <d3dx11tex.h>
+#include "Util.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -34,7 +35,7 @@ public:
     void Shutdown();
 
     // Getter functions
-    ID3D11ShaderResourceView* GetTexture();
+    ID3D11ShaderResourceView* GetResource();
 
 private:
 
