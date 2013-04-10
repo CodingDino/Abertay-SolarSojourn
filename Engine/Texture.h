@@ -13,6 +13,7 @@
 // |----------------------------------------------------------------------------|
 #include <d3d11.h>
 #include <d3dx11tex.h>
+#include <D3dx9tex.h>
 #include "Util.h"
 
 
@@ -36,6 +37,8 @@ public:
 
     // Getter functions
     ID3D11ShaderResourceView* GetResource();
+    int GetWidth() { return m_width; }
+    int GetHeight() { return m_height; }
 
 private:
 
@@ -43,5 +46,8 @@ private:
 
     // Texture
     ID3D11ShaderResourceView* m_texture;
+
+    // Size
+    int m_width, m_height;
 
 };

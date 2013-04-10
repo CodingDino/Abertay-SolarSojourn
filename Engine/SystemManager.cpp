@@ -330,6 +330,9 @@ void SystemManager::InitializeWindows(int& screenWidth, int& screenHeight)
         posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;
         posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
     }
+	
+	SCREEN_WIDTH = screenWidth;
+	SCREEN_HEIGHT = screenHeight;
 
     // Create the window with the screen settings and get the handle to it.
     windowHandle = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName, 

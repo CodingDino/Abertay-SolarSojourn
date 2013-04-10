@@ -121,3 +121,9 @@ Coord Coord::operator=(const float& rhs) {
     z = rhs;
     return *this;
 }
+
+bool Coord::operator==(const Coord& rhs) {
+    if (x == rhs.x && y == rhs.y && z == rhs.z)
+        return true;
+    return false;
+}

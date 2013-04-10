@@ -106,4 +106,9 @@ protected:
     GameObject** m_gameObjects;
     GameObject** m_overlayObjects;
 
+    // TODO
+    // Array of models, materials, and textures
+    // Loaded when Screen is initialized, removed when screen is shutdown
+    // Pointed to by the GameObjects in this screen
+
 };

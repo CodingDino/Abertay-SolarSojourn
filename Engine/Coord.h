@@ -23,6 +23,8 @@ public:
     Coord (const Coord& old_coord) : x(old_coord.x), y(old_coord.y), z(old_coord.z) {}
     
     //~~~~~~~~~~~~~~~~~~~~~~   Operator Overloading   ~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+    // Asignment and Arithmetic
     Coord operator+(const Coord& rhs);
     Coord operator+(const float& rhs);
     Coord operator+=(const Coord& rhs);
@@ -37,6 +39,9 @@ public:
     Coord operator/=(const float& rhs);
     Coord operator=(const Coord& rhs);
     Coord operator=(const float& rhs);
+
+    // Comparison
+    bool operator==(const Coord& rhs);
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~~   Data Members   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     float x, y, z;

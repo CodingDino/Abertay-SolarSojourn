@@ -14,6 +14,7 @@
 #include "Screen.h"
 #include "Util.h"
 #include "GameObject.h"
+#include "Image.h"
 
 
 // |----------------------------------------------------------------------------|

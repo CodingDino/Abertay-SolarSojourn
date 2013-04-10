@@ -51,7 +51,7 @@ public:
 
     // Setter functions
     void virtual SetPosition(Coord position) {m_position = position;}
-    void virtual SetOrientation(Coord orientation) {orientation = m_orientation;}
+    void virtual SetOrientation(Coord orientation) {m_orientation = orientation;}
     void virtual SetLinearVelocity(Coord linearVelocity) {m_linearVelocity = linearVelocity;}
     void virtual SetAngularVelocity(Coord angularVelocity) {m_angularVelocity = angularVelocity;}
     void virtual SetGraphic(Graphic* graphic) {m_graphic = graphic; }

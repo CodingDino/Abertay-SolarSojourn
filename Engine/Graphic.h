@@ -5,6 +5,7 @@
 //
 // Graphic
 //      Contains data for a single graphic, including model, texture, and material.
+#pragma once
 
 
 // |----------------------------------------------------------------------------|
@@ -33,31 +34,43 @@ public:
     virtual ~Graphic();
     
     // Initialization and shutdown
-    bool Initialize();
-    void Shutdown();
+    virtual bool Initialize();
+    virtual void Shutdown();
 
     // Renders the graphic to the supplied context
-    void Render();
+    virtual void Render();
 
     // Getter functions
-    Model* GetModel() { return m_model; }
-    Texture* GetTexture() { return m_texture; }
-    Material* GetMaterial() { return m_material; }
+    virtual Model* GetModel() { return m_model; }
+    virtual Texture* GetTexture() { return m_texture; }
+    virtual Material* GetMaterial() { return m_material; }
+    virtual Coord GetPosition() {return m_position; }
+    virtual Coord GetOrientation() {return m_orientation; }
+    virtual Coord GetScale() {return m_scale; }
 
     // Setter functions
-    void SetModel(Model* model) { m_model = model; }
-    void SetTexture(Texture* texture) { m_texture = texture; }
-    void SetMaterial(Material* material) { m_material = material; }
+    virtual void SetModel(Model* model) { m_model = model; }
+    virtual void SetTexture(Texture* texture) { m_texture = texture; }
+    virtual void SetMaterial(Material* material) { m_material = material; }
+    virtual void SetPosition(Coord position) {m_position = position;}
+    virtual void SetOrientation(Coord orientation) {m_orientation = orientation;}
+    virtual void SetScale(Coord scale) {m_scale = scale;}
 
-private:
+protected:
 
-    //|-------------------------------Private Functions-------------------------|
+    //|------------------------------Protected Functions------------------------|
 
-private:
+protected:
 
-    //|-----------------------------Private Data Members------------------------|
+    //|----------------------------Protected Data Members-----------------------|
 
+    // Main Graphic Components
     Model* m_model;
     Texture* m_texture;
     Material* m_material;
+
+    // Graphic Parameters
+    Coord m_scale;
+    Coord m_orientation;
+    Coord m_position;
 };

@@ -62,16 +62,21 @@ bool TitleScreen::Initialize() {
 
     // Set up texture
     Texture* texture = new Texture;
-    texture->Initialize(D3DManager::GetRef()->GetDevice(),L"../Engine/data/textures/sun01.png");
+    texture->Initialize(D3DManager::GetRef()->GetDevice(),L"../Engine/data/textures/crosshair.png");
 
     // Set up graphic
-    Graphic* graphic = new Graphic;
-    graphic->SetMaterial(material);
-    graphic->SetModel(model);
-    graphic->SetTexture(texture);
+    Image* image = new Image;
+    image->SetMaterial(material);
+    image->SetModel(model);
+    image->SetTexture(texture);
+    image->Initialize();
+
+    // Set up transforms
+    image->SetScale(Coord(0.2f,0.2f,1.0f));
+    image->SetOrientation(Coord(0.0f, 0.0f, 45.0f));
 
     // Add graphic to game object
-    m_gameObjects[0]->SetGraphic(graphic);
+    m_gameObjects[0]->SetGraphic(image);
 
 	DebugLog ("TitleScreen: object initialized.");
 	return true;

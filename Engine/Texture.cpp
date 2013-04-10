@@ -17,7 +17,9 @@
 // |						   Default Constructor								|
 // |----------------------------------------------------------------------------|
 Texture::Texture() :
-	m_texture(0)
+	m_texture(0),
+    m_width(0),
+    m_height(0)
 {
 }
 
@@ -28,6 +30,11 @@ bool Texture::Initialize(ID3D11Device* device, WCHAR* filename)
 {
 	HRESULT result;
 
+    // Get original image dimmensions
+    D3DX11_IMAGE_INFO info;
+    D3DX11GetImageInfoFromFile(filename, 0, &info, &result);
+    m_width = info.Width;
+    m_height = info.Height;
 
 	// Load the texture in.
 	result = D3DX11CreateShaderResourceViewFromFile(device, filename, NULL, NULL, &m_texture, NULL);
