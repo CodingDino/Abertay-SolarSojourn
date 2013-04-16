@@ -92,6 +92,9 @@
     <ClCompile Include="Image.cpp">
       <Filter>Graphics\Graphic Types</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -154,6 +157,10 @@
     <ClInclude Include="Image.h">
       <Filter>Graphics\Graphic Types</Filter>
     </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">
@@ -168,5 +175,10 @@
     <None Include="texture.vs">
       <Filter>Graphics\Shader Files\TextureShader</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc">
+      <Filter>Graphics\Shader Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

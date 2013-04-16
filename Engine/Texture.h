@@ -40,9 +40,9 @@ public:
     int GetWidth() { return m_width; }
     int GetHeight() { return m_height; }
 
-private:
+protected:
 
-    //|-----------------------------Private Data Members------------------------|
+    //|----------------------------Protected Data Members-----------------------|
 
     // Texture
     ID3D11ShaderResourceView* m_texture;

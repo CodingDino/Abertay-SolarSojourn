@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{3699430F-DA71-4E86-951A-245C9D7BCBEB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D1C528B6-AA02-4D29-9D61-DC08E317A70D} = {D1C528B6-AA02-4D29-9D61-DC08E317A70D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml2", "Engine\tinyxml2\tinyxml2\tinyxml2.vcxproj", "{D1C528B6-AA02-4D29-9D61-DC08E317A70D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +18,10 @@ Global
 		{3699430F-DA71-4E86-951A-245C9D7BCBEB}.Debug|Win32.Build.0 = Debug|Win32
 		{3699430F-DA71-4E86-951A-245C9D7BCBEB}.Release|Win32.ActiveCfg = Release|Win32
 		{3699430F-DA71-4E86-951A-245C9D7BCBEB}.Release|Win32.Build.0 = Release|Win32
+		{D1C528B6-AA02-4D29-9D61-DC08E317A70D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D1C528B6-AA02-4D29-9D61-DC08E317A70D}.Debug|Win32.Build.0 = Debug|Win32
+		{D1C528B6-AA02-4D29-9D61-DC08E317A70D}.Release|Win32.ActiveCfg = Release|Win32
+		{D1C528B6-AA02-4D29-9D61-DC08E317A70D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
