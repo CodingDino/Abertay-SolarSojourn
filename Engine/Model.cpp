@@ -19,7 +19,9 @@
 Model::Model() :
 	m_vertexBuffer(0),
 	m_indexBuffer(0),
-	m_model(0)
+	m_model(0),
+	m_bufferUsage(D3D11_USAGE_DEFAULT),
+	m_bufferCPUAccess(0)
 {
 }
 
@@ -27,9 +29,14 @@ Model::Model() :
 // |----------------------------------------------------------------------------|
 // |						      Initialize									|
 // |----------------------------------------------------------------------------|
-bool Model::Initialize(ID3D11Device* device, char* modelFilename)
+bool Model::Initialize(char* modelFilename)
 {
+	DebugLog ("Model::Initialize() called.", DB_GRAPHICS, 1);
 	bool result;
+
+	// Set buffer flags
+	m_bufferUsage = D3D11_USAGE_DEFAULT;
+	m_bufferCPUAccess = 0;
 
 	// Load in the model data,
 	result = LoadModel(modelFilename);
@@ -40,7 +47,7 @@ bool Model::Initialize(ID3D11Device* device, char* modelFilename)
 	}
 
 	// Initialize the vertex and index buffers.
-	result = InitializeBuffers(device);
+	result = InitializeBuffers();
 	if(!result)
 	{
 		return false;
@@ -55,7 +62,7 @@ bool Model::Initialize(ID3D11Device* device, char* modelFilename)
 // |----------------------------------------------------------------------------|
 void Model::Shutdown()
 {
-
+	DebugLog ("Model::Shutdown() called.", DB_GRAPHICS, 1);
 	// Shutdown the vertex and index buffers.
 	ShutdownBuffers();
 
@@ -69,10 +76,11 @@ void Model::Shutdown()
 // |----------------------------------------------------------------------------|
 // |						       Render										|
 // |----------------------------------------------------------------------------|
-void Model::Render(ID3D11DeviceContext* deviceContext)
+void Model::Render()
 {
+	DebugLog ("Model::Render() called.", DB_GRAPHICS, 10);
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	RenderBuffers(deviceContext);
+	RenderBuffers();
 
 	return;
 }
@@ -83,6 +91,7 @@ void Model::Render(ID3D11DeviceContext* deviceContext)
 // |----------------------------------------------------------------------------|
 int Model::GetIndexCount()
 {
+	DebugLog ("Model::GetIndexCount() called.", DB_GRAPHICS, 10);
 	return m_indexCount;
 }
 
@@ -90,15 +99,14 @@ int Model::GetIndexCount()
 // |----------------------------------------------------------------------------|
 // |						  InitializeBuffers									|
 // |----------------------------------------------------------------------------|
-bool Model::InitializeBuffers(ID3D11Device* device)
+bool Model::InitializeBuffers()
 {
+	DebugLog ("Model::InitializeBuffers() called.", DB_GRAPHICS, 1);
 	VertexType* vertices;
 	unsigned long* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-	int i;
-
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
@@ -114,21 +122,14 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 		return false;
 	}
 
-	// Load the vertex array and index array with data.
-	for(i=0; i<m_vertexCount; i++)
-	{
-		vertices[i].position = D3DXVECTOR3(m_model[i].x, m_model[i].y, m_model[i].z);
-		vertices[i].texture = D3DXVECTOR2(m_model[i].tu, m_model[i].tv);
-		vertices[i].normal = D3DXVECTOR3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
-
-		indices[i] = i;
-	}
+	// Populate vertex data
+	PopulateBuffers(vertices,indices);
 
 	// Set up the description of the static vertex buffer.
-    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    vertexBufferDesc.Usage = m_bufferUsage;
     vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertexBufferDesc.CPUAccessFlags = 0;
+    vertexBufferDesc.CPUAccessFlags = m_bufferCPUAccess;
     vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
@@ -138,17 +139,18 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+    result = D3DManager::GetRef()->GetDevice()->
+		CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
 	if(FAILED(result))
 	{
 		return false;
 	}
 
 	// Set up the description of the static index buffer.
-    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    indexBufferDesc.Usage = m_bufferUsage;
     indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    indexBufferDesc.CPUAccessFlags = 0;
+    indexBufferDesc.CPUAccessFlags = m_bufferCPUAccess;
     indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
@@ -158,7 +160,8 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	result = D3DManager::GetRef()->GetDevice()->
+		CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -176,10 +179,33 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 
 
 // |----------------------------------------------------------------------------|
+// |						  PopulateBuffers									|
+// |----------------------------------------------------------------------------|
+bool Model::PopulateBuffers(VertexType*& vertices, unsigned long*& indices)
+{
+	DebugLog ("Model::PopulateBuffers() called.", DB_GRAPHICS, 10);
+
+	// Load the vertex array and index array with data.
+	for(int i=0; i<m_vertexCount; i++)
+	{
+		vertices[i].position = D3DXVECTOR3(m_model[i].x, m_model[i].y, m_model[i].z);
+		vertices[i].texture = D3DXVECTOR2(m_model[i].tu, m_model[i].tv);
+		vertices[i].normal = D3DXVECTOR3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
+
+		indices[i] = i;
+	}
+
+	return true;
+}
+
+
+// |----------------------------------------------------------------------------|
 // |						   ShutdownBuffers									|
 // |----------------------------------------------------------------------------|
 void Model::ShutdownBuffers()
 {
+	DebugLog ("Model::ShutdownBuffers() called.", DB_GRAPHICS, 1);
+
 	// Release the index buffer.
 	if(m_indexBuffer)
 	{
@@ -201,8 +227,10 @@ void Model::ShutdownBuffers()
 // |----------------------------------------------------------------------------|
 // |						   RenderBuffers									|
 // |----------------------------------------------------------------------------|
-void Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
+void Model::RenderBuffers()
 {
+	DebugLog ("Model::RenderBuffers() called.", DB_GRAPHICS, 10);
+
 	unsigned int stride;
 	unsigned int offset;
 
@@ -211,13 +239,16 @@ void Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	offset = 0;
     
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	D3DManager::GetRef()->GetDeviceContext()
+		->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 
     // Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	D3DManager::GetRef()->GetDeviceContext()
+		->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	D3DManager::GetRef()->GetDeviceContext()
+		->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	return;
 }
@@ -228,6 +259,8 @@ void Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 // |----------------------------------------------------------------------------|
 bool Model::LoadModel(char* filename)
 {
+	DebugLog ("Model::LoadModel() called.", DB_GRAPHICS, 1);
+
 	ifstream fin;
 	char input;
 	int i;
@@ -291,6 +324,8 @@ bool Model::LoadModel(char* filename)
 // |----------------------------------------------------------------------------|
 void Model::ReleaseModel()
 {
+	DebugLog ("Model::ReleaseModel() called.", DB_GRAPHICS, 1);
+
 	if(m_model)
 	{
 		delete [] m_model;

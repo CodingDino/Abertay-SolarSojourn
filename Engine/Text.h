@@ -3,8 +3,9 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// Image
-//      Contains data for a single 2D image, including texture and rendering method.
+// Text
+//      Contains data for a single text object, including texture and rendering 
+//		method.
 #pragma once
 
 
@@ -12,12 +13,14 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include "Graphic.h"
-#include "Quad.h"
+#include "Sentence.h"
+#include "Font.h"
+
 
 // |----------------------------------------------------------------------------|
-// |                              Class: Graphic                                |
+// |                               Class: Text			                        |
 // |----------------------------------------------------------------------------|
-class Image : public Graphic
+class Text : public Graphic
 {
 
 public:
@@ -25,9 +28,9 @@ public:
     //|-------------------------------Public Functions--------------------------|
     
     // Constructors and Destructors
-    Image();
-    Image(const Image&);
-    virtual ~Image();
+    Text();
+    Text(const Text&);
+    virtual ~Text();
     
     // Initialization and shutdown
     virtual bool Initialize();
@@ -36,13 +39,23 @@ public:
     // Renders the graphic to the supplied context
     virtual void Render();
 
+	// Getter and Setter functions
+	char* GetText();
+	void SetText(char*); // Rebuilds the buffer from Font.
+	void SetColor(float r, float g, float b);
+
+protected:
+
+    //|------------------------------Protected Functions------------------------|
+
 protected:
 
     //|----------------------------Protected Data Members-----------------------|
 
-	// Model and texture data members
-	// Change these to a model? (quad)
-	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
-	int m_vertexCount, m_indexCount;
+	// Screen location information
+	Coord m_previousPosition;
+
+	// String to be rendered
+	char* m_string;
 
 };

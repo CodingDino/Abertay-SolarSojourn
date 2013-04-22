@@ -28,6 +28,7 @@ Texture::Texture() :
 // |----------------------------------------------------------------------------|
 bool Texture::Initialize(ID3D11Device* device, WCHAR* filename)
 {
+	DebugLog ("Texture::Initialize() called.", DB_GRAPHICS, 1);
 	HRESULT result;
 
     // Get original image dimmensions

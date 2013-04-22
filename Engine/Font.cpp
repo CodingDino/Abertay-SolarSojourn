@@ -48,6 +48,7 @@ Font::~Font()
 // |----------------------------------------------------------------------------|
 bool Font::Initialize(ID3D11Device* device, char* fontFilename, WCHAR* textureFilename) 
 {
+	DebugLog ("Font::Initialize() called.", DB_GRAPHICS, 1);
 	bool result;
 
 	// Initialize the parent class
@@ -90,6 +91,7 @@ void Font::Shutdown()
 // |----------------------------------------------------------------------------|
 bool Font::LoadFontData(char* filename)
 {
+	DebugLog ("Font::LoadFontData() called.", DB_GRAPHICS, 1);
 	int i(0);
 
 	/*First we create an array of the FontType structure. The size of the array 
@@ -100,6 +102,7 @@ bool Font::LoadFontData(char* filename)
 	m_Font = new FontType[95];
 	if(!m_Font)
 	{
+		DebugLog ("Could not create font array.", DB_GRAPHICS, 1);
 		return false;
 	}
 
@@ -107,25 +110,38 @@ bool Font::LoadFontData(char* filename)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(filename);
 
+	// Check for parsing errors
+	if(doc.Error())
+	{
+		DebugLog ("Error parsing font xml.", DB_GRAPHICS, 1);
+		return false;
+	}
+	DebugLog ("Font xml parsed.", DB_GRAPHICS, 5);
+
 	// Font attributes
 	// Get font name
 	m_name = new char[strlen(doc.FirstChildElement("Font")->Attribute("family"))+1];
 	m_name = strcpy(m_name,doc.FirstChildElement("Font")->Attribute("family"));
 	// Get font style
-	m_name = new char[strlen(doc.FirstChildElement("Font")->Attribute("style"))+1];
-	m_name = strcpy(m_name,doc.FirstChildElement("Font")->Attribute("style"));
+	m_style = new char[strlen(doc.FirstChildElement("Font")->Attribute("style"))+1];
+	m_style = strcpy(m_style,doc.FirstChildElement("Font")->Attribute("style"));
 	// Get font size
 	m_size = atoi(doc.FirstChildElement("Font")->Attribute("size"));
 	// Get font height
 	m_fontHeight = atoi(doc.FirstChildElement("Font")->Attribute("height"));
+	DebugLog ("Font summary stored.", DB_GRAPHICS, 5);
 
 
 	// Read in each character's information
 	tinyxml2::XMLElement* character(0);
-	while (doc.FirstChildElement("Font")->FirstChildElement("Char"));
+	DebugLog ("Reading font characters...", DB_GRAPHICS, 10);
+	while (!doc.FirstChildElement("Font")->NoChildren())
 	{
+
 		// Get the element to process
 		character = doc.FirstChildElement("Font")->FirstChildElement("Char");
+		
+		DebugLog (character->Attribute("code"), DB_GRAPHICS, 10);
 
 		// Get character width
 		m_Font[i].width = atoi(character->Attribute("width"));
@@ -141,26 +157,31 @@ bool Font::LoadFontData(char* filename)
 		char* rect = new char[strlen(character->Attribute("rect"))+1];
 		rect = strcpy(rect,character->Attribute("rect"));
 		m_Font[i].left = atoi(strtok(rect," "));
-		m_Font[i].right = m_Font[i].left + atoi(strtok(NULL," "));
 		m_Font[i].top = atoi(strtok(NULL," "));
-		m_Font[i].bottom = m_Font[i].top + atoi(strtok(NULL," "));
+		m_Font[i].tWidth = atoi(strtok(NULL," "));
+		m_Font[i].right = m_Font[i].left + m_Font[i].tWidth;
+		m_Font[i].tHeight = atoi(strtok(NULL," "));
+		m_Font[i].bottom = m_Font[i].top + m_Font[i].tHeight;
 
-		// Calculate U and V coordinates
-		m_Font[i].uLeft = (float)m_Font[i].left / (float)m_width;
-		m_Font[i].uRight = (float)m_Font[i].right / (float)m_width;
-		m_Font[i].vTop = (float)m_Font[i].top / (float)m_height;
-		m_Font[i].vBottom = (float)m_Font[i].bottom / (float)m_height;
+		// Calculate texture coordinates
+		m_Font[i].uLeft = (float)((double)m_Font[i].left / (double)m_width);
+		m_Font[i].uRight = (float)((double)m_Font[i].right / (double)m_width);
+		m_Font[i].vTop = (float)((double)m_Font[i].top / (double)m_height);
+		m_Font[i].vBottom = (float)((double)m_Font[i].bottom / (double)m_height);
 
 		// Get character code
 		m_Font[i].code = character->Attribute("code")[0];
 
 		// Remove this character for the next round of processing
 		doc.FirstChildElement("Font")->DeleteChild(character);
+		
+		//DebugLog (character->Attribute("code"), DB_GRAPHICS, 10);
 
 		// Increment array index
 		i++;
 	}
 
+	DebugLog ("Font character information stored.", DB_GRAPHICS, 5);
 	return true;
 }
 
@@ -184,13 +205,10 @@ void Font::ReleaseFontData()
 // |----------------------------------------------------------------------------|
 // |							BuildVertexArray								|
 // |----------------------------------------------------------------------------|
-void Font::BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY)
+void Font::BuildVertexArray(VertexType* vertices, char* sentence, float drawX, float drawY)
 {
-	VertexType* vertexPtr;
+	DebugLog ("Font::BuildVertexArray() called.", DB_GRAPHICS, 2);
 	int numLetters, index, i, letter;
-
-	// Coerce the input vertices into a VertexType structure.
-	vertexPtr = (VertexType*)vertices;
 
 	// Get the number of letters in the sentence.
 	numLetters = (int)strlen(sentence);
@@ -203,42 +221,61 @@ void Font::BuildVertexArray(void* vertices, char* sentence, float drawX, float d
 	{
 		letter = ((int)sentence[i]) - ' ';
 
-		// If the letter is a space then just move over three pixels.
-		//if(letter == 0)
-		//{
-		//	drawX = drawX + 3.0f;
-		//}
-		//else
-		//{
 		// First triangle in quad.
-		vertexPtr[index].position = D3DXVECTOR3(drawX, drawY, 0.0f);  // Top left.
-		vertexPtr[index].texture = D3DXVECTOR2(m_Font[letter].uLeft,m_Font[letter].vTop);
+
+		// Top left
+		vertices[index].position = D3DXVECTOR3(
+			drawX + m_Font[letter].offsetX, 
+			drawY - m_Font[letter].offsetY, 
+			0.0f);
+		vertices[index].texture = D3DXVECTOR2(m_Font[letter].uLeft,m_Font[letter].vTop);
 		index++;
 
-		vertexPtr[index].position = D3DXVECTOR3((drawX + m_Font[letter].width), (drawY - m_Font[letter].height), 0.0f);  // Bottom right.
-		vertexPtr[index].texture = D3DXVECTOR2(m_Font[letter].uRight,m_Font[letter].vBottom);
+		// Bottom right
+		vertices[index].position = D3DXVECTOR3(
+			drawX + m_Font[letter].offsetX + m_Font[letter].tWidth, 
+			drawY - m_Font[letter].offsetY - m_Font[letter].tHeight
+			, 0.0f);
+		vertices[index].texture = D3DXVECTOR2(m_Font[letter].uRight,m_Font[letter].vBottom);
 		index++;
 
-		vertexPtr[index].position = D3DXVECTOR3(drawX, (drawY - m_Font[letter].height), 0.0f);  // Bottom left.
-		vertexPtr[index].texture = D3DXVECTOR2(m_Font[letter].uLeft,m_Font[letter].vBottom);
+		// Bottom left
+		vertices[index].position = D3DXVECTOR3(
+			drawX + m_Font[letter].offsetX, 
+			drawY - m_Font[letter].offsetY - m_Font[letter].tHeight, 
+			0.0f);  
+		vertices[index].texture = D3DXVECTOR2(m_Font[letter].uLeft,m_Font[letter].vBottom);
 		index++;
 
 		// Second triangle in quad.
-		vertexPtr[index].position = D3DXVECTOR3(drawX, drawY, 0.0f);  // Top left.
-		vertexPtr[index].texture = D3DXVECTOR2(m_Font[letter].uLeft,m_Font[letter].vTop);
+
+		// Top left
+		vertices[index].position = D3DXVECTOR3(
+			drawX + m_Font[letter].offsetX, 
+			drawY - m_Font[letter].offsetY, 
+			0.0f);
+		vertices[index].texture = D3DXVECTOR2(m_Font[letter].uLeft,m_Font[letter].vTop);
 		index++;
 
-		vertexPtr[index].position = D3DXVECTOR3(drawX + m_Font[letter].width, drawY, 0.0f);  // Top right.
-		vertexPtr[index].texture = D3DXVECTOR2(m_Font[letter].uRight,m_Font[letter].vTop);
+		// Top right
+		vertices[index].position = D3DXVECTOR3(
+			drawX + m_Font[letter].offsetX + m_Font[letter].tWidth, 
+			drawY - m_Font[letter].offsetY, 
+			0.0f);  
+		vertices[index].texture = D3DXVECTOR2(m_Font[letter].uRight,m_Font[letter].vTop);
 		index++;
 
-		vertexPtr[index].position = D3DXVECTOR3((drawX + m_Font[letter].width), (drawY - m_Font[letter].height), 0.0f);  // Bottom right.
-		vertexPtr[index].texture = D3DXVECTOR2(m_Font[letter].uRight,m_Font[letter].vBottom);
+		// Bottom right
+		vertices[index].position = D3DXVECTOR3(
+			drawX + m_Font[letter].offsetX + m_Font[letter].tWidth, 
+			drawY - m_Font[letter].offsetY - m_Font[letter].tHeight
+			, 0.0f);
+		vertices[index].texture = D3DXVECTOR2(m_Font[letter].uRight,m_Font[letter].vBottom);
 		index++;
 
 		// Update the x location for drawing by the size of the letter and one pixel.
 		drawX = drawX + m_Font[letter].width;
-		//}
+		
 	}
 
 	return;

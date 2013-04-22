@@ -3,21 +3,22 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// Image
-//      Contains data for a single 2D image, including texture and rendering method.
+// Sentence
+//      Contains model information for set of text
 #pragma once
 
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
-#include "Graphic.h"
-#include "Quad.h"
+#include "Model.h"
+#include "Font.h"
+
 
 // |----------------------------------------------------------------------------|
-// |                              Class: Graphic                                |
+// |                           Class: TextModel                                 |
 // |----------------------------------------------------------------------------|
-class Image : public Graphic
+class Sentence : public Model
 {
 
 public:
@@ -25,24 +26,26 @@ public:
     //|-------------------------------Public Functions--------------------------|
     
     // Constructors and Destructors
-    Image();
-    Image(const Image&);
-    virtual ~Image();
-    
+	Sentence();
+	Sentence(const Sentence&);
+	virtual ~Sentence();
+	
     // Initialization and shutdown
-    virtual bool Initialize();
-    virtual void Shutdown();
+	virtual bool Initialize() {return Initialize(100);}
+	virtual bool Initialize(int maxLength);
 
-    // Renders the graphic to the supplied context
-    virtual void Render();
+    // Updates the buffers based on the supplied string and font
+    virtual bool UpdateBuffers(char* string, Font* font);
+	
+protected:
 
+    //|------------------------------Protected Functions------------------------|
+
+    // Populates buffers with data
+    virtual bool PopulateBuffers(VertexType*& vertices, unsigned long*& indices);
+	
 protected:
 
     //|----------------------------Protected Data Members-----------------------|
-
-	// Model and texture data members
-	// Change these to a model? (quad)
-	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
-	int m_vertexCount, m_indexCount;
-
+	int m_maxLength;
 };

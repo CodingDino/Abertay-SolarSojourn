@@ -3,7 +3,7 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// TextureShader
+// FontShader
 //      Wraps and interacts with vertex and pixel shader.
 #pragma once
 
@@ -14,9 +14,9 @@
 #include "Shader.h"
 
 // |----------------------------------------------------------------------------|
-// |                            Class: TextureShader                            |
+// |                            Class: FontShader                            |
 // |----------------------------------------------------------------------------|
-class TextureShader: public Shader
+class FontShader: public Shader
 {
 protected:
 
@@ -28,17 +28,12 @@ protected:
         D3DXMATRIX projection;
     };
 
-    struct PSBufferType
-    {
-		D3DXVECTOR4 color;
-    };
-
 public:
 
     //|-------------------------------Public Functions--------------------------|
     
     // Constructors and Destructors
-    TextureShader() : 
+    FontShader() : 
         m_sampleState(0) 
     {}
     

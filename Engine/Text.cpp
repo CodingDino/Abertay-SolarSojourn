@@ -3,25 +3,23 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// Image
-//      Contains data for a single 2D image, including texture and rendering method.
+// Text
+//      Contains data for a single text object, including texture and rendering 
+//		method.
 
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
-#include "Image.h"
+#include "Text.h"
 #include "Shader.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
-Image::Image() :
-    m_vertexBuffer(0),
-    m_indexBuffer(0),
-    m_vertexCount(0),
-    m_indexCount(0),
+Text::Text() :
+    m_string(0),
     Graphic()
 {
 }
@@ -30,7 +28,7 @@ Image::Image() :
 // |----------------------------------------------------------------------------|
 // |						    Copy Constructor								|
 // |----------------------------------------------------------------------------|
-Image::Image(const Image& other)
+Text::Text(const Text& other)
 {
 }
 
@@ -38,7 +36,7 @@ Image::Image(const Image& other)
 // |----------------------------------------------------------------------------|
 // |						     Deconstructor									|
 // |----------------------------------------------------------------------------|
-Image::~Image()
+Text::~Text()
 {
 }
 
@@ -46,9 +44,10 @@ Image::~Image()
 // |----------------------------------------------------------------------------|
 // |                              Initialize                                    |
 // |----------------------------------------------------------------------------|
-bool Image::Initialize()
+bool Text::Initialize()
 {
-    
+	DebugLog ("Text::Initialize() called.", DB_GRAPHICS, 1);
+
 	bool result;
 
 	// If there's not a material, make a blank one
@@ -62,7 +61,7 @@ bool Image::Initialize()
 	// If there's not a model, make a quad
 	if (!m_model)
 	{
-		m_model = new Quad();
+		m_model = new Sentence();
 		m_model->Initialize();
 	}
 
@@ -79,7 +78,7 @@ bool Image::Initialize()
 // |----------------------------------------------------------------------------|
 // |                              Shutdown                                      |
 // |----------------------------------------------------------------------------|
-void Image::Shutdown()
+void Text::Shutdown()
 {
     return Graphic::Shutdown();
 }
@@ -88,31 +87,33 @@ void Image::Shutdown()
 // |----------------------------------------------------------------------------|
 // |                               Render                                       |
 // |----------------------------------------------------------------------------|
-void Image::Render()
+void Text::Render()
 {
-	DebugLog ("Image::Render() called.", DB_GRAPHICS, 10);
+	DebugLog ("Text::Render() called.", DB_GRAPHICS, 10);
 
 	// Turn off z buffer
     D3DManager::GetRef()->TurnZBufferOff();
 
+	// Turn on alpha blending
+	D3DManager::GetRef()->TurnOnAlphaBlending();
+
     // Get correct shader to use from material
     Shader* shader = m_material->GetShader();
 
-    // Put the quad in the buffer
+    // Put the model in the buffer
     if(m_model) m_model->Render();
 
     // Scale, Translate, and Rotate
     D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();
     D3DXMATRIX scale, rotate, translate;
 	// Scale by texture size and scaling factor
-	D3DXMatrixScaling(&scale, m_texture->GetWidth()*m_scale.x, m_texture->GetHeight()*m_scale.y, 1.0f);
-	//D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, 1.0f);
+	D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, 1.0f);
 	// Rotate by orientation factor
 	D3DXMatrixRotationYawPitchRoll(&rotate, 0.0f, 0.0f, m_orientation.z);
 	// Translate first to the upper left corner, then based on position factor
     D3DXMatrixTranslation(&translate, 
-        m_scale.x*m_texture->GetWidth()/2 - SCREEN_WIDTH/2 + m_position.x, 
-        -1*m_scale.y*m_texture->GetHeight()/2 + SCREEN_HEIGHT/2 - m_position.y, 
+        0.0f + m_position.x,
+        0.0f - m_position.y,
         0.0f);
 	// Modify world matrix by scale, rotation, and translation
     worldMatrix = scale * rotate * translate;
@@ -124,6 +125,9 @@ void Image::Render()
         GraphicsManager::GetRef()->GetBaseViewMatrix(),
         GraphicsManager::GetRef()->GetOrthoMatrix(),
         this);
+
+	// Turn off alpha blending
+	D3DManager::GetRef()->TurnOffAlphaBlending();
 	
 	// Turn on z buffer
     D3DManager::GetRef()->TurnZBufferOn();
@@ -131,3 +135,36 @@ void Image::Render()
     return;
 }
 
+
+// |----------------------------------------------------------------------------|
+// |                               GetText                                      |
+// |----------------------------------------------------------------------------|
+char* Text::GetText()
+{
+	char* string = new char[strlen(m_string)+1];
+	strcpy(string,m_string);
+	return string;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                               SetText                                      |
+// |----------------------------------------------------------------------------|
+void Text::SetText(char* string)
+{
+	// Copy the new string
+	m_string = new char[strlen(string)+1];
+	strcpy(m_string,string);
+
+	// Update the vertex buffer based on the new string
+	((Sentence*)m_model)->UpdateBuffers(string, ((Font*)m_texture));
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                               SetColor                                     |
+// |----------------------------------------------------------------------------|
+void Text::SetColor(float r, float g, float b)
+{
+	m_material->SetTint(D3DXVECTOR4(r,g,b,1.0f));
+}

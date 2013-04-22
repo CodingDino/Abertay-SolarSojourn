@@ -49,6 +49,7 @@ Graphic::~Graphic()
 // |----------------------------------------------------------------------------|
 bool Graphic::Initialize()
 {
+	DebugLog ("Graphic::Initialize() called.", DB_GRAPHICS, 1);
     return true;
 }
 
@@ -68,11 +69,12 @@ void Graphic::Shutdown()
 void Graphic::Render()
 {
 	DebugLog ("Graphic::Render() called.", DB_GRAPHICS, 10);
+
     // Get correct shader to use from material
     Shader* shader = m_material->GetShader();
 
     // Put the model in the buffer
-    if(m_model) m_model->Render(D3DManager::GetRef()->GetDeviceContext());
+    if(m_model) m_model->Render();
 
     // Scale, Translate, and Rotate
     D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();

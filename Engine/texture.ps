@@ -12,6 +12,10 @@
 // |----------------------------------------------------------------------------|
 Texture2D shaderTexture;
 SamplerState SampleType;
+cbuffer ColorBuffer
+{
+    float4 color;
+};
 
 
 // |----------------------------------------------------------------------------|
@@ -39,6 +43,9 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
     {
         textureColor.a = 0.0f;
     }
+
+	// Calculate the tinted color
+	textureColor = saturate(textureColor * color);
 
     return textureColor;
 }

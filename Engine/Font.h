@@ -16,6 +16,7 @@
 #include <fstream>
 #include "Texture.h"
 #include "tinyxml2.h"
+#include "VertexType.h"
 using namespace std;
 
 // |----------------------------------------------------------------------------|
@@ -34,12 +35,8 @@ private:
 		float uLeft, uRight, vTop, vBottom;
 		int offsetX, offsetY;
 		int width, height;
+		int tWidth, tHeight;
 		char code;
-	};
-	struct VertexType
-	{
-		D3DXVECTOR3 position;
-		D3DXVECTOR2 texture;
 	};
 
 public:
@@ -56,7 +53,7 @@ public:
     virtual void Shutdown();
 
 	// Builds the array of triangles that will render the characte sentence
-	void BuildVertexArray(void*, char*, float, float);
+	void BuildVertexArray(VertexType* vertices, char* sentence, float drawX, float drawY);
 
 private:
 

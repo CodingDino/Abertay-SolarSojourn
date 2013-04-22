@@ -3,24 +3,25 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// TextureShader
+// FontShader
 //      Wraps and interacts with vertex and pixel shader.
 
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
-#include "TextureShader.h"
+#include "FontShader.h"
 #include "Graphic.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
-bool TextureShader::Initialize()
+bool FontShader::Initialize()
 {
     // Set up the shader files
-    return Shader::Initialize("TextureVertexShader", "TexturePixelShader", L"../Engine/texture.vs", L"../Engine/texture.ps");
+    return Shader::Initialize("FontVertexShader", "FontPixelShader", L"../Engine/font.vs", L"../Engine/font.ps");
+
 
     // Initialize vertex shader buffers
     if (! InitializeVertexShaderBuffers(D3DManager::GetRef()->GetDevice()) )
@@ -32,7 +33,7 @@ bool TextureShader::Initialize()
 // |----------------------------------------------------------------------------|
 // |                           InitializeSamplerState                           |
 // |----------------------------------------------------------------------------|
-bool TextureShader::InitializeSamplerState(ID3D11Device* device)
+bool FontShader::InitializeSamplerState(ID3D11Device* device)
 {	
     HRESULT result;
     D3D11_SAMPLER_DESC samplerDesc;
@@ -67,7 +68,7 @@ bool TextureShader::InitializeSamplerState(ID3D11Device* device)
 // |----------------------------------------------------------------------------|
 // |                                RenderShader                                |
 // |----------------------------------------------------------------------------|
-void TextureShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void FontShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
     // Set the vertex input layout.
     deviceContext->IASetInputLayout(m_layout);
@@ -89,11 +90,11 @@ void TextureShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCo
 // |----------------------------------------------------------------------------|
 // |                               SetVSBuffer                                  |
 // |----------------------------------------------------------------------------|
-bool TextureShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
+bool FontShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
         D3DXMATRIX projectionMatrix, Graphic* graphic)
 {
-	DebugLog ("TextureShader::SetVSBuffer() called.", DB_GRAPHICS, 10);
+	DebugLog ("FontShader::SetVSBuffer() called.", DB_GRAPHICS, 10);
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     unsigned int bufferNumber;
@@ -134,39 +135,12 @@ bool TextureShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
 // |----------------------------------------------------------------------------|
 // |                               SetPSBuffer                                  |
 // |----------------------------------------------------------------------------|
-bool TextureShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
+bool FontShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
         Graphic* graphic)
 {
-	DebugLog ("TextureShader::SetPSBuffer() called.", DB_GRAPHICS, 10);
+	DebugLog ("FontShader::SetPSBuffer() called.", DB_GRAPHICS, 10);
 
-    HRESULT result;
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    unsigned int bufferNumber;
-    PSBufferType* t_psbuffer;
-
-    // Lock the light constant buffer so it can be written to.
-	result = deviceContext->Map(m_psBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if(FAILED(result))
-	{
-		return false;
-	}
-
-	// Get a pointer to the data in the constant buffer.
-	t_psbuffer = (PSBufferType*)mappedResource.pData;
-
-	// Copy the color into the constant buffer.
-	t_psbuffer->color = graphic->GetMaterial()->GetTint();
-
-	// Unlock the constant buffer.
-	deviceContext->Unmap(m_psBuffer, 0);
-
-	// Set the position of the light constant buffer in the pixel shader.
-	bufferNumber = 0;
-
-	// Send the color buffer to the pixel shader.
-	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_psBuffer);
-
-	// Send the texture sampler to the pixel shader.
+	// Finally set the light constant buffer in the pixel shader with the updated values.
     ID3D11ShaderResourceView* texture = graphic->GetTexture()->GetResource();
 	deviceContext->PSSetShaderResources(0, 1, &texture);
 

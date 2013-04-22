@@ -53,30 +53,30 @@ bool TitleScreen::Initialize() {
 
     // Set up material
     Material* material = new Material;
-    material->SetTint(D3DXVECTOR4(1.0f,0.0f,0.0f,1.0f));
+    //material->SetTint(D3DXVECTOR4(0.5f,0.5f,1.0f,1.0f));
     material->SetShader(GraphicsManager::GetRef()->GetShader("Texture"));
-    
-    // Set up model
-    Model* model = new Model;
-    model->Initialize(D3DManager::GetRef()->GetDevice(),"../Engine/data/models/sphere.txt");
 
     // Set up texture
-    Texture* texture = new Texture;
-    texture->Initialize(D3DManager::GetRef()->GetDevice(),L"../Engine/data/textures/crosshair.png");
+    Font* texture = new Font;
+    texture->Initialize(D3DManager::GetRef()->GetDevice(),
+		"../Engine/data/fonts/manaspace_regular_20.xml",
+		L"../Engine/data/fonts/manaspace_regular_20.png");
 
     // Set up graphic
-    Image* image = new Image;
-    image->SetMaterial(material);
-    image->SetModel(model);
-    image->SetTexture(texture);
-    image->Initialize();
+    Text* graphic = new Text;
+    graphic->SetMaterial(material);
+    graphic->SetTexture(texture);
+    graphic->Initialize();
+
+	// Set the text
+	graphic->SetText("Hello World!");
 
     // Set up transforms
-    image->SetScale(Coord(0.2f,0.2f,1.0f));
-    image->SetOrientation(Coord(0.0f, 0.0f, 45.0f));
+    //image->SetScale(Coord(100.0f,100.0f,0.01f));
+    //image->SetOrientation(Coord(0.0f, 0.0f, 45.0f));
 
     // Add graphic to game object
-    m_gameObjects[0]->SetGraphic(image);
+    m_gameObjects[0]->SetGraphic(graphic);
 
 	DebugLog ("TitleScreen: object initialized.");
 	return true;

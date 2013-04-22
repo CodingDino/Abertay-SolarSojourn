@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Font size="20" family="Manaspace" height="30" style="Regular">
- <Char width="18" offset="0 23" rect="1 20 0 0" code=" "/>
+ <Char width="18" offset="0 23" rect="0 0 0 0" code=" "/>
  <Char width="17" offset="7 4" rect="2 1 6 19" code="!"/>
  <Char width="17" offset="4 4" rect="9 1 12 9" code="&quot;"/>
  <Char width="17" offset="2 4" rect="22 1 13 19" code="#"/>

@@ -5,6 +5,7 @@
 //
 // Model
 //      Contains model data.
+#pragma once
 
 
 // |----------------------------------------------------------------------------|
@@ -14,6 +15,8 @@
 #include <d3dx10math.h>
 #include <fstream>
 #include "Util.h"
+#include "D3DManager.h"
+#include "VertexType.h"
 using namespace std;
 
 
@@ -25,14 +28,6 @@ class Model
 private:
 
     //|-----------------------------Private Data Types--------------------------|
-
-    // Holds a single vertex position, texture, and normal
-    struct VertexType
-    {
-        D3DXVECTOR3 position;   // Vertex position in 3d space
-        D3DXVECTOR2 texture;    // Texture coordinate for 2D texture
-        D3DXVECTOR3 normal;     // Normal vector for this vertex
-    };
 
     // Holds vertex information, to be passed to shaders
     struct ModelType
@@ -50,39 +45,43 @@ public:
     Model();
 
     // Initialize the model, reads in a vertex and texture file
-    bool Initialize(ID3D11Device* device, char* modelFilename);
+	virtual bool Initialize() {return true;}
+    virtual bool Initialize(char* modelFilename);
 
     // Releases data associated with the model
-    void Shutdown();
+    virtual void Shutdown();
 
     // Renders the model to the supplied context
-    void Render(ID3D11DeviceContext* deviceContext);
+    virtual void Render();
 
     // Getter functions
-    int GetIndexCount();
+    virtual int GetIndexCount();
 
-private:
+protected:
 
-    //|-------------------------------Private Functions-------------------------|
+    //|------------------------------Protected Functions------------------------|
 
     // Sets up the buffers associated with this model
-    bool InitializeBuffers(ID3D11Device* device);
+    virtual bool InitializeBuffers();
+
+    // Populates buffers with data
+    virtual bool PopulateBuffers(VertexType*&, unsigned long*&);
 
     // Releases buffers associated with this model
-    void ShutdownBuffers();
+    virtual void ShutdownBuffers();
 
     // Renders the buffers
-    void RenderBuffers(ID3D11DeviceContext* deviceContext);
+    virtual void RenderBuffers();
 
     // Loads the given model from file
-    bool LoadModel(char*);
+    virtual bool LoadModel(char*);
 
     // Releases the model data
-    void ReleaseModel();
+    virtual void ReleaseModel();
 
-private:
+protected:
 
-    //|-----------------------------Private Data Members------------------------|
+    //|----------------------------Protected Data Members-----------------------|
 
     // Buffers
     ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
@@ -92,4 +91,8 @@ private:
 
     // Model
     ModelType* m_model;
+
+	// Buffer flags
+	D3D11_USAGE m_bufferUsage;
+	UINT m_bufferCPUAccess;
 };

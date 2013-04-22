@@ -29,7 +29,7 @@ Material::Material() :
 // |----------------------------------------------------------------------------|
 bool Material::Initialize()
 {
-
+	DebugLog ("Material::Initialize() called.", DB_GRAPHICS, 1);
     return true;
 }
 
