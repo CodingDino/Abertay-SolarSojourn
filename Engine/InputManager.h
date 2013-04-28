@@ -67,6 +67,7 @@ public:
 
     // Gets mouse position
     void GetMouseLocation(int& mouseX, int& mouseY);
+    void GetMouseChange(int& mouseX, int& mouseY);
 
 private:
 
@@ -100,6 +101,7 @@ private:
 
     // mouse coordinates
     int m_mouseX, m_mouseY;
+    int m_mouseChangeX, m_mouseChangeY;
 
     // Keybindings
     int m_keybindings[NUM_BUTTONS];

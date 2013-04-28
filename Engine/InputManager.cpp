@@ -270,6 +270,10 @@ void InputManager::ProcessInput()
     // Update the location of the mouse cursor based on the change of the mouse location during the frame.
     m_mouseX += m_mouseState.lX;
     m_mouseY += m_mouseState.lY;
+    m_mouseChangeX = m_mouseState.lX;
+    m_mouseChangeY = m_mouseState.lY;
+    if(m_mouseState.lX || m_mouseState.lY)
+	    DebugLog ("InputManager: Mouse movement detected", DB_LOGIC, 10);
 
     // Ensure the mouse location doesn't exceed the screen width or height.
     if(m_mouseX < 0)  { m_mouseX = 0; }
@@ -289,6 +293,17 @@ void InputManager::GetMouseLocation(int& mouseX, int& mouseY)
 {
     mouseX = m_mouseX;
     mouseY = m_mouseY;
+    return;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                            GetMouseChange                                  |
+// |----------------------------------------------------------------------------|
+void InputManager::GetMouseChange(int& mouseX, int& mouseY)
+{
+    mouseX = m_mouseChangeX;
+    mouseY = m_mouseChangeY;
     return;
 }
 

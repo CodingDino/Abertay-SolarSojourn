@@ -53,6 +53,7 @@ void Camera::SetPosition(Coord position)
 // |----------------------------------------------------------------------------|
 void Camera::SetOrientation(Coord orientation)
 {
+	DebugLog ("Camera::SetOrientation() called.", DB_GRAPHICS, 10);
 	m_orientation = orientation;
 	return;
 }
@@ -82,6 +83,7 @@ Coord Camera::GetOrientation()
 // |----------------------------------------------------------------------------|
 void Camera::GetViewMatrix(D3DXMATRIX& viewMatrix)
 {
+	DebugLog ("Camera::GetViewMatrix() called.", DB_GRAPHICS, 10);
 	viewMatrix = m_viewMatrix;
 	return;
 }
@@ -92,6 +94,7 @@ void Camera::GetViewMatrix(D3DXMATRIX& viewMatrix)
 // |----------------------------------------------------------------------------|
 void Camera::Render()
 {
+	DebugLog ("Camera::Render() called.", DB_GRAPHICS, 10);
 	D3DXVECTOR3 up, position, lookAt;
 	float yaw, pitch, roll;
 	D3DXMATRIX rotationMatrix;

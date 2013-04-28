@@ -46,8 +46,8 @@ bool TitleScreen::Initialize() {
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
 
-    m_numGameObjects = 1;
-    m_gameObjects = new GameObject*[1];
+    m_numGameObjects = 2;
+    m_gameObjects = new GameObject*[m_numGameObjects];
     Planet* gameObject = new Planet;
     gameObject->Initialize();
 
@@ -85,6 +85,10 @@ bool TitleScreen::Initialize() {
 
     // Add gameObject to array
     m_gameObjects[0] = gameObject;
+
+    // Set up camera
+    m_gameObjects[1] = new MouseLookCamera;
+
 
 	DebugLog ("TitleScreen: object initialized.");
 	return true;

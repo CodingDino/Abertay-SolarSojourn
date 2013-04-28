@@ -16,6 +16,7 @@
 #include "Image.h"
 #include "Text.h"
 #include "Planet.h"
+#include "MouseLookCamera.h"
 
 
 // |----------------------------------------------------------------------------|

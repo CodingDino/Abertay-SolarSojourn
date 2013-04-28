@@ -67,6 +67,9 @@ public:
     // Get shaders
     Shader* GetShader(const char* key);
 
+    // Get camera
+    Camera* GetCamera() {return m_Camera; }
+
 private:
 
     //|-------------------------------Private Functions-------------------------|
