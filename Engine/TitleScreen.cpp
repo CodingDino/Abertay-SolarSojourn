@@ -48,35 +48,43 @@ bool TitleScreen::Initialize() {
 
     m_numGameObjects = 1;
     m_gameObjects = new GameObject*[1];
-    m_gameObjects[0] = new GameObject;
-    m_gameObjects[0]->Initialize();
+    Planet* gameObject = new Planet;
+    gameObject->Initialize();
 
     // Set up material
     Material* material = new Material;
-    //material->SetTint(D3DXVECTOR4(0.5f,0.5f,1.0f,1.0f));
-    material->SetShader(GraphicsManager::GetRef()->GetShader("Texture"));
+    material->SetTint(D3DXVECTOR4(0.5f,0.5f,1.0f,1.0f));
+    material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
 
     // Set up texture
-    Font* texture = new Font;
-    texture->Initialize(D3DManager::GetRef()->GetDevice(),
-		"../Engine/data/fonts/manaspace_regular_20.xml",
-		L"../Engine/data/fonts/manaspace_regular_20.png");
+    //Font* texture = new Font;
+    //texture->Initialize(D3DManager::GetRef()->GetDevice(),
+	//	"../Engine/data/fonts/manaspace_regular_20.xml",
+	//	L"../Engine/data/fonts/manaspace_regular_20.png");
+
+    // Set up model
+    Model* model = new Model;
+    model->Initialize("../Engine/data/models/sphere.txt");
 
     // Set up graphic
-    Text* graphic = new Text;
+    Graphic* graphic = new Graphic;
     graphic->SetMaterial(material);
-    graphic->SetTexture(texture);
+    graphic->SetModel(model);
     graphic->Initialize();
-
-	// Set the text
-	graphic->SetText("Hello World!");
 
     // Set up transforms
     //image->SetScale(Coord(100.0f,100.0f,0.01f));
     //image->SetOrientation(Coord(0.0f, 0.0f, 45.0f));
 
     // Add graphic to game object
-    m_gameObjects[0]->SetGraphic(graphic);
+    gameObject->SetGraphic(graphic);
+
+    // Set up game object as planet
+    gameObject->SetOrbitRadius(2);
+    gameObject->SetOrbitSpeed(0.1);
+
+    // Add gameObject to array
+    m_gameObjects[0] = gameObject;
 
 	DebugLog ("TitleScreen: object initialized.");
 	return true;
@@ -100,6 +108,7 @@ bool TitleScreen::Shutdown() {
 bool TitleScreen::Logic() {
 	DebugLog ("TitleScreen: Logic() called.", DB_LOGIC, 10);
     Screen::Logic();
+
 	return true;
 }
 

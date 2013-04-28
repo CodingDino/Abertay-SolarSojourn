@@ -3,49 +3,53 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// GameObject
-//      Abstract class for game all objects. Contains models, evaluates basic physics 
-//      and executes other behaviour logic, sends render request to renderer.
+// Planet
+//      GameObject class that handles planet orbiting.
 
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
-#include "GameObject.h"
+#include "Planet.h"
 
 
 // |----------------------------------------------------------------------------|
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
-GameObject::GameObject() :
-    m_graphic(0)
+Planet::Planet() :
+    m_orbitCenterObject(0),
+    m_orbitRadius(0),
+    m_orbitSpeed(0),
+    m_orbitTilt(0),
+    m_orbitAngle(0),
+    GameObject()
 {
-	DebugLog ("GameObject: object instantiated.");
+	DebugLog ("Planet: object instantiated.");
 }
      
 
 // |----------------------------------------------------------------------------|
 // |							  Copy Constructor								|
 // |----------------------------------------------------------------------------|
-GameObject::GameObject(const GameObject&) {
-	DebugLog ("GameObject: object copied.");
+Planet::Planet(const Planet&) {
+	DebugLog ("Planet: object copied.");
 }
 
 
 // |----------------------------------------------------------------------------|
 // |							   Destructor									|
 // |----------------------------------------------------------------------------|
-GameObject::~GameObject() {
-	DebugLog ("GameObject: object destroyed.");
+Planet::~Planet() {
+	DebugLog ("Planet: object destroyed.");
 }
 
 
 // |----------------------------------------------------------------------------|
 // |							   Initialize									|
 // |----------------------------------------------------------------------------|
-bool GameObject::Initialize() {
-
-	DebugLog ("GameObject: object initialized.");
+bool Planet::Initialize() {
+    GameObject::Initialize();
+	DebugLog ("Planet: object initialized.");
 	return true;
 }
 
@@ -53,11 +57,9 @@ bool GameObject::Initialize() {
 // |----------------------------------------------------------------------------|
 // |							    Shutdown									|
 // |----------------------------------------------------------------------------|
-bool GameObject::Shutdown() {
-    // TODO: Should we clean up graphic? Theoretically models and textures 
-    //       should all be in one place, rather than owned by individual game objects.
-
-	DebugLog ("GameObject: object shutdown.");
+bool Planet::Shutdown() {
+    GameObject::Shutdown();
+	DebugLog ("Planet: object shutdown.");
 	return true;
 }
 
@@ -65,24 +67,23 @@ bool GameObject::Shutdown() {
 // |----------------------------------------------------------------------------|
 // |							     Logic()									|
 // |----------------------------------------------------------------------------|
-bool GameObject::Logic() {
-	DebugLog ("GameObject: Logic() called.", DB_LOGIC, 10);
+bool Planet::Logic() {
+	DebugLog ("Planet: Logic() called.", DB_LOGIC, 10);
 
-	return true;
-}
+    // Update orbit Angle based on speed
+    m_orbitAngle += m_orbitSpeed; // TODO: Add Frame Time
 
-// |----------------------------------------------------------------------------|
-// |							     Draw()										|
-// |----------------------------------------------------------------------------|
-bool GameObject::Draw() {
-	DebugLog ("GameObject: Draw() called.", DB_GRAPHICS, 10);
+    // Determine relative position based on angle
+    float x, y, z;
+    z = -1*m_orbitRadius*sin(PI/2 - m_orbitTilt)*cos(m_orbitAngle);
+    x = m_orbitRadius*sin(PI/2 - m_orbitTilt)*sin(m_orbitAngle);
+    y = m_orbitRadius*cos(PI/2 - m_orbitTilt);
+    m_position = Coord(x,y,z);
 
-    if (m_graphic)
-    {
-        m_graphic->SetOrientation(m_orientation);
-        m_graphic->SetPosition(m_position);
-        m_graphic->Render();
-    }
+    // Translate based on center
+    if (m_orbitCenterObject)
+        m_orbitCenter = m_orbitCenterObject->GetPosition();
+    m_position += m_orbitCenter;
 
 	return true;
 }

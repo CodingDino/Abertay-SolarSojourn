@@ -8,8 +8,6 @@
 //      and executes other behaviour logic, sends render request to renderer.
 #pragma once
 
-// TODO: cpp file, models, textures, materials
-
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
@@ -66,8 +64,5 @@ protected:
 
     // Graphics
     Graphic* m_graphic;
-    //Model* m_model;                 // Model for the object
-    //Texture* m_texture;             // Texture for the object
-    //Material* m_material;           // Material for the object
 
 };

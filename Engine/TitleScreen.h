@@ -15,6 +15,7 @@
 #include "Util.h"
 #include "Image.h"
 #include "Text.h"
+#include "Planet.h"
 
 
 // |----------------------------------------------------------------------------|

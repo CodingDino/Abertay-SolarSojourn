@@ -39,9 +39,6 @@
     <Filter Include="Graphics\Model Types">
       <UniqueIdentifier>{56e1f5e6-8ed2-47be-b3bd-661f0d0ba925}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Shader Files\FontShader">
-      <UniqueIdentifier>{1bd3e5bf-aa75-4b6b-90c6-b90d6761f99a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -113,8 +110,8 @@
     <ClCompile Include="Text.cpp">
       <Filter>Graphics\Graphic Types</Filter>
     </ClCompile>
-    <ClCompile Include="FontShader.cpp">
-      <Filter>Graphics\Shader Files\FontShader</Filter>
+    <ClCompile Include="Planet.cpp">
+      <Filter>Game\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,8 +191,8 @@
     <ClInclude Include="Sentence.h">
       <Filter>Graphics\Model Types</Filter>
     </ClInclude>
-    <ClInclude Include="FontShader.h">
-      <Filter>Graphics\Shader Files\FontShader</Filter>
+    <ClInclude Include="Planet.h">
+      <Filter>Game\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -210,12 +207,6 @@
     </None>
     <None Include="texture.vs">
       <Filter>Graphics\Shader Files\TextureShader</Filter>
-    </None>
-    <None Include="font.ps">
-      <Filter>Graphics\Shader Files\FontShader</Filter>
-    </None>
-    <None Include="font.vs">
-      <Filter>Graphics\Shader Files\FontShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
