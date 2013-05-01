@@ -14,7 +14,6 @@
 #include "Util.h"
 #include "GameObject.h"
 #include "InputManager.h"
-#include <d3dx10math.h>
 #define PI 3.14159265
 
 
@@ -48,7 +47,4 @@ protected:
     bool m_active;
     float m_mouseSensitivity;
 	float m_speed;
-	D3DXVECTOR3 m_direction;
-	D3DXVECTOR3 m_right;
-	D3DXVECTOR3 m_up;
 };

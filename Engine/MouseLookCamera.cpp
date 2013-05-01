@@ -79,42 +79,44 @@ bool MouseLookCamera::Logic() {
 	// TODO: This just turns x / y based on origin, need to rotate based on current orientation in space.
     m_orientation.x += m_mouseSensitivity * mouseY; // TODO: Scale by elapsed time
     m_orientation.y += m_mouseSensitivity * mouseX; // TODO: Scale by elapsed time
-	
-	// TRYING OUT DXTRANSFORMS
 
-	D3DXMATRIX rotationMatrix;
-	D3DXMatrixRotationYawPitchRoll(&rotationMatrix, 
-		m_orientation.y * PI / 180, 
-		m_orientation.x * PI / 180, 
-		m_orientation.z * PI / 180);
-
-	// Setup the vector that points upwards.
-	m_up.x = 0.0f;
-	m_up.y = 1.0f;
-	m_up.z = 0.0f;
-	// Setup where the camera is looking by default.
-	m_direction.x = 0.0f;
-	m_direction.y = 0.0f;
-	m_direction.z = 1.0f;
-	// Setup the vector pointing to the right.
-	m_right.x = 1.0f;
-	m_right.y = 0.0f;
-	m_right.z = 0.0f;
+    // Clamp x orientation to -90 to 90 range
+    if(m_orientation.x > 90)
+        m_orientation.x = 90;
+    if(m_orientation.x < -90)
+        m_orientation.x = -90;
+    // Cycle y orientation within 0 to 360 range
+    if(m_orientation.y > 360)
+        m_orientation.y -=360;
+    if(m_orientation.y < 0)
+        m_orientation.y += 360;
 	
     // Get keyboard input for movement
-	int forward = 0;
+	int forward(0), right(0), up(0);
 	if(InputManager::GetRef()->GetButtonDown(BUTTON_FORWARD))
 		forward = 1;
 	else if(InputManager::GetRef()->GetButtonDown(BUTTON_BACKWARD))
 		forward = -1;
+	if(InputManager::GetRef()->GetButtonDown(BUTTON_STRAFE_RIGHT))
+		right = 1;
+	else if(InputManager::GetRef()->GetButtonDown(BUTTON_STRAFE_LEFT))
+		right = -1;
+	if(InputManager::GetRef()->GetButtonDown(BUTTON_ASCEND))
+		up = 1;
+	else if(InputManager::GetRef()->GetButtonDown(BUTTON_DESCEND))
+		up = -1;
 	
 	// TODO: When strafing left or right, roll left or right slightly.
     // TODO: Set camera position
+    // TODO: Scale by elapsed time
 	m_linearVelocity = Coord(
-		forward * m_speed * sin(m_orientation.y * PI / 180),
-		forward * m_speed * -1 * sin(m_orientation.x * PI / 180),
-		forward * m_speed * cos(m_orientation.y * PI / 180) * cos(m_orientation.x * PI / 180));
-	m_position += m_linearVelocity; // TODO: Scale by elapsed time
+		forward * m_speed * sin(m_orientation.y * PI / 180) 
+            + right * m_speed * sin(PI / 2 + m_orientation.y * PI / 180),
+		forward * m_speed * -1 * sin(m_orientation.x * PI / 180)
+            + up * m_speed,
+		forward * m_speed * cos(m_orientation.y * PI / 180) * cos(m_orientation.x * PI / 180)
+            + right * m_speed * cos(PI / 2 + m_orientation.y * PI / 180) );
+	m_position += m_linearVelocity; 
 
     // Set camera position and orientation
     Camera* camera = GraphicsManager::GetRef()->GetCamera();

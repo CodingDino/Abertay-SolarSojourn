@@ -36,6 +36,10 @@
 enum BUTTON_IDENT {
 	BUTTON_FORWARD,		// Moves player forward
 	BUTTON_BACKWARD,	// Moves player backward
+	BUTTON_STRAFE_LEFT,	// Moves player left
+	BUTTON_STRAFE_RIGHT,// Moves player right
+	BUTTON_ASCEND,	    // Moves player left
+	BUTTON_DESCEND,     // Moves player right
     BUTTON_EXIT,        // Exits the game
     NUM_BUTTONS         // Number of buttons that can be bound
 };

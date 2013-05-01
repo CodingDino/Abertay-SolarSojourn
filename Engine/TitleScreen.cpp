@@ -46,7 +46,7 @@ bool TitleScreen::Initialize() {
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
 
-    m_numGameObjects = 6;
+    m_numGameObjects = 4;
     m_gameObjects = new GameObject*[m_numGameObjects];
 	
 
@@ -77,24 +77,6 @@ bool TitleScreen::Initialize() {
     // Set up camera
     m_gameObjects[1] = new MouseLookCamera;
     m_gameObjects[1]->SetPosition(Coord(0.0f, 0.0f, -10.0f));
-
-    // Set up text for coord display
-    Font* font = new Font;
-    font->Initialize(D3DManager::GetRef()->GetDevice(),
-		"../Engine/data/fonts/manaspace_regular_20.xml",
-		L"../Engine/data/fonts/manaspace_regular_20.png");
-    Text* text = new Text;
-	text->SetTexture(font);
-    text->Initialize();
-    m_gameObjects[2] = new GameObject;
-	m_gameObjects[2]->SetGraphic(text);
-    // Set up text for rotation display
-    Text* rotation = new Text;
-	rotation->SetTexture(font);
-    rotation->Initialize();
-    m_gameObjects[3] = new GameObject;
-	m_gameObjects[3]->SetGraphic(rotation);
-	m_gameObjects[3]->SetPosition(Coord(0.0f,30.0f,0.0f));
     
     // Set up planet
     Planet* planet = new Planet;
@@ -114,7 +96,7 @@ bool TitleScreen::Initialize() {
     planet->SetOrbitRadius(2.0);
     planet->SetOrbitSpeed(0.1f);
     // Add planet to array
-    m_gameObjects[4] = planet;
+    m_gameObjects[2] = planet;
     
     // Set up planet
     GameObject* floor = new GameObject;
@@ -136,7 +118,29 @@ bool TitleScreen::Initialize() {
     floor->SetOrientation(Coord(0.0f,90.0f * PI / 180,0.0f));
     // Set up game object as planet
     // Add planet to array
-    m_gameObjects[5] = floor;
+    m_gameObjects[3] = floor;
+
+    // Set up text for coord display
+
+    m_numOverlayObjects = 2;
+    m_overlayObjects = new GameObject*[m_numOverlayObjects];
+
+    Font* font = new Font;
+    font->Initialize(D3DManager::GetRef()->GetDevice(),
+		"../Engine/data/fonts/manaspace_regular_20.xml",
+		L"../Engine/data/fonts/manaspace_regular_20.png");
+    Text* text = new Text;
+	text->SetTexture(font);
+    text->Initialize();
+    m_overlayObjects[0] = new GameObject;
+	m_overlayObjects[0]->SetGraphic(text);
+    // Set up text for rotation display
+    Text* rotation = new Text;
+	rotation->SetTexture(font);
+    rotation->Initialize();
+    m_overlayObjects[1] = new GameObject;
+	m_overlayObjects[1]->SetGraphic(rotation);
+	m_overlayObjects[1]->SetPosition(Coord(0.0f,30.0f,0.0f));
 
 	DebugLog ("TitleScreen: object initialized.");
 	return true;
@@ -160,8 +164,8 @@ bool TitleScreen::Shutdown() {
 bool TitleScreen::Logic() {
 	DebugLog ("TitleScreen: Logic() called.", DB_LOGIC, 10);
     Screen::Logic();
-	((Text*)(m_gameObjects[2]->GetGraphic()))->SetText(("pos: "+m_gameObjects[1]->GetPosition().ToString()).c_str());
-	((Text*)(m_gameObjects[3]->GetGraphic()))->SetText(("rot: "+m_gameObjects[1]->GetOrientation().ToString()).c_str());
+	((Text*)(m_overlayObjects[0]->GetGraphic()))->SetText(("pos: "+m_gameObjects[1]->GetPosition().ToString()).c_str());
+	((Text*)(m_overlayObjects[1]->GetGraphic()))->SetText(("rot: "+m_gameObjects[1]->GetOrientation().ToString()).c_str());
 	return true;
 }
 

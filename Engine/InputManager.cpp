@@ -52,6 +52,10 @@ bool InputManager::Initialize(HINSTANCE hinstance, int screenWidth, int screenHe
     m_keybindings[BUTTON_EXIT] = DIK_ESCAPE;
     m_keybindings[BUTTON_FORWARD] = DIK_W;
     m_keybindings[BUTTON_BACKWARD] = DIK_S;
+    m_keybindings[BUTTON_STRAFE_LEFT] = DIK_A;
+    m_keybindings[BUTTON_STRAFE_RIGHT] = DIK_D;
+    m_keybindings[BUTTON_ASCEND] = DIK_SPACE;
+    m_keybindings[BUTTON_DESCEND] = DIK_LMENU;
 
     // Store the screen size which will be used for positioning the mouse cursor.
     m_screenWidth = screenWidth;
