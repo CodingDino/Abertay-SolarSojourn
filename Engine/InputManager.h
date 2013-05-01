@@ -34,6 +34,8 @@
 // |                                Constants                                   |
 // |----------------------------------------------------------------------------|
 enum BUTTON_IDENT {
+	BUTTON_FORWARD,		// Moves player forward
+	BUTTON_BACKWARD,	// Moves player backward
     BUTTON_EXIT,        // Exits the game
     NUM_BUTTONS         // Number of buttons that can be bound
 };

@@ -58,7 +58,7 @@ bool Text::Initialize()
 		m_material->SetShader(GraphicsManager::GetRef()->GetShader("Texture"));
 	}
 
-	// If there's not a model, make a quad
+	// If there's not a model, make a sentence
 	if (!m_model)
 	{
 		m_model = new Sentence();
@@ -150,14 +150,17 @@ char* Text::GetText()
 // |----------------------------------------------------------------------------|
 // |                               SetText                                      |
 // |----------------------------------------------------------------------------|
-void Text::SetText(char* string)
+void Text::SetText(const char* string)
 {
+	// Delete the old string
+	delete[] m_string;
+
 	// Copy the new string
 	m_string = new char[strlen(string)+1];
 	strcpy(m_string,string);
 
 	// Update the vertex buffer based on the new string
-	((Sentence*)m_model)->UpdateBuffers(string, ((Font*)m_texture));
+	((Sentence*)m_model)->UpdateBuffers(m_string, ((Font*)m_texture));
 }
 
 

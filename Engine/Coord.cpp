@@ -8,10 +8,28 @@
 //      something in the game world. The data members for this class will be 
 //      public, like a struct.
 
+
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include "Coord.h"
+
+
+// |----------------------------------------------------------------------------|
+// |								  Utility			                        |
+// |----------------------------------------------------------------------------|
+std::string Coord::ToString() {
+    std::string string = "";
+	string += "(";
+	string += std::to_string(static_cast<long long>(x));
+	string += ",";
+	string += std::to_string(static_cast<long long>(y));
+	string += ",";
+	string += std::to_string(static_cast<long long>(z));
+	string += ")";
+	return string;
+}
+
 
 // |----------------------------------------------------------------------------|
 // |                           Operator Overloading                             |

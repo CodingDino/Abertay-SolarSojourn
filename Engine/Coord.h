@@ -11,6 +11,11 @@
 
 
 // |----------------------------------------------------------------------------|
+// |                                Includes                                    |
+// |----------------------------------------------------------------------------|
+#include <string>
+
+// |----------------------------------------------------------------------------|
 // |                          Class Definition: Coord                           |
 // |----------------------------------------------------------------------------|
 class Coord {
@@ -22,6 +27,9 @@ public:
     Coord (const float newx, const float newy, const float newz) : x(newx), y(newy), z(newz){}
     Coord (const Coord& old_coord) : x(old_coord.x), y(old_coord.y), z(old_coord.z) {}
     
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   Utility   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+	std::string ToString();
+
     //~~~~~~~~~~~~~~~~~~~~~~   Operator Overloading   ~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     // Asignment and Arithmetic
@@ -42,6 +50,8 @@ public:
 
     // Comparison
     bool operator==(const Coord& rhs);
+
+	
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~~   Data Members   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     float x, y, z;

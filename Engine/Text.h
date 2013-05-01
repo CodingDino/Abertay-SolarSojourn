@@ -41,7 +41,7 @@ public:
 
 	// Getter and Setter functions
 	char* GetText();
-	void SetText(char*); // Rebuilds the buffer from Font.
+	void SetText(const char*); // Rebuilds the buffer from Font.
 	void SetColor(float r, float g, float b);
 
 protected:

@@ -72,7 +72,7 @@ bool Sentence::Initialize(int maxLength)
 // |----------------------------------------------------------------------------|
 bool Sentence::PopulateBuffers(VertexType*& vertices, unsigned long*& indices)
 {
-	DebugLog ("Sentence::PopulateBuffers() called.", DB_GRAPHICS, 1);
+	DebugLog ("Sentence::PopulateBuffers() called.", DB_GRAPHICS, 10);
 
 	// Initialize index array
 	for(int i=0; i<m_indexCount; i++)

@@ -18,7 +18,8 @@
 // |----------------------------------------------------------------------------|
 MouseLookCamera::MouseLookCamera() :
     m_active(true),
-    m_mouseSensitivity(1.0f),
+    m_mouseSensitivity(0.7f),
+	m_speed(1.0f),
     GameObject()
 {
 	DebugLog ("MouseLookCamera: object instantiated.");
@@ -73,16 +74,52 @@ bool MouseLookCamera::Logic() {
     // Get mouse input for orientation
     int mouseX, mouseY;
     InputManager::GetRef()->GetMouseChange(mouseX, mouseY);
+	// TODO: Change to setting rotational velocity, automatically moves and stops.
+	// TODO: Stop mouselook at set angles
+	// TODO: This just turns x / y based on origin, need to rotate based on current orientation in space.
     m_orientation.x += m_mouseSensitivity * mouseY; // TODO: Scale by elapsed time
     m_orientation.y += m_mouseSensitivity * mouseX; // TODO: Scale by elapsed time
+	
+	// TRYING OUT DXTRANSFORMS
 
-    // Set camera orientation
+	D3DXMATRIX rotationMatrix;
+	D3DXMatrixRotationYawPitchRoll(&rotationMatrix, 
+		m_orientation.y * PI / 180, 
+		m_orientation.x * PI / 180, 
+		m_orientation.z * PI / 180);
+
+	// Setup the vector that points upwards.
+	m_up.x = 0.0f;
+	m_up.y = 1.0f;
+	m_up.z = 0.0f;
+	// Setup where the camera is looking by default.
+	m_direction.x = 0.0f;
+	m_direction.y = 0.0f;
+	m_direction.z = 1.0f;
+	// Setup the vector pointing to the right.
+	m_right.x = 1.0f;
+	m_right.y = 0.0f;
+	m_right.z = 0.0f;
+	
+    // Get keyboard input for movement
+	int forward = 0;
+	if(InputManager::GetRef()->GetButtonDown(BUTTON_FORWARD))
+		forward = 1;
+	else if(InputManager::GetRef()->GetButtonDown(BUTTON_BACKWARD))
+		forward = -1;
+	
+	// TODO: When strafing left or right, roll left or right slightly.
+    // TODO: Set camera position
+	m_linearVelocity = Coord(
+		forward * m_speed * sin(m_orientation.y * PI / 180),
+		forward * m_speed * -1 * sin(m_orientation.x * PI / 180),
+		forward * m_speed * cos(m_orientation.y * PI / 180) * cos(m_orientation.x * PI / 180));
+	m_position += m_linearVelocity; // TODO: Scale by elapsed time
+
+    // Set camera position and orientation
     Camera* camera = GraphicsManager::GetRef()->GetCamera();
     camera->SetOrientation(m_orientation);
-
-    // TODO: Get keyboard input for movement
-
-    // TODO: Set camera position
+    camera->SetPosition(m_position);
 
 	return true;
 }

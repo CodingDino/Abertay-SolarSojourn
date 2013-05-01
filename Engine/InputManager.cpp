@@ -50,6 +50,8 @@ bool InputManager::Initialize(HINSTANCE hinstance, int screenWidth, int screenHe
 
     // Set default keybindings
     m_keybindings[BUTTON_EXIT] = DIK_ESCAPE;
+    m_keybindings[BUTTON_FORWARD] = DIK_W;
+    m_keybindings[BUTTON_BACKWARD] = DIK_S;
 
     // Store the screen size which will be used for positioning the mouse cursor.
     m_screenWidth = screenWidth;
@@ -276,6 +278,7 @@ void InputManager::ProcessInput()
 	    DebugLog ("InputManager: Mouse movement detected", DB_LOGIC, 10);
 
     // Ensure the mouse location doesn't exceed the screen width or height.
+	// NOTE: Will still record movement outside the screen as mouseChange
     if(m_mouseX < 0)  { m_mouseX = 0; }
     if(m_mouseY < 0)  { m_mouseY = 0; }
     

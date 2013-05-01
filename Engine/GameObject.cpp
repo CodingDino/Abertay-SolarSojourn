@@ -56,6 +56,7 @@ bool GameObject::Initialize() {
 bool GameObject::Shutdown() {
     // TODO: Should we clean up graphic? Theoretically models and textures 
     //       should all be in one place, rather than owned by individual game objects.
+    //       Graphic should be cleaned up here, but model, texture, material should be cleaned up elsewhere.
 
 	DebugLog ("GameObject: object shutdown.");
 	return true;
