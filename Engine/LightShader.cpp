@@ -3,24 +3,24 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// TextureShader
+// LightShader
 //      Wraps and interacts with vertex and pixel shader.
 
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
-#include "TextureShader.h"
+#include "LightShader.h"
 #include "Graphic.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
-bool TextureShader::Initialize()
+bool LightShader::Initialize()
 {
     // Set up the shader files
-    return Shader::Initialize("TextureVertexShader", "TexturePixelShader", L"../Engine/texture.vs", L"../Engine/texture.ps");
+    return Shader::Initialize("LightVertexShader", "LightPixelShader", L"../Engine/light.vs", L"../Engine/light.ps");
 
     // Initialize vertex shader buffers
     if (! InitializeVertexShaderBuffers(D3DManager::GetRef()->GetDevice()) )
@@ -32,7 +32,7 @@ bool TextureShader::Initialize()
 // |----------------------------------------------------------------------------|
 // |                           InitializeSamplerState                           |
 // |----------------------------------------------------------------------------|
-bool TextureShader::InitializeSamplerState(ID3D11Device* device)
+bool LightShader::InitializeSamplerState(ID3D11Device* device)
 {	
     HRESULT result;
     D3D11_SAMPLER_DESC samplerDesc;
@@ -67,7 +67,7 @@ bool TextureShader::InitializeSamplerState(ID3D11Device* device)
 // |----------------------------------------------------------------------------|
 // |                                RenderShader                                |
 // |----------------------------------------------------------------------------|
-void TextureShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void LightShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
     // Set the vertex input layout.
     deviceContext->IASetInputLayout(m_layout);
@@ -89,11 +89,11 @@ void TextureShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCo
 // |----------------------------------------------------------------------------|
 // |                               SetVSBuffer                                  |
 // |----------------------------------------------------------------------------|
-bool TextureShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
+bool LightShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
         D3DXMATRIX projectionMatrix, Graphic* graphic)
 {
-	DebugLog ("TextureShader::SetVSBuffer() called.", DB_GRAPHICS, 10);
+	DebugLog ("LightShader::SetVSBuffer() called.", DB_GRAPHICS, 10);
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     unsigned int bufferNumber;
@@ -134,10 +134,10 @@ bool TextureShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
 // |----------------------------------------------------------------------------|
 // |                               SetPSBuffer                                  |
 // |----------------------------------------------------------------------------|
-bool TextureShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
+bool LightShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
         Graphic* graphic)
 {
-	DebugLog ("TextureShader::SetPSBuffer() called.", DB_GRAPHICS, 10);
+	DebugLog ("LightShader::SetPSBuffer() called.", DB_GRAPHICS, 10);
 
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -157,7 +157,7 @@ bool TextureShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 	// Copy the color into the constant buffer.
     Material* material = graphic->GetMaterial();
     t_psbuffer->color = D3DXVECTOR4(material->tintR, material->tintG, material->tintB, material->alpha);
-        
+ 
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_psBuffer, 0);
 

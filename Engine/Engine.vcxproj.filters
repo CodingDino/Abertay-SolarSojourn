@@ -39,6 +39,9 @@
     <Filter Include="Graphics\Model Types">
       <UniqueIdentifier>{56e1f5e6-8ed2-47be-b3bd-661f0d0ba925}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Shader Files\LightShader">
+      <UniqueIdentifier>{3cb480c3-ae70-431b-9717-8fd6973457db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -70,9 +73,6 @@
     </ClCompile>
     <ClCompile Include="GameManager.cpp">
       <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="TitleScreen.cpp">
       <Filter>Game\Screens</Filter>
@@ -124,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShader.cpp">
+      <Filter>Graphics\Shader Files\LightShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +221,9 @@
     <ClInclude Include="ParticleSystem.h">
       <Filter>Game\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Graphics\Shader Files\LightShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">
@@ -231,6 +237,12 @@
     </None>
     <None Include="texture.vs">
       <Filter>Graphics\Shader Files\TextureShader</Filter>
+    </None>
+    <None Include="light.vs">
+      <Filter>Graphics\Shader Files\LightShader</Filter>
+    </None>
+    <None Include="light.ps">
+      <Filter>Graphics\Shader Files\LightShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

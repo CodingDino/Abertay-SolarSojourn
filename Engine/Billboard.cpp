@@ -52,8 +52,7 @@ bool Billboard::Initialize()
 	if (!m_material)
 	{
 		m_material = new Material;
-		m_material->Initialize();
-		m_material->SetShader(GraphicsManager::GetRef()->GetShader("Texture"));
+		m_material->shader = GraphicsManager::GetRef()->GetShader("Texture");
 	}
 
 	// If there's not a model, make a quad
@@ -89,11 +88,21 @@ void Billboard::Render(Coord position)
 {
 	DebugLog ("Billboard::Render() called.", DB_GRAPHICS, 10);
 
-	// Turn on alpha blending
-	D3DManager::GetRef()->TurnOnAlphaBlending();
-
     // Get correct shader to use from material
-    Shader* shader = m_material->GetShader();
+    Shader* shader = m_material->shader;
+
+    // Pipeline settings
+    if (m_material)
+    {
+        if (m_material->alphaBlend)
+            D3DManager::GetRef()->TurnOnAlphaBlending();
+        if (m_material->particleBlend)
+            D3DManager::GetRef()->TurnOnParticleBlending();
+        if (!m_material->backfaceCull)
+            D3DManager::GetRef()->TurnOffBackCulling();
+        if (!m_material->zBuffer)
+            D3DManager::GetRef()->TurnZBufferOff();
+    }
 
     // Put the quad in the buffer
     if(m_model) m_model->Render();
@@ -138,8 +147,11 @@ void Billboard::Render(Coord position)
         GraphicsManager::GetRef()->GetProjectionMatrix(),
         this);
     
-	// Turn off alpha blending
-	D3DManager::GetRef()->TurnOffAlphaBlending();
+
+    // Reset pipeline settings
+    D3DManager::GetRef()->TurnOffAlphaBlending();
+    D3DManager::GetRef()->TurnOnBackCulling();
+    D3DManager::GetRef()->TurnZBufferOn();
 
     return;
 }

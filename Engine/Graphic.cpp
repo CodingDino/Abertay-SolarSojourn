@@ -78,7 +78,20 @@ void Graphic::Render(Coord position)
 	DebugLog ("Graphic::Render() called.", DB_GRAPHICS, 10);
 
     // Get correct shader to use from material
-    Shader* shader = m_material->GetShader();
+    Shader* shader = m_material->shader;
+
+    // Pipeline settings
+    if (m_material)
+    {
+        if (m_material->alphaBlend)
+            D3DManager::GetRef()->TurnOnAlphaBlending();
+        if (m_material->particleBlend)
+            D3DManager::GetRef()->TurnOnParticleBlending();
+        if (!m_material->backfaceCull)
+            D3DManager::GetRef()->TurnOffBackCulling();
+        if (!m_material->zBuffer)
+            D3DManager::GetRef()->TurnZBufferOff();
+    }
 
     // Put the model in the buffer
     if(m_model) m_model->Render();
@@ -98,6 +111,11 @@ void Graphic::Render(Coord position)
         GraphicsManager::GetRef()->GetViewMatrix(),
         GraphicsManager::GetRef()->GetProjectionMatrix(),
         this);
+
+    // Reset pipeline settings
+    D3DManager::GetRef()->TurnOffAlphaBlending();
+    D3DManager::GetRef()->TurnOnBackCulling();
+    D3DManager::GetRef()->TurnZBufferOn();
 
     return;
 }

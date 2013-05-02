@@ -67,6 +67,7 @@ public:
 
     // Blending modification
     void TurnOnAlphaBlending();
+    void TurnOnParticleBlending();
     void TurnOffAlphaBlending();
 
     // Culling modification
@@ -100,6 +101,7 @@ private:
     ID3D11RasterizerState* m_cullingDisabledRasterState;
     ID3D11DepthStencilState* m_depthDisabledStencilState;
     ID3D11BlendState* m_alphaEnableBlendingState;
+    ID3D11BlendState* m_particleAlphaEnableBlendingState;
     ID3D11BlendState* m_alphaDisableBlendingState;
 
     // Matrices

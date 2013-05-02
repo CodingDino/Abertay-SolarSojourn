@@ -54,8 +54,9 @@ bool Text::Initialize()
 	if (!m_material)
 	{
 		m_material = new Material;
-		m_material->Initialize();
-		m_material->SetShader(GraphicsManager::GetRef()->GetShader("Texture"));
+		m_material->shader = GraphicsManager::GetRef()->GetShader("Texture");
+		m_material->alphaBlend = true;
+		m_material->zBuffer = false;
 	}
 
 	// If there's not a model, make a sentence
@@ -91,14 +92,21 @@ void Text::Render()
 {
 	DebugLog ("Text::Render() called.", DB_GRAPHICS, 10);
 
-	// Turn off z buffer
-    D3DManager::GetRef()->TurnZBufferOff();
-
-	// Turn on alpha blending
-	D3DManager::GetRef()->TurnOnAlphaBlending();
-
     // Get correct shader to use from material
-    Shader* shader = m_material->GetShader();
+    Shader* shader = m_material->shader;
+
+    // Pipeline settings
+    if (m_material)
+    {
+        if (m_material->alphaBlend)
+            D3DManager::GetRef()->TurnOnAlphaBlending();
+        if (m_material->particleBlend)
+            D3DManager::GetRef()->TurnOnParticleBlending();
+        if (!m_material->backfaceCull)
+            D3DManager::GetRef()->TurnOffBackCulling();
+        if (!m_material->zBuffer)
+            D3DManager::GetRef()->TurnZBufferOff();
+    }
 
     // Put the model in the buffer
     if(m_model) m_model->Render();
@@ -125,11 +133,10 @@ void Text::Render()
         GraphicsManager::GetRef()->GetBaseViewMatrix(),
         GraphicsManager::GetRef()->GetOrthoMatrix(),
         this);
-
-	// Turn off alpha blending
-	D3DManager::GetRef()->TurnOffAlphaBlending();
-	
-	// Turn on z buffer
+    
+    // Reset pipeline settings
+    D3DManager::GetRef()->TurnOffAlphaBlending();
+    D3DManager::GetRef()->TurnOnBackCulling();
     D3DManager::GetRef()->TurnZBufferOn();
 
     return;

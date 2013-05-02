@@ -55,7 +55,7 @@ bool TitleScreen::Initialize() {
     gameObject->Initialize();
     Material* material = new Material;
     material->SetTint(1.0f,1.0f,0.0f,1.0f);
-    material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
+    material->shader = GraphicsManager::GetRef()->GetShader("Color");
     Model* model = new Model;
     model->Initialize("../Engine/data/models/sphere.txt");
     Graphic* graphic = new Graphic;
@@ -83,7 +83,7 @@ bool TitleScreen::Initialize() {
     planet->Initialize();
     material = new Material;
     material->SetTint(1.0f,0.0f,0.0f,1.0f);
-    material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
+    material->shader = GraphicsManager::GetRef()->GetShader("Color");
     graphic = new Graphic;
     graphic->SetMaterial(material);
     graphic->SetModel(model);
@@ -98,12 +98,12 @@ bool TitleScreen::Initialize() {
     // Add planet to array
     m_gameObjects[2] = planet;
     
-    // Set up planet
+    // Set up floor
     GameObject* floor = new GameObject;
     floor->Initialize();
     material = new Material;
     material->SetTint(0.7f,0.6f,0.5f,1.0f);
-    material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
+    material->shader = GraphicsManager::GetRef()->GetShader("Color");
     graphic = new Graphic;
     graphic->SetMaterial(material);
     Quad* quad = new Quad;
@@ -127,7 +127,8 @@ bool TitleScreen::Initialize() {
 		L"../Engine/data/textures/particle_ice.dds");
     material = new Material;
     material->SetTint(01.0f,0.4f,0.0f,1.0f);
-    material->SetShader(GraphicsManager::GetRef()->GetShader("Texture"));
+    material->shader = GraphicsManager::GetRef()->GetShader("Texture");
+    material->particleBlend = true;
     graphic = new Billboard;
     graphic->SetMaterial(material);
     graphic->SetModel(quad);

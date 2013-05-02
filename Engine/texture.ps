@@ -14,7 +14,7 @@ Texture2D shaderTexture;
 SamplerState SampleType;
 cbuffer ColorBuffer
 {
-    float4 color;
+    float4 tint;
 };
 
 
@@ -37,15 +37,10 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 
     // Sample the pixel color from the texture using the sampler at this texture coordinate location.
     textureColor = shaderTexture.Sample(SampleType, input.tex);
-	
-    // If the color is black on the texture then treat this pixel as transparent.
-    if(textureColor.r == 0.0f)
-    {
-        textureColor.a = 0.0f;
-    }
 
 	// Calculate the tinted color
-	textureColor = saturate(textureColor * color);
+	textureColor = saturate(textureColor * tint);
+    //textureColor.a = 0.0f;
 
     return textureColor;
 }

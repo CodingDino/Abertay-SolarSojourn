@@ -33,34 +33,31 @@ class Material
 
 public:
 
-    //|-------------------------------Public Functions--------------------------|
-    
-    // Constructors and Destructors
-    Material();
-    
-    // Initializes the material
-    bool Initialize();
+    Shader* shader;
+    float tintR, tintG, tintB;
+    float alpha;
+    bool alphaBlend;
+    bool particleBlend;
+    bool backfaceCull;
+    bool zBuffer;
 
-    // Performs shutdown, deallocation, and cleanup
-    void Shutdown();
+    Material() : 
+        shader(0),
+        tintR(1.0),
+        tintG(1.0),
+        tintB(1.0),
+        alpha(1.0),
+        alphaBlend(false),
+        particleBlend(false),
+        backfaceCull(true),
+        zBuffer(true)
+    {}
 
-    // Setter Functions
-    void SetShader(Shader* shader) {m_shader = shader;}
-    void SetTint(float r, float g, float b, float a) 
-        {m_tint = D3DXVECTOR4(r,g,b,a);}
-
-    // Getter Functions
-    Shader* GetShader() {return m_shader;}
-    D3DXVECTOR4 GetTint() {return m_tint;}
-    
-protected:
-
-    //|-----------------------------Protected Functions------------------------|
-
-protected:
-
-    //|---------------------------Protected Data Members-----------------------|
-    Shader* m_shader;
-    D3DXVECTOR4 m_tint;
+    void SetTint(float r, float g, float b, float a) {
+        tintR = r;
+        tintG = g;
+        tintB = b;
+        alpha = a;
+    }
 
 };

@@ -3,13 +3,15 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// color.ps
-//      Pixel shader for handling simple colored shapes with no lighting/texture
+// light.ps
+//      Pixel shader for handling simple textured shapes with lighting
 
 
 // |----------------------------------------------------------------------------|
 // |                                 Globals                                    |
 // |----------------------------------------------------------------------------|
+Texture2D shaderTexture;
+SamplerState SampleType;
 cbuffer ColorBuffer
 {
     float4 tint;
@@ -26,11 +28,24 @@ struct PixelInputType
     float3 normal : NORMAL;
 };
 
-
 // |----------------------------------------------------------------------------|
 // |                              Pixel Shader                                  |
 // |----------------------------------------------------------------------------|
-float4 ColorPixelShader(PixelInputType input) : SV_TARGET
+float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 {
-    return tint;
+    float4 textureColor;
+
+    // Sample the pixel color from the texture using the sampler at this texture coordinate location.
+    textureColor = shaderTexture.Sample(SampleType, input.tex);
+	
+    // If the color is black on the texture then treat this pixel as transparent.
+    if(textureColor.r == 0.0f)
+    {
+        textureColor.a = 0.0f;
+    }
+
+	// Calculate the tinted color
+	textureColor = saturate(textureColor * tint);
+
+    return textureColor;
 }
