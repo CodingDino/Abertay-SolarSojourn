@@ -111,15 +111,18 @@ void Billboard::Render()
 
 	// Rotate to face camera
     Camera* camera = GraphicsManager::GetRef()->GetCamera();
-    Coord cameraPosition = camera->GetPosition();
-    Coord direction = m_position - cameraPosition;
-    float mag = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+    D3DXVECTOR3 position(m_position.x, m_position.y, m_position.z);
+    D3DXVECTOR3 cameraPosition(camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
+    D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
+    D3DXVECTOR3 direction(m_position.x - camera->GetPosition().x, 
+        m_position.y - camera->GetPosition().y, 
+        m_position.z - camera->GetPosition().z);
+    D3DXVECTOR3 axis;
+    D3DXVec3Cross(&axis,&direction,&up);
+    float mag = D3DXVec3Length(&direction);
     float yaw = atan2(direction.x,direction.z);
-    float pitch = -atan2(direction.y,direction.z);
-    
-	D3DXMatrixRotationX(&rotateX, pitch);
-	D3DXMatrixRotationY(&rotateY, yaw);
-    rotate =  rotateX;
+    float pitch = D3DX_PI/2 - acos(-direction.y / mag);
+    D3DXMatrixRotationYawPitchRoll(&rotate, yaw, pitch, 0.0f);
 
 	// Translate
 	D3DXMatrixTranslation(&translate, m_position.x, m_position.y, m_position.z);
