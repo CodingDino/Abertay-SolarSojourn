@@ -46,7 +46,8 @@ public:
 
     // Setter Functions
     void SetShader(Shader* shader) {m_shader = shader;}
-    void SetTint(D3DXVECTOR4 tint) {m_tint = tint;}
+    void SetTint(float r, float g, float b, float a) 
+        {m_tint = D3DXVECTOR4(r,g,b,a);}
 
     // Getter Functions
     Shader* GetShader() {return m_shader;}

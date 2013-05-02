@@ -18,6 +18,7 @@
 #include "Planet.h"
 #include "MouseLookCamera.h"
 #include "Billboard.h"
+#include "ParticleSystem.h"
 
 
 // |----------------------------------------------------------------------------|

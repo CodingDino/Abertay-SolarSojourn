@@ -35,7 +35,7 @@ public:
     virtual void Shutdown();
 
     // Renders the graphic to the supplied context
-    virtual void Render();
+    virtual void Render(Coord position);
 
 protected:
 

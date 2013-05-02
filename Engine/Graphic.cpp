@@ -62,11 +62,18 @@ void Graphic::Shutdown()
     return;
 }
 
-
 // |----------------------------------------------------------------------------|
 // |                               Render                                       |
 // |----------------------------------------------------------------------------|
 void Graphic::Render()
+{
+    Render(m_position);
+}
+
+// |----------------------------------------------------------------------------|
+// |                               Render                                       |
+// |----------------------------------------------------------------------------|
+void Graphic::Render(Coord position)
 {
 	DebugLog ("Graphic::Render() called.", DB_GRAPHICS, 10);
 
@@ -81,7 +88,7 @@ void Graphic::Render()
     D3DXMATRIX scale, rotate, translate;
 	D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, m_scale.z);
 	D3DXMatrixRotationYawPitchRoll(&rotate, m_orientation.x, m_orientation.y, m_orientation.z);
-	D3DXMatrixTranslation(&translate, m_position.x, m_position.y, m_position.z);
+	D3DXMatrixTranslation(&translate, position.x, position.y, position.z);
     worldMatrix = scale * rotate * translate;
 
     // Render using the shader and a self pointer.

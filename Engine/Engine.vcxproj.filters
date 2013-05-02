@@ -122,6 +122,9 @@
     <ClCompile Include="Billboard.cpp">
       <Filter>Graphics\Graphic Types</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Game\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="Billboard.h">
       <Filter>Graphics\Graphic Types</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Game\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

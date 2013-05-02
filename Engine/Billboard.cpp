@@ -85,7 +85,7 @@ void Billboard::Shutdown()
 // |----------------------------------------------------------------------------|
 // |                               Render                                       |
 // |----------------------------------------------------------------------------|
-void Billboard::Render()
+void Billboard::Render(Coord position)
 {
 	DebugLog ("Billboard::Render() called.", DB_GRAPHICS, 10);
 
@@ -111,12 +111,12 @@ void Billboard::Render()
 
 	// Rotate to face camera
     Camera* camera = GraphicsManager::GetRef()->GetCamera();
-    D3DXVECTOR3 position(m_position.x, m_position.y, m_position.z);
+    //D3DXVECTOR3 positionVec(position.x, position.y, position.z);
     D3DXVECTOR3 cameraPosition(camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
     D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-    D3DXVECTOR3 direction(m_position.x - camera->GetPosition().x, 
-        m_position.y - camera->GetPosition().y, 
-        m_position.z - camera->GetPosition().z);
+    D3DXVECTOR3 direction(position.x - camera->GetPosition().x, 
+        position.y - camera->GetPosition().y, 
+        position.z - camera->GetPosition().z);
     D3DXVECTOR3 axis;
     D3DXVec3Cross(&axis,&direction,&up);
     float mag = D3DXVec3Length(&direction);
@@ -125,7 +125,7 @@ void Billboard::Render()
     D3DXMatrixRotationYawPitchRoll(&rotate, yaw, pitch, 0.0f);
 
 	// Translate
-	D3DXMatrixTranslation(&translate, m_position.x, m_position.y, m_position.z);
+	D3DXMatrixTranslation(&translate, position.x, position.y, position.z);
 
 	// Modify world matrix by scale, rotation, and translation
     worldMatrix = scale * rotate * translate;

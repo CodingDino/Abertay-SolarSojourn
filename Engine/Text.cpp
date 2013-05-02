@@ -169,5 +169,5 @@ void Text::SetText(const char* string)
 // |----------------------------------------------------------------------------|
 void Text::SetColor(float r, float g, float b)
 {
-	m_material->SetTint(D3DXVECTOR4(r,g,b,1.0f));
+	m_material->SetTint(r,g,b,1.0f);
 }

@@ -39,6 +39,7 @@ public:
 
     // Renders the graphic to the supplied context
     virtual void Render();
+    virtual void Render(Coord position);
 
     // Getter functions
     virtual Model* GetModel() { return m_model; }

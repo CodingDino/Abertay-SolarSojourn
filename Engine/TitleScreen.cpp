@@ -54,7 +54,7 @@ bool TitleScreen::Initialize() {
     Planet* gameObject = new Planet;
     gameObject->Initialize();
     Material* material = new Material;
-    material->SetTint(D3DXVECTOR4(1.0f,1.0f,0.0f,1.0f));
+    material->SetTint(1.0f,1.0f,0.0f,1.0f);
     material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
     Model* model = new Model;
     model->Initialize("../Engine/data/models/sphere.txt");
@@ -82,7 +82,7 @@ bool TitleScreen::Initialize() {
     Planet* planet = new Planet;
     planet->Initialize();
     material = new Material;
-    material->SetTint(D3DXVECTOR4(1.0f,0.0f,0.0f,1.0f));
+    material->SetTint(1.0f,0.0f,0.0f,1.0f);
     material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
     graphic = new Graphic;
     graphic->SetMaterial(material);
@@ -102,7 +102,7 @@ bool TitleScreen::Initialize() {
     GameObject* floor = new GameObject;
     floor->Initialize();
     material = new Material;
-    material->SetTint(D3DXVECTOR4(0.7f,0.6f,0.5f,1.0f));
+    material->SetTint(0.7f,0.6f,0.5f,1.0f);
     material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
     graphic = new Graphic;
     graphic->SetMaterial(material);
@@ -119,44 +119,33 @@ bool TitleScreen::Initialize() {
     // Add planet to array
     m_gameObjects[3] = floor;
     
-    // Set up billboard
-    GameObject* spark = new GameObject;
+    // Set up particle system
+    ParticleSystem* spark = new ParticleSystem;
     spark->Initialize();
+    Texture* texture = new Texture;
+    texture->Initialize(D3DManager::GetRef()->GetDevice(),
+		L"../Engine/data/textures/particle_ice.dds");
     material = new Material;
-    material->SetTint(D3DXVECTOR4(0.3f,0.8f,1.0f,1.0f));
-    material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
+    material->SetTint(01.0f,0.4f,0.0f,1.0f);
+    material->SetShader(GraphicsManager::GetRef()->GetShader("Texture"));
     graphic = new Billboard;
     graphic->SetMaterial(material);
-    //quad = new Quad;
-    //quad->Initialize();
     graphic->SetModel(quad);
+    graphic->SetTexture(texture);
     graphic->Initialize();
     // Set up transforms
-    graphic->SetScale(Coord(10.0f,10.0f,10.0f));
+    graphic->SetScale(Coord(0.005f,0.005f,0.005f));
     // Add graphic to game object
     spark->SetGraphic(graphic);
-    spark->SetPosition(Coord(0.0f,-3.0f,0.0f));
-    spark->SetOrientation(Coord(0.0f,90.0f * PI / 180,0.0f));
+    spark->SetParticleVelocity(Coord(0.0f,0.0f,0.0f));
+    spark->SetParticleVelocityVariation(Coord(1.0f,0.5f,1.0f));
+    spark->SetParticleSpawnFrequency(0.000001f);
+    spark->SetParticleLifetime(10.0f);
+    spark->SetParticleFadeout(5.0f);
+    spark->SetMaxParticles(100000);
+    //spark->SetOrientation(Coord(0.0f,90.0f * PI / 180,0.0f));
     // Add planet to array
     m_gameObjects[4] = spark;
-    
-    // Set up planet
-    //GameObject* spark = new GameObject;
-    //spark->Initialize();
-    //material = new Material;
-    //material->SetTint(D3DXVECTOR4(0.5f,0.8f,1.0f,1.0f));
-    //material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
-    //graphic = new Graphic;
-    //graphic->SetMaterial(material);
-    ////graphic->SetModel(quad);
-    //graphic->Initialize();
-    //// Set up transforms
-    //graphic->SetScale(Coord(5.0f,5.0f,5.0f));
-    //// Add graphic to game object
-    //spark->SetGraphic(graphic);
-    //spark->SetPosition(Coord(0.0f,-3.0f,0.0f));
-    //// Add to array
-    //m_gameObjects[4] = spark;
 
 
 
