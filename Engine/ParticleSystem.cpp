@@ -158,7 +158,7 @@ void ParticleSystem::EmitParticles() {
 		newParticle.red   = 1.0f;
 		newParticle.green = 1.0f;
 		newParticle.blue  = 1.0f;
-		newParticle.alpha = 0.1f;
+		newParticle.alpha = 1.0f;
 
 		newParticle.lifetime = 0.0f;
         newParticle.maxLife = m_particleLifetime;

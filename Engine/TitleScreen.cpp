@@ -124,11 +124,11 @@ bool TitleScreen::Initialize() {
     spark->Initialize();
     Texture* texture = new Texture;
     texture->Initialize(D3DManager::GetRef()->GetDevice(),
-		L"../Engine/data/textures/particle_ice.dds");
+		L"../Engine/data/textures/particle_point.png");
     material = new Material;
     material->SetTint(01.0f,0.4f,0.0f,1.0f);
     material->shader = GraphicsManager::GetRef()->GetShader("Texture");
-    material->particleBlend = true;
+    material->alphaBlend = true;
     graphic = new Billboard;
     graphic->SetMaterial(material);
     graphic->SetModel(quad);
