@@ -14,6 +14,7 @@
 #include "Util.h"
 #include "Coord.h"
 #include "Graphic.h"
+#include "TimerManager.h"
 
 
 // |----------------------------------------------------------------------------|

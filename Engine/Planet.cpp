@@ -70,8 +70,11 @@ bool Planet::Shutdown() {
 bool Planet::Logic() {
 	DebugLog ("Planet: Logic() called.", DB_LOGIC, 10);
 
+    // Get time for this frame
+    float time = TimerManager::GetRef()->GetTime() / 1000;
+
     // Update orbit Angle based on speed
-    m_orbitAngle += m_orbitSpeed; // TODO: Add Frame Time
+    m_orbitAngle += m_orbitSpeed * time;
 
     // Determine relative position based on angle
     float x, y, z;

@@ -23,6 +23,7 @@
 #include "InputManager.h"
 #include "GraphicsManager.h"
 #include "GameManager.h"
+#include "TimerManager.h"
 //#include "SoundManager.h"
 
 
@@ -80,6 +81,9 @@ private:
 
     // Sound Manager
     //SoundManager* m_sound;
+
+    // Timer Manager
+    TimerManager* m_timer;
 
     // Game Manager
     GameManager* m_game;

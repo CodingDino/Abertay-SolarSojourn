@@ -7,6 +7,8 @@
 //      Wraps information about what shader and shader settings to use.
 #pragma once
 
+// TODO: Material settings for alpha blending, back face culling, and z buffer
+
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |

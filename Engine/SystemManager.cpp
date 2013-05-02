@@ -105,6 +105,22 @@ bool SystemManager::Initialize()
     //    return false;
     //}
 
+    // Create the timer object.
+    m_timer = new TimerManager();
+    if(!m_timer)
+    {
+        DebugPopup(L"Could not get instance of TimerManager. Aborting.");
+        return false;
+    }
+
+    // Initialize the timer object.
+    result = m_timer->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize TimerManager. Aborting.");
+        return false;
+    }
+
     // Create the game object.
     m_game = new GameManager();
     if(!m_game)
@@ -117,7 +133,7 @@ bool SystemManager::Initialize()
     result = m_game->Initialize();
     if(!result)
     {
-        DebugPopup(L"Could not initialize GraphicsManager. Aborting.");
+        DebugPopup(L"Could not initialize GameManager. Aborting.");
         return false;
     }
 
@@ -154,6 +170,14 @@ void SystemManager::Shutdown()
     //    delete m_sound;
     //    m_sound = 0;
     //}
+
+    // Release the game object.
+    if(m_timer)
+    {
+        m_timer->Shutdown();
+        delete m_timer;
+        m_timer = 0;
+    }
 
     // Release the game object.
     if(m_game)
@@ -229,6 +253,13 @@ bool SystemManager::Frame()
 
     // Do the input processing.
     result = m_input->Frame();
+    if(!result)
+    {
+        return false;
+    }
+
+    // Process timer
+    result = m_timer->Frame();
     if(!result)
     {
         return false;

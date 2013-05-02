@@ -116,6 +116,12 @@
     <ClCompile Include="MouseLookCamera.cpp">
       <Filter>Game\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="TimerManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Billboard.cpp">
+      <Filter>Graphics\Graphic Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -199,6 +205,12 @@
     </ClInclude>
     <ClInclude Include="MouseLookCamera.h">
       <Filter>Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Billboard.h">
+      <Filter>Graphics\Graphic Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

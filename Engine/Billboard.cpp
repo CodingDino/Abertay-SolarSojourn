@@ -3,21 +3,22 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// Image
-//      Contains data for a single 2D image, including texture and rendering method.
+// Billboard
+//      Contains data for a single 2D billboard, rendered on a quad and 
+//      automatically turned to face the camera
 
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
-#include "Image.h"
+#include "Billboard.h"
 #include "Shader.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
-Image::Image() :
+Billboard::Billboard() :
     Graphic()
 {
 }
@@ -26,7 +27,7 @@ Image::Image() :
 // |----------------------------------------------------------------------------|
 // |						    Copy Constructor								|
 // |----------------------------------------------------------------------------|
-Image::Image(const Image& other)
+Billboard::Billboard(const Billboard& other)
 {
 }
 
@@ -34,7 +35,7 @@ Image::Image(const Image& other)
 // |----------------------------------------------------------------------------|
 // |						     Deconstructor									|
 // |----------------------------------------------------------------------------|
-Image::~Image()
+Billboard::~Billboard()
 {
 }
 
@@ -42,7 +43,7 @@ Image::~Image()
 // |----------------------------------------------------------------------------|
 // |                              Initialize                                    |
 // |----------------------------------------------------------------------------|
-bool Image::Initialize()
+bool Billboard::Initialize()
 {
     
 	bool result;
@@ -75,7 +76,7 @@ bool Image::Initialize()
 // |----------------------------------------------------------------------------|
 // |                              Shutdown                                      |
 // |----------------------------------------------------------------------------|
-void Image::Shutdown()
+void Billboard::Shutdown()
 {
     return Graphic::Shutdown();
 }
@@ -84,12 +85,12 @@ void Image::Shutdown()
 // |----------------------------------------------------------------------------|
 // |                               Render                                       |
 // |----------------------------------------------------------------------------|
-void Image::Render()
+void Billboard::Render()
 {
-	DebugLog ("Image::Render() called.", DB_GRAPHICS, 10);
+	DebugLog ("Billboard::Render() called.", DB_GRAPHICS, 10);
 
-	// Turn off z buffer
-    D3DManager::GetRef()->TurnZBufferOff();
+	// Turn on alpha blending
+	D3DManager::GetRef()->TurnOnAlphaBlending();
 
     // Get correct shader to use from material
     Shader* shader = m_material->GetShader();
@@ -99,16 +100,30 @@ void Image::Render()
 
     // Scale, Translate, and Rotate
     D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();
-    D3DXMATRIX scale, rotate, translate;
+    D3DXMATRIX scale, rotateY, rotateX, lookat, rotate, translate;
+
 	// Scale by texture size and scaling factor
-	D3DXMatrixScaling(&scale, m_texture->GetWidth()*m_scale.x, m_texture->GetHeight()*m_scale.y, 1.0f);
-	// Rotate by orientation factor
-	D3DXMatrixRotationYawPitchRoll(&rotate, 0.0f, 0.0f, m_orientation.z);
-	// Translate first to the upper left corner, then based on position factor
-    D3DXMatrixTranslation(&translate, 
-        m_scale.x*m_texture->GetWidth()/2 - SCREEN_WIDTH/2 + m_position.x, 
-        -1*m_scale.y*m_texture->GetHeight()/2 + SCREEN_HEIGHT/2 - m_position.y, 
-        0.0f);
+    if(m_texture)
+	    D3DXMatrixScaling(&scale, m_texture->GetWidth()*m_scale.x, m_texture->GetHeight()*m_scale.y, m_scale.z);
+    else
+	    D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, m_scale.z);
+
+
+	// Rotate to face camera
+    Camera* camera = GraphicsManager::GetRef()->GetCamera();
+    Coord cameraPosition = camera->GetPosition();
+    Coord direction = m_position - cameraPosition;
+    float mag = sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+    float yaw = atan2(direction.x,direction.z);
+    float pitch = -atan2(direction.y,direction.z);
+    
+	D3DXMatrixRotationX(&rotateX, pitch);
+	D3DXMatrixRotationY(&rotateY, yaw);
+    rotate =  rotateX;
+
+	// Translate
+	D3DXMatrixTranslation(&translate, m_position.x, m_position.y, m_position.z);
+
 	// Modify world matrix by scale, rotation, and translation
     worldMatrix = scale * rotate * translate;
 
@@ -116,12 +131,12 @@ void Image::Render()
     shader->Render(D3DManager::GetRef()->GetDeviceContext(),
         m_model->GetIndexCount(),
         worldMatrix,
-        GraphicsManager::GetRef()->GetBaseViewMatrix(),
-        GraphicsManager::GetRef()->GetOrthoMatrix(),
+        GraphicsManager::GetRef()->GetViewMatrix(),
+        GraphicsManager::GetRef()->GetProjectionMatrix(),
         this);
-	
-	// Turn on z buffer
-    D3DManager::GetRef()->TurnZBufferOn();
+    
+	// Turn off alpha blending
+	D3DManager::GetRef()->TurnOffAlphaBlending();
 
     return;
 }

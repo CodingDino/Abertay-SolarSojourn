@@ -46,7 +46,7 @@ bool TitleScreen::Initialize() {
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
 
-    m_numGameObjects = 4;
+    m_numGameObjects = 5;
     m_gameObjects = new GameObject*[m_numGameObjects];
 	
 
@@ -94,7 +94,7 @@ bool TitleScreen::Initialize() {
     planet->SetGraphic(graphic);
     // Set up game object as planet
     planet->SetOrbitRadius(2.0);
-    planet->SetOrbitSpeed(0.1f);
+    planet->SetOrbitSpeed(1.0f);
     // Add planet to array
     m_gameObjects[2] = planet;
     
@@ -116,12 +116,51 @@ bool TitleScreen::Initialize() {
     floor->SetGraphic(graphic);
     floor->SetPosition(Coord(0.0f,-5.0f,0.0f));
     floor->SetOrientation(Coord(0.0f,90.0f * PI / 180,0.0f));
-    // Set up game object as planet
     // Add planet to array
     m_gameObjects[3] = floor;
+    
+    // Set up billboard
+    GameObject* spark = new GameObject;
+    spark->Initialize();
+    material = new Material;
+    material->SetTint(D3DXVECTOR4(0.3f,0.8f,1.0f,1.0f));
+    material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
+    graphic = new Billboard;
+    graphic->SetMaterial(material);
+    //quad = new Quad;
+    //quad->Initialize();
+    graphic->SetModel(quad);
+    graphic->Initialize();
+    // Set up transforms
+    graphic->SetScale(Coord(10.0f,10.0f,10.0f));
+    // Add graphic to game object
+    spark->SetGraphic(graphic);
+    spark->SetPosition(Coord(0.0f,-3.0f,0.0f));
+    spark->SetOrientation(Coord(0.0f,90.0f * PI / 180,0.0f));
+    // Add planet to array
+    m_gameObjects[4] = spark;
+    
+    // Set up planet
+    //GameObject* spark = new GameObject;
+    //spark->Initialize();
+    //material = new Material;
+    //material->SetTint(D3DXVECTOR4(0.5f,0.8f,1.0f,1.0f));
+    //material->SetShader(GraphicsManager::GetRef()->GetShader("Color"));
+    //graphic = new Graphic;
+    //graphic->SetMaterial(material);
+    ////graphic->SetModel(quad);
+    //graphic->Initialize();
+    //// Set up transforms
+    //graphic->SetScale(Coord(5.0f,5.0f,5.0f));
+    //// Add graphic to game object
+    //spark->SetGraphic(graphic);
+    //spark->SetPosition(Coord(0.0f,-3.0f,0.0f));
+    //// Add to array
+    //m_gameObjects[4] = spark;
+
+
 
     // Set up text for coord display
-
     m_numOverlayObjects = 2;
     m_overlayObjects = new GameObject*[m_numOverlayObjects];
 

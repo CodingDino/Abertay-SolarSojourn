@@ -18,8 +18,8 @@
 // |----------------------------------------------------------------------------|
 MouseLookCamera::MouseLookCamera() :
     m_active(true),
-    m_mouseSensitivity(0.7f),
-	m_speed(1.0f),
+    m_mouseSensitivity(10.0f),
+	m_speed(10.0f),
     GameObject()
 {
 	DebugLog ("MouseLookCamera: object instantiated.");
@@ -68,6 +68,9 @@ bool MouseLookCamera::Shutdown() {
 bool MouseLookCamera::Logic() {
 	DebugLog ("MouseLookCamera: Logic() called.", DB_LOGIC, 10);
 
+    // Get time for this frame
+    float time = TimerManager::GetRef()->GetTime() / 1000;
+
     // Exit if the camera is not active
     if (!m_active) return true;
 
@@ -77,8 +80,8 @@ bool MouseLookCamera::Logic() {
 	// TODO: Change to setting rotational velocity, automatically moves and stops.
 	// TODO: Stop mouselook at set angles
 	// TODO: This just turns x / y based on origin, need to rotate based on current orientation in space.
-    m_orientation.x += m_mouseSensitivity * mouseY; // TODO: Scale by elapsed time
-    m_orientation.y += m_mouseSensitivity * mouseX; // TODO: Scale by elapsed time
+    m_orientation.x += m_mouseSensitivity * mouseY * time;
+    m_orientation.y += m_mouseSensitivity * mouseX * time;
 
     // Clamp x orientation to -90 to 90 range
     if(m_orientation.x > 90)
@@ -109,13 +112,18 @@ bool MouseLookCamera::Logic() {
 	// TODO: When strafing left or right, roll left or right slightly.
     // TODO: Set camera position
     // TODO: Scale by elapsed time
-	m_linearVelocity = Coord(
-		forward * m_speed * sin(m_orientation.y * PI / 180) 
-            + right * m_speed * sin(PI / 2 + m_orientation.y * PI / 180),
-		forward * m_speed * -1 * sin(m_orientation.x * PI / 180)
-            + up * m_speed,
-		forward * m_speed * cos(m_orientation.y * PI / 180) * cos(m_orientation.x * PI / 180)
-            + right * m_speed * cos(PI / 2 + m_orientation.y * PI / 180) );
+    Coord vel = Coord(
+		forward * sin(m_orientation.y * PI / 180) 
+            + right * sin(PI / 2 + m_orientation.y * PI / 180),
+		forward * -1 * sin(m_orientation.x * PI / 180)
+            + up,
+		forward * cos(m_orientation.y * PI / 180) * cos(m_orientation.x * PI / 180)
+            + right * cos(PI / 2 + m_orientation.y * PI / 180) );
+    // TODO: Normallization not working?
+    //float velMag = sqrt (vel.x * vel.x + vel.y * vel.y + vel.z * vel.z);
+    //vel /= velMag;
+    vel *= m_speed * time;
+	m_linearVelocity = vel;
 	m_position += m_linearVelocity; 
 
     // Set camera position and orientation

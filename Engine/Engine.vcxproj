@@ -81,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -104,10 +105,12 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureShader.cpp" />
+    <ClCompile Include="TimerManager.cpp" />
     <ClCompile Include="TitleScreen.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Billboard.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Camera.h" />
@@ -133,6 +136,7 @@
     <ClInclude Include="Sentence.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureShader.h" />
+    <ClInclude Include="TimerManager.h" />
     <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="VertexType.h" />
