@@ -17,6 +17,14 @@
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
 ParticleSystem::ParticleSystem() :
+    m_tintR(1.0f),
+    m_tintG(1.0f),
+    m_tintB(1.0f),
+    m_alpha(1.0f),
+    m_tintRVar(0.0f),
+    m_tintGVar(0.0f),
+    m_tintBVar(0.0f),
+    m_alphaVar(0.0f),
     m_particleDeviation(0.0f,0.0f,0.0f),
     m_particleVelocity(0.0f,0.0f,0.0f),
     m_particleVelocityVariation(0.0f,0.0f,0.0f),
@@ -152,13 +160,10 @@ void ParticleSystem::EmitParticles() {
         newParticle.velocity.y = m_particleVelocity.y + (((float)rand()-(float)rand())/RAND_MAX) * m_particleVelocityVariation.y;
 		newParticle.velocity.z = m_particleVelocity.z + (((float)rand()-(float)rand())/RAND_MAX) * m_particleVelocityVariation.z;
         
-		//newParticle.red   = (((float)rand()-(float)rand())/RAND_MAX);
-		//newParticle.green = (((float)rand()-(float)rand())/RAND_MAX);
-		//newParticle.blue  = (((float)rand()-(float)rand())/RAND_MAX);
-		newParticle.red   = 1.0f;
-		newParticle.green = 1.0f;
-		newParticle.blue  = 1.0f;
-		newParticle.alpha = 1.0f;
+		newParticle.red   = Clamp(m_tintR + (((float)rand()-(float)rand())/RAND_MAX) * m_tintRVar,0.0f,1.0f);
+		newParticle.green = Clamp(m_tintG + (((float)rand()-(float)rand())/RAND_MAX) * m_tintGVar,0.0f,1.0f);
+		newParticle.blue  = Clamp(m_tintB + (((float)rand()-(float)rand())/RAND_MAX) * m_tintBVar,0.0f,1.0f);
+		newParticle.alpha = Clamp(m_alpha + (((float)rand()-(float)rand())/RAND_MAX) * m_alphaVar,0.0f,1.0f);
 
 		newParticle.lifetime = 0.0f;
         newParticle.maxLife = m_particleLifetime;
@@ -194,7 +199,7 @@ void ParticleSystem::UpdateParticles() {
 
         // Update particle alpha
         if (it->lifetime > m_particleFadeout)
-            it->alpha = (m_particleLifetime - it->lifetime) / (m_particleLifetime - m_particleFadeout);
+            it->alpha = m_alpha * (m_particleLifetime - it->lifetime) / (m_particleLifetime - m_particleFadeout);
     }
 
     // Sort particles based on distance from camera

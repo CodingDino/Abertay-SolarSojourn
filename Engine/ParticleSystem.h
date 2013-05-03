@@ -65,6 +65,19 @@ public:
     void SetParticleLifetime(float particleLifetime) { m_particleLifetime = particleLifetime; }
     void SetParticleFadeout(float particleFadeout) { m_particleFadeout = particleFadeout; }
     void SetMaxParticles(int maxParticles) { m_maxParticles = maxParticles; }
+    
+    void SetTint(float r, float g, float b, float a = 1.0f) {
+        m_tintR = r;
+        m_tintG = g;
+        m_tintB = b;
+        m_alpha = a;
+    }
+    void SetTintVar(float r, float g, float b, float a = 1.0f) {
+        m_tintRVar = r;
+        m_tintGVar = g;
+        m_tintBVar = b;
+        m_alphaVar = a;
+    }
 
 protected:
    
@@ -79,6 +92,8 @@ protected:
     //|---------------------------Protected Data Members-----------------------|
 
     // Particle system parameters
+    float m_tintR, m_tintG, m_tintB, m_alpha;
+    float m_tintRVar, m_tintGVar, m_tintBVar, m_alphaVar;
     Coord m_particleDeviation;
     Coord m_particleVelocity;
     Coord m_particleVelocityVariation;

@@ -44,3 +44,12 @@ void DebugPopup(const wchar_t* msg, DEBUG_TYPE type, int level)
         MessageBox(windowHandle, msg, L"Error", MB_OK);
     }
 }
+
+
+// |----------------------------------------------------------------------------|
+// |                                  Clamp                                     |
+// |----------------------------------------------------------------------------|
+double Clamp(double val, double min, double max)
+{ 
+    return min(max(val,min),max);
+}

@@ -54,10 +54,10 @@ bool TitleScreen::Initialize() {
     Planet* gameObject = new Planet;
     Texture* sun_tex = new Texture;
     sun_tex->Initialize(D3DManager::GetRef()->GetDevice(),
-		L"../Engine/data/textures/sun01.png");
+		L"../Engine/data/textures/default.png");
     gameObject->Initialize();
     Material* material = new Material;
-    material->SetTint(1.0f,1.0f,0.0f,1.0f);
+    material->SetTint(1.0f,0.5f,0.0f,1.0f);
     material->shader = GraphicsManager::GetRef()->GetShader("Light");
     Model* model = new Model;
     model->Initialize("../Engine/data/models/sphere.txt");
@@ -148,6 +148,8 @@ bool TitleScreen::Initialize() {
     spark->SetParticleLifetime(10.0f);
     spark->SetParticleFadeout(5.0f);
     spark->SetMaxParticles(100000);
+    spark->SetTint(1.0f,1.0f,0.8f);
+    spark->SetTintVar(0.5f,0.5f,0.5f);
     //spark->SetOrientation(Coord(0.0f,90.0f * PI / 180,0.0f));
     // Add planet to array
     m_gameObjects[4] = spark;

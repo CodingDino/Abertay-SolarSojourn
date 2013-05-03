@@ -53,7 +53,7 @@ public:
         zBuffer(true)
     {}
 
-    void SetTint(float r, float g, float b, float a) {
+    void SetTint(float r, float g, float b, float a = 1.0f) {
         tintR = r;
         tintG = g;
         tintB = b;

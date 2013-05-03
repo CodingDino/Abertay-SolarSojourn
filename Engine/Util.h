@@ -36,3 +36,4 @@ extern float SCALE_Y;
 // |----------------------------------------------------------------------------|
 void DebugLog(const char* msg, DEBUG_TYPE type=DB_GENERAL, int level=1);
 void DebugPopup(const wchar_t* msg, DEBUG_TYPE type=DB_GENERAL, int level=1);
+double Clamp(double val, double min, double max);
