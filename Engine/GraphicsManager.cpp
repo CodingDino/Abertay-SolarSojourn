@@ -21,6 +21,7 @@ GraphicsManager::GraphicsManager() :
     m_Camera(0),
     m_colorShader(0),
     m_textureShader(0),
+    m_lightShader(0),
     m_screen(0),
     m_screenCounter(0),
     m_screenWidth(0),
@@ -106,11 +107,11 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
         DebugPopup(L"Could not create TextureShader.");
         return false;
     }
-    //m_LightShader = new LightShaderClass;
-    //if(!m_LightShader)
-    //{
-    //    return false;
-    //}
+    m_lightShader = new LightShader;
+    if(!m_lightShader)
+    {
+        return false;
+    }
     
     // Initialize the shader objects.
     result = m_colorShader->Initialize();
@@ -125,12 +126,12 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
         DebugPopup(L"Could not initialize TextureShader.");
         return false;
     }
-    //result = m_LightShader->Initialize(m_D3D->GetDevice(), hwnd);
-    //if(!result)
-    //{
-    //    MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
-    //    return false;
-    //}
+    result = m_lightShader->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize LightShader.");
+        return false;
+    }
 
     return true;
 }
@@ -154,12 +155,12 @@ void GraphicsManager::Shutdown()
         delete m_textureShader;
         m_textureShader = 0;
     }
-    //if(m_LightShader)
-    //{
-    //    m_LightShader->Shutdown();
-    //    delete m_LightShader;
-    //    m_LightShader = 0;
-    //}
+    if(m_lightShader)
+    {
+        m_lightShader->Shutdown();
+        delete m_lightShader;
+        m_lightShader = 0;
+    }
 
     // Release the camera object.
     if(m_Camera)
@@ -196,12 +197,6 @@ bool GraphicsManager::Frame(int mouseX, int mouseY, int fps, int cpu, float fram
         m_screen++;
     }
     m_screenCounter += frameTime;
-
-    // Set the position of the camera.
-    //m_Camera->SetPosition(camera_position.x, camera_position.y, camera_position.z-300.0f);
-
-    // Set the rotation of the camera.
-    //m_Camera->SetRotation(camera_rotation.x, camera_rotation.y, camera_rotation.z);
     
     // Render the graphics scene.
     result = Render(mouseX, mouseY, camera_position);
@@ -318,7 +313,7 @@ bool GraphicsManager::EndRender()
 
 
 // |----------------------------------------------------------------------------|
-// |						     Deconstructor									|
+// |						      GetShader				    					|
 // |----------------------------------------------------------------------------|
 Shader* GraphicsManager::GetShader(const char* key)
 {
@@ -329,6 +324,10 @@ Shader* GraphicsManager::GetShader(const char* key)
     else if (!strcmp(key, "Texture"))
     {
         return m_textureShader;
+    }
+    else if (!strcmp(key, "Light"))
+    {
+        return m_lightShader;
     }
     else return 0;
 }

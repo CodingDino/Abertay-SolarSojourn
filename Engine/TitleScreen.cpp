@@ -52,15 +52,19 @@ bool TitleScreen::Initialize() {
 
     // Set up sun
     Planet* gameObject = new Planet;
+    Texture* sun_tex = new Texture;
+    sun_tex->Initialize(D3DManager::GetRef()->GetDevice(),
+		L"../Engine/data/textures/sun01.png");
     gameObject->Initialize();
     Material* material = new Material;
     material->SetTint(1.0f,1.0f,0.0f,1.0f);
-    material->shader = GraphicsManager::GetRef()->GetShader("Color");
+    material->shader = GraphicsManager::GetRef()->GetShader("Light");
     Model* model = new Model;
     model->Initialize("../Engine/data/models/sphere.txt");
     Graphic* graphic = new Graphic;
     graphic->SetMaterial(material);
     graphic->SetModel(model);
+    graphic->SetTexture(sun_tex);
     graphic->Initialize();
     // Set up transforms
     //image->SetScale(Coord(100.0f,100.0f,0.01f));

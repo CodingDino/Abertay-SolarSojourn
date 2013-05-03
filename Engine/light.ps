@@ -12,9 +12,13 @@
 // |----------------------------------------------------------------------------|
 Texture2D shaderTexture;
 SamplerState SampleType;
-cbuffer ColorBuffer
+cbuffer PixelBuffer
 {
-    float4 tint;
+	float4 tint;
+    float4 ambientColor;
+    float4 diffuseColor;
+    float3 lightDirection;
+    float padding;
 };
 
 
@@ -31,21 +35,37 @@ struct PixelInputType
 // |----------------------------------------------------------------------------|
 // |                              Pixel Shader                                  |
 // |----------------------------------------------------------------------------|
-float4 TexturePixelShader(PixelInputType input) : SV_TARGET
+float4 LightPixelShader(PixelInputType input) : SV_TARGET
 {
+    float4 color;
     float4 textureColor;
+    float4 lightColor;
+    float3 lightDir;
+    float lightIntensity;
 
     // Sample the pixel color from the texture using the sampler at this texture coordinate location.
     textureColor = shaderTexture.Sample(SampleType, input.tex);
-	
-    // If the color is black on the texture then treat this pixel as transparent.
-    if(textureColor.r == 0.0f)
+
+    // Set default light color to ambient color
+    lightColor = ambientColor;
+
+    // Invert the light direction for calculations.
+    lightDir = -lightDirection;
+
+    // Calculate the amount of light on this pixel.
+    lightIntensity = saturate(dot(input.normal, lightDir));
+
+    if(lightIntensity > 0.0f)
     {
-        textureColor.a = 0.0f;
+        // Determine the final diffuse color based on the diffuse color and the amount of light intensity.
+        lightColor += (diffuseColor * lightIntensity);
     }
+    
+    // Saturate the final light color.
+    lightColor = saturate(lightColor);
 
-	// Calculate the tinted color
-	textureColor = saturate(textureColor * tint);
+    // Combine texture, tint, and light to get final color
+    color = textureColor * tint * lightColor;
 
-    return textureColor;
+    return color;
 }

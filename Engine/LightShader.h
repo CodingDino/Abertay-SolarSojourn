@@ -30,7 +30,11 @@ protected:
 
     struct PSBufferType
     {
-		D3DXVECTOR4 color;
+		D3DXVECTOR4 tint;
+		D3DXVECTOR4 ambientColor;
+		D3DXVECTOR4 diffuseColor;
+		D3DXVECTOR3 lightDirection;
+		float padding;
     };
 
 public:

@@ -39,7 +39,7 @@ struct PixelInputType
 // |----------------------------------------------------------------------------|
 // |                              Vertex Shader                                 |
 // |----------------------------------------------------------------------------|
-PixelInputType TextureVertexShader(VertexInputType input)
+PixelInputType LightVertexShader(VertexInputType input)
 {
     PixelInputType output;
     
@@ -54,8 +54,11 @@ PixelInputType TextureVertexShader(VertexInputType input)
     // Store the texture coordinates for the pixel shader.
     output.tex = input.tex;
 
-    // Store the texture coordinates for the pixel shader.
-    output.normal = input.normal;
+    // Calculate the normal vector against the world matrix only.
+    output.normal = mul(input.normal, (float3x3)worldMatrix);
+	
+    // Normalize the normal vector.
+    output.normal = normalize(output.normal);
     
     return output;
 }
