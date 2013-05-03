@@ -45,6 +45,8 @@ bool TitleScreen::Initialize() {
 
     // Set lighting
     LightManager::GetRef()->SetAmbient(0.0f,0.0f,0.0f);
+    LightManager::GetRef()->SetDiffuseColor(1.0f,1.0f,1.0f);
+    LightManager::GetRef()->SetDiffuseDirection(1.0f,0.0f,0.0f);
 
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
