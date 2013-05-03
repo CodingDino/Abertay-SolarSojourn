@@ -230,6 +230,9 @@
     <ClInclude Include="Material.h">
       <Filter>Graphics\Graphic Types</Filter>
     </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">

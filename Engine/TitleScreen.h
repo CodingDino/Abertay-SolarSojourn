@@ -19,6 +19,7 @@
 #include "MouseLookCamera.h"
 #include "Billboard.h"
 #include "ParticleSystem.h"
+#include "LightManager.h"
 
 
 // |----------------------------------------------------------------------------|

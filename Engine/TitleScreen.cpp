@@ -43,6 +43,9 @@ TitleScreen::~TitleScreen() {
 // |----------------------------------------------------------------------------|
 bool TitleScreen::Initialize() {
 
+    // Set lighting
+    LightManager::GetRef()->SetAmbient(0.0f,0.0f,0.0f);
+
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
 

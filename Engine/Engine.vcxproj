@@ -125,6 +125,7 @@
     <ClInclude Include="Graphic.h" />
     <ClInclude Include="GraphicsManager.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="LightManager.h" />
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />

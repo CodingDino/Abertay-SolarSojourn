@@ -157,7 +157,7 @@ bool LightShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 	// Copy the color and light into the constant buffer.
     // TODO: Get lights from scene rather than hardcode
     t_psbuffer->tint = D3DXVECTOR4(graphic->GetTintR(), graphic->GetTintG(), graphic->GetTintB(), graphic->GetAlpha());
-    t_psbuffer->ambientColor = D3DXVECTOR4(0.15f, 0.15f, 0.15f, 0.15f);
+    t_psbuffer->ambientColor = LightManager::GetRef()->GetAmbient();
     t_psbuffer->diffuseColor = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
     t_psbuffer->lightDirection = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
     t_psbuffer->padding = 0.0f;

@@ -22,6 +22,7 @@ SystemManager::SystemManager() :
     m_graphics(0),
     m_timer(0),
     m_assets(0),
+    m_lights(0),
     //m_sound(0),
     m_game(0)
 {
@@ -139,6 +140,22 @@ bool SystemManager::Initialize()
         return false;
     }
 
+    // Create the lights object.
+    m_lights = new LightManager();
+    if(!m_lights)
+    {
+        DebugPopup(L"Could not get instance of LightManager. Aborting.");
+        return false;
+    }
+
+    // Initialize the lights object.
+    result = m_lights->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize LightManager. Aborting.");
+        return false;
+    }
+
     // Create the game object.
     m_game = new GameManager();
     if(!m_game)
@@ -203,6 +220,14 @@ void SystemManager::Shutdown()
         m_assets->Shutdown();
         delete m_assets;
         m_assets = 0;
+    }
+
+    // Release the lights object.
+    if(m_lights)
+    {
+        m_lights->Shutdown();
+        delete m_lights;
+        m_lights = 0;
     }
 
     // Release the game object.

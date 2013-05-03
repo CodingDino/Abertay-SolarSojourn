@@ -25,6 +25,7 @@
 #include "GameManager.h"
 #include "TimerManager.h"
 #include "AssetManager.h"
+#include "LightManager.h"
 //#include "SoundManager.h"
 
 
@@ -88,6 +89,9 @@ private:
 
     // Asset Manager
     AssetManager* m_assets;
+
+    // Light Manager
+    LightManager* m_lights;
 
     // Game Manager
     GameManager* m_game;
