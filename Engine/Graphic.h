@@ -64,6 +64,8 @@ protected:
 
     //|------------------------------Protected Functions------------------------|
 
+    virtual D3DXMATRIX TransformWorldMatrix(Coord position);
+
 protected:
 
     //|----------------------------Protected Data Members-----------------------|

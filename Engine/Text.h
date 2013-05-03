@@ -36,9 +36,6 @@ public:
     virtual bool Initialize();
     virtual void Shutdown();
 
-    // Renders the graphic to the supplied context
-    virtual void Render();
-
 	// Getter and Setter functions
 	char* GetText();
 	void SetText(const char*); // Rebuilds the buffer from Font.
@@ -52,12 +49,11 @@ protected:
 
     //|------------------------------Protected Functions------------------------|
 
+    virtual D3DXMATRIX TransformWorldMatrix(Coord position);
+
 protected:
 
     //|----------------------------Protected Data Members-----------------------|
-
-	// Screen location information
-	Coord m_previousPosition;
 
 	// String to be rendered
 	char* m_string;

@@ -53,6 +53,7 @@ bool Billboard::Initialize()
 	{
 		m_material = new Material;
 		m_material->shader = GraphicsManager::GetRef()->GetShader("Texture");
+		m_material->alphaBlend = true;
 	}
 
 	// If there's not a model, make a quad
@@ -87,30 +88,11 @@ void Billboard::Shutdown()
 
 
 // |----------------------------------------------------------------------------|
-// |                               Render                                       |
+// |                         TransformWorldMatrix                               |
 // |----------------------------------------------------------------------------|
-void Billboard::Render(Coord position)
+D3DXMATRIX Billboard::TransformWorldMatrix(Coord position)
 {
-	DebugLog ("Billboard::Render() called.", DB_GRAPHICS, 10);
-
-    // Get correct shader to use from material
-    Shader* shader = m_material->shader;
-
-    // Pipeline settings
-    if (m_material)
-    {
-        if (m_material->alphaBlend)
-            D3DManager::GetRef()->TurnOnAlphaBlending();
-        if (m_material->particleBlend)
-            D3DManager::GetRef()->TurnOnParticleBlending();
-        if (!m_material->backfaceCull)
-            D3DManager::GetRef()->TurnOffBackCulling();
-        if (!m_material->zBuffer)
-            D3DManager::GetRef()->TurnZBufferOff();
-    }
-
-    // Put the quad in the buffer
-    if(m_model) m_model->Render();
+	DebugLog ("Billboard::TransformWorldMatrix() called.", DB_GRAPHICS, 10);
 
     // Scale, Translate, and Rotate
     D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();
@@ -121,7 +103,6 @@ void Billboard::Render(Coord position)
 	    D3DXMatrixScaling(&scale, m_texture->GetWidth()*m_scale.x, m_texture->GetHeight()*m_scale.y, m_scale.z);
     else
 	    D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, m_scale.z);
-
 
 	// Rotate to face camera
     Camera* camera = GraphicsManager::GetRef()->GetCamera();
@@ -144,20 +125,6 @@ void Billboard::Render(Coord position)
 	// Modify world matrix by scale, rotation, and translation
     worldMatrix = scale * rotate * translate;
 
-    // Render using the shader and a self pointer.
-    shader->Render(D3DManager::GetRef()->GetDeviceContext(),
-        m_model->GetIndexCount(),
-        worldMatrix,
-        GraphicsManager::GetRef()->GetViewMatrix(),
-        GraphicsManager::GetRef()->GetProjectionMatrix(),
-        this);
-    
-
-    // Reset pipeline settings
-    D3DManager::GetRef()->TurnOffAlphaBlending();
-    D3DManager::GetRef()->TurnOnBackCulling();
-    D3DManager::GetRef()->TurnZBufferOn();
-
-    return;
+    return worldMatrix;
 }
 

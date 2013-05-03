@@ -52,6 +52,10 @@ bool Image::Initialize()
 	{
 		m_material = new Material;
 		m_material->shader = GraphicsManager::GetRef()->GetShader("Texture");
+		m_material->alphaBlend = true;
+		m_material->zBuffer = false;
+		m_material->baseView = true;
+		m_material->ortho = true;
 	}
 
 	// If there's not a model, make a quad
@@ -86,30 +90,11 @@ void Image::Shutdown()
 
 
 // |----------------------------------------------------------------------------|
-// |                               Render                                       |
+// |                      TransformWorldMatrix                                  |
 // |----------------------------------------------------------------------------|
-void Image::Render()
+D3DXMATRIX Image::TransformWorldMatrix(Coord position)
 {
-	DebugLog ("Image::Render() called.", DB_GRAPHICS, 10);
-
-    // Get correct shader to use from material
-    Shader* shader = m_material->shader;
-
-    // Pipeline settings
-    if (m_material)
-    {
-        if (m_material->alphaBlend)
-            D3DManager::GetRef()->TurnOnAlphaBlending();
-        if (m_material->particleBlend)
-            D3DManager::GetRef()->TurnOnParticleBlending();
-        if (!m_material->backfaceCull)
-            D3DManager::GetRef()->TurnOffBackCulling();
-        if (!m_material->zBuffer)
-            D3DManager::GetRef()->TurnZBufferOff();
-    }
-
-    // Put the quad in the buffer
-    if(m_model) m_model->Render();
+	DebugLog ("Image::TransformWorldMatrix() called.", DB_GRAPHICS, 10);
 
     // Scale, Translate, and Rotate
     D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();
@@ -120,25 +105,12 @@ void Image::Render()
 	D3DXMatrixRotationYawPitchRoll(&rotate, 0.0f, 0.0f, m_orientation.z);
 	// Translate first to the upper left corner, then based on position factor
     D3DXMatrixTranslation(&translate, 
-        m_scale.x*m_texture->GetWidth()/2 - SCREEN_WIDTH/2 + m_position.x, 
-        -1*m_scale.y*m_texture->GetHeight()/2 + SCREEN_HEIGHT/2 - m_position.y, 
+        m_scale.x*m_texture->GetWidth()/2 - SCREEN_WIDTH/2 + position.x, 
+        -1*m_scale.y*m_texture->GetHeight()/2 + SCREEN_HEIGHT/2 - position.y, 
         0.0f);
 	// Modify world matrix by scale, rotation, and translation
     worldMatrix = scale * rotate * translate;
 
-    // Render using the shader and a self pointer.
-    shader->Render(D3DManager::GetRef()->GetDeviceContext(),
-        m_model->GetIndexCount(),
-        worldMatrix,
-        GraphicsManager::GetRef()->GetBaseViewMatrix(),
-        GraphicsManager::GetRef()->GetOrthoMatrix(),
-        this);
-	
-    // Reset pipeline settings
-    D3DManager::GetRef()->TurnOffAlphaBlending();
-    D3DManager::GetRef()->TurnOnBackCulling();
-    D3DManager::GetRef()->TurnZBufferOn();
-
-    return;
+    return worldMatrix;
 }
 

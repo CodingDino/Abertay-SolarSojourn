@@ -40,6 +40,8 @@ public:
     bool particleBlend;
     bool backfaceCull;
     bool zBuffer;
+    bool baseView;
+    bool ortho;
 
     Material() : 
         shader(0),
@@ -50,7 +52,9 @@ public:
         alphaBlend(false),
         particleBlend(false),
         backfaceCull(true),
-        zBuffer(true)
+        zBuffer(true),
+        baseView(false),
+        ortho(false)
     {}
 
     void SetTint(float r, float g, float b, float a = 1.0f) {

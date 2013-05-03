@@ -33,8 +33,11 @@ public:
     virtual bool Initialize();
     virtual void Shutdown();
 
-    // Renders the graphic to the supplied context
-    virtual void Render();
+protected:
+
+    //|------------------------------Protected Functions------------------------|
+
+    virtual D3DXMATRIX TransformWorldMatrix(Coord position);
 
 protected:
 

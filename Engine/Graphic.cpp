@@ -110,19 +110,22 @@ void Graphic::Render(Coord position)
     if(m_model) m_model->Render();
 
     // Scale, Translate, and Rotate
-    D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();
-    D3DXMATRIX scale, rotate, translate;
-	D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, m_scale.z);
-	D3DXMatrixRotationYawPitchRoll(&rotate, m_orientation.x, m_orientation.y, m_orientation.z);
-	D3DXMatrixTranslation(&translate, position.x, position.y, position.z);
-    worldMatrix = scale * rotate * translate;
+    D3DXMATRIX worldMatrix = TransformWorldMatrix(position);
+
+    // Determine view matrix to use
+    D3DXMATRIX viewMatrix = GraphicsManager::GetRef()->GetViewMatrix();
+    if (m_material && m_material->baseView) viewMatrix = GraphicsManager::GetRef()->GetBaseViewMatrix();
+
+    // Determine projection matrix to use
+    D3DXMATRIX projMatrix = GraphicsManager::GetRef()->GetProjectionMatrix();
+    if (m_material && m_material->ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
 
     // Render using the shader and a self pointer.
     shader->Render(D3DManager::GetRef()->GetDeviceContext(),
         m_model->GetIndexCount(),
         worldMatrix,
-        GraphicsManager::GetRef()->GetViewMatrix(),
-        GraphicsManager::GetRef()->GetProjectionMatrix(),
+        viewMatrix,
+        projMatrix,
         this);
 
     // Reset pipeline settings
@@ -131,4 +134,19 @@ void Graphic::Render(Coord position)
     D3DManager::GetRef()->TurnZBufferOn();
 
     return;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                               TransformWorldMatrix                                       |
+// |----------------------------------------------------------------------------|
+D3DXMATRIX Graphic::TransformWorldMatrix(Coord position)
+{
+    D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();
+    D3DXMATRIX scale, rotate, translate;
+	D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, m_scale.z);
+	D3DXMatrixRotationYawPitchRoll(&rotate, m_orientation.x, m_orientation.y, m_orientation.z);
+	D3DXMatrixTranslation(&translate, position.x, position.y, position.z);
+    worldMatrix = scale * rotate * translate;
+    return worldMatrix;
 }
