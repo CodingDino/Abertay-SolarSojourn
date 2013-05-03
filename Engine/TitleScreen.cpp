@@ -48,23 +48,15 @@ bool TitleScreen::Initialize() {
 
     m_numGameObjects = 5;
     m_gameObjects = new GameObject*[m_numGameObjects];
-	
 
     // Set up sun
     Planet* gameObject = new Planet;
-    Texture* sun_tex = new Texture;
-    sun_tex->Initialize(D3DManager::GetRef()->GetDevice(),
-		L"../Engine/data/textures/default.png");
     gameObject->Initialize();
     Material* material = new Material;
     material->SetTint(1.0f,0.5f,0.0f,1.0f);
     material->shader = GraphicsManager::GetRef()->GetShader("Light");
-    Model* model = new Model;
-    model->Initialize("../Engine/data/models/sphere.txt");
     Graphic* graphic = new Graphic;
     graphic->SetMaterial(material);
-    graphic->SetModel(model);
-    graphic->SetTexture(sun_tex);
     graphic->Initialize();
     // Set up transforms
     //image->SetScale(Coord(100.0f,100.0f,0.01f));
@@ -90,7 +82,6 @@ bool TitleScreen::Initialize() {
     material->shader = GraphicsManager::GetRef()->GetShader("Color");
     graphic = new Graphic;
     graphic->SetMaterial(material);
-    graphic->SetModel(model);
     graphic->Initialize();
     // Set up transforms
     graphic->SetScale(Coord(0.2f,0.2f,0.2f));
@@ -110,9 +101,7 @@ bool TitleScreen::Initialize() {
     material->shader = GraphicsManager::GetRef()->GetShader("Color");
     graphic = new Graphic;
     graphic->SetMaterial(material);
-    Quad* quad = new Quad;
-    quad->Initialize();
-    graphic->SetModel(quad);
+    graphic->SetModel("quad");
     graphic->Initialize();
     // Set up transforms
     graphic->SetScale(Coord(20.0f,20.0f,20.0f));
@@ -126,17 +115,13 @@ bool TitleScreen::Initialize() {
     // Set up particle system
     ParticleSystem* spark = new ParticleSystem;
     spark->Initialize();
-    Texture* texture = new Texture;
-    texture->Initialize(D3DManager::GetRef()->GetDevice(),
-		L"../Engine/data/textures/particle_point.png");
     material = new Material;
     material->SetTint(01.0f,0.4f,0.0f,1.0f);
     material->shader = GraphicsManager::GetRef()->GetShader("Texture");
     material->alphaBlend = true;
     graphic = new Billboard;
     graphic->SetMaterial(material);
-    graphic->SetModel(quad);
-    graphic->SetTexture(texture);
+    graphic->SetTexture("particle_point");
     graphic->Initialize();
     // Set up transforms
     graphic->SetScale(Coord(0.005f,0.005f,0.005f));
@@ -160,18 +145,14 @@ bool TitleScreen::Initialize() {
     m_numOverlayObjects = 2;
     m_overlayObjects = new GameObject*[m_numOverlayObjects];
 
-    Font* font = new Font;
-    font->Initialize(D3DManager::GetRef()->GetDevice(),
-		"../Engine/data/fonts/manaspace_regular_20.xml",
-		L"../Engine/data/fonts/manaspace_regular_20.png");
     Text* text = new Text;
-	text->SetTexture(font);
+    text->SetFont("manaspace_regular_20");
     text->Initialize();
     m_overlayObjects[0] = new GameObject;
 	m_overlayObjects[0]->SetGraphic(text);
     // Set up text for rotation display
     Text* rotation = new Text;
-	rotation->SetTexture(font);
+    rotation->SetFont("manaspace_regular_20");
     rotation->Initialize();
     m_overlayObjects[1] = new GameObject;
 	m_overlayObjects[1]->SetGraphic(rotation);

@@ -59,11 +59,16 @@ bool Text::Initialize()
 		m_material->zBuffer = false;
 	}
 
-	// If there's not a model, make a sentence
+	// If there's not a model, make a setence
 	if (!m_model)
 	{
-		m_model = new Sentence();
-		m_model->Initialize();
+		m_model = AssetManager::GetRef()->GetModel("sentence");
+	}
+
+	// If there's not a font, use default
+	if (!m_texture)
+	{
+		m_texture = AssetManager::GetRef()->GetFont("default");
 	}
 
     // Initialize parent class

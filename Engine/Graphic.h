@@ -16,6 +16,7 @@
 #include "Texture.h"
 #include "Material.h"
 #include "GraphicsManager.h"
+#include "AssetManager.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -51,7 +52,9 @@ public:
 
     // Setter functions
     virtual void SetModel(Model* model) { m_model = model; }
+    virtual void SetModel(std::string name) { m_model = AssetManager::GetRef()->GetModel(name); }
     virtual void SetTexture(Texture* texture) { m_texture = texture; }
+    virtual void SetTexture(std::string name) { m_texture = AssetManager::GetRef()->GetTexture(name); }
     virtual void SetMaterial(Material* material) { m_material = material; }
     virtual void SetPosition(Coord position) {m_position = position;}
     virtual void SetOrientation(Coord orientation) {m_orientation = orientation;}

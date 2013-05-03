@@ -50,6 +50,19 @@ Graphic::~Graphic()
 bool Graphic::Initialize()
 {
 	DebugLog ("Graphic::Initialize() called.", DB_GRAPHICS, 1);
+
+	// If there's not a model, make a sphere
+	if (!m_model)
+	{
+		m_model = AssetManager::GetRef()->GetModel("sphere");
+	}
+
+	// If there's not a texture, use default
+	if (!m_texture)
+	{
+		m_texture = AssetManager::GetRef()->GetTexture("default");
+	}
+
     return true;
 }
 

@@ -43,6 +43,10 @@ public:
 	char* GetText();
 	void SetText(const char*); // Rebuilds the buffer from Font.
 	void SetColor(float r, float g, float b);
+    virtual void SetTexture(Font* texture) { m_texture = texture; }
+    virtual void SetTexture(std::string name) { m_texture = AssetManager::GetRef()->GetFont(name); }
+    virtual void SetFont(Font* texture) { m_texture = texture; }
+    void SetFont(std::string name) { m_texture = AssetManager::GetRef()->GetFont(name); }
 
 protected:
 

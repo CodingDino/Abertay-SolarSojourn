@@ -29,7 +29,7 @@ Model::Model() :
 // |----------------------------------------------------------------------------|
 // |						      Initialize									|
 // |----------------------------------------------------------------------------|
-bool Model::Initialize(char* modelFilename)
+bool Model::Initialize(const char* modelFilename)
 {
 	DebugLog ("Model::Initialize() called.", DB_GRAPHICS, 1);
 	bool result;
@@ -257,7 +257,7 @@ void Model::RenderBuffers()
 // |----------------------------------------------------------------------------|
 // |				   		    LoadModel										|
 // |----------------------------------------------------------------------------|
-bool Model::LoadModel(char* filename)
+bool Model::LoadModel(const char* filename)
 {
 	DebugLog ("Model::LoadModel() called.", DB_GRAPHICS, 1);
 

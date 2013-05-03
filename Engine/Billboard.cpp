@@ -58,8 +58,13 @@ bool Billboard::Initialize()
 	// If there's not a model, make a quad
 	if (!m_model)
 	{
-		m_model = new Quad();
-		m_model->Initialize();
+		m_model = AssetManager::GetRef()->GetModel("quad");
+	}
+
+	// If there's not a texture, use default
+	if (!m_texture)
+	{
+		m_texture = AssetManager::GetRef()->GetTexture("default");
 	}
 
     // Initialize parent class
