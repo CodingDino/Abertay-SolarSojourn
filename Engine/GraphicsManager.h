@@ -66,7 +66,7 @@ public:
     D3DXMATRIX GetBaseViewMatrix() {return baseViewMatrix;}
 
     // Get shaders
-    Shader* GetShader(const char* key);
+    Shader* GetShader(const std::string key);
 
     // Get camera
     Camera* GetCamera() {return m_Camera; }

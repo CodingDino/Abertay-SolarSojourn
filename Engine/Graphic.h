@@ -22,7 +22,7 @@
 // |----------------------------------------------------------------------------|
 // |                              Class: Graphic                                |
 // |----------------------------------------------------------------------------|
-class Graphic
+class Graphic : public Material
 {
 
 public:
@@ -45,7 +45,7 @@ public:
     // Getter functions
     virtual Model* GetModel() { return m_model; }
     virtual Texture* GetTexture() { return m_texture; }
-    virtual Material* GetMaterial() { return m_material; }
+    //virtual Material* GetMaterial() { return this; }
     virtual Coord GetPosition() {return m_position; }
     virtual Coord GetOrientation() {return m_orientation; }
     virtual Coord GetScale() {return m_scale; }
@@ -55,7 +55,6 @@ public:
     virtual void SetModel(std::string name) { m_model = AssetManager::GetRef()->GetModel(name); }
     virtual void SetTexture(Texture* texture) { m_texture = texture; }
     virtual void SetTexture(std::string name) { m_texture = AssetManager::GetRef()->GetTexture(name); }
-    virtual void SetMaterial(Material* material) { m_material = material; }
     virtual void SetPosition(Coord position) {m_position = position;}
     virtual void SetOrientation(Coord orientation) {m_orientation = orientation;}
     virtual void SetScale(Coord scale) {m_scale = scale;}
@@ -73,7 +72,6 @@ protected:
     // Main Graphic Components
     Model* m_model;
     Texture* m_texture;
-    Material* m_material;
 
     // Graphic Parameters
     Coord m_scale;

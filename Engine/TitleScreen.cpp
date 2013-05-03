@@ -52,15 +52,10 @@ bool TitleScreen::Initialize() {
     // Set up sun
     Planet* gameObject = new Planet;
     gameObject->Initialize();
-    Material* material = new Material;
-    material->SetTint(1.0f,0.5f,0.0f,1.0f);
-    material->shader = GraphicsManager::GetRef()->GetShader("Light");
     Graphic* graphic = new Graphic;
-    graphic->SetMaterial(material);
+    graphic->SetTint(1.0f,0.5f,0.0f,1.0f);
+    graphic->SetShader("Light");
     graphic->Initialize();
-    // Set up transforms
-    //image->SetScale(Coord(100.0f,100.0f,0.01f));
-    //image->SetOrientation(Coord(0.0f, 0.0f, 45.0f));
     // Add graphic to game object
     gameObject->SetGraphic(graphic);
     // Set up game object as planet
@@ -77,11 +72,9 @@ bool TitleScreen::Initialize() {
     // Set up planet
     Planet* planet = new Planet;
     planet->Initialize();
-    material = new Material;
-    material->SetTint(1.0f,0.0f,0.0f,1.0f);
-    material->shader = GraphicsManager::GetRef()->GetShader("Color");
     graphic = new Graphic;
-    graphic->SetMaterial(material);
+    graphic->SetTint(1.0f,0.0f,0.0f,1.0f);
+    graphic->SetShader("Color");
     graphic->Initialize();
     // Set up transforms
     graphic->SetScale(Coord(0.2f,0.2f,0.2f));
@@ -96,11 +89,9 @@ bool TitleScreen::Initialize() {
     // Set up floor
     GameObject* floor = new GameObject;
     floor->Initialize();
-    material = new Material;
-    material->SetTint(0.7f,0.6f,0.5f,1.0f);
-    material->shader = GraphicsManager::GetRef()->GetShader("Color");
     graphic = new Graphic;
-    graphic->SetMaterial(material);
+    graphic->SetTint(0.7f,0.6f,0.5f,1.0f);
+    graphic->SetShader("Color");
     graphic->SetModel("quad");
     graphic->Initialize();
     // Set up transforms
@@ -115,12 +106,10 @@ bool TitleScreen::Initialize() {
     // Set up particle system
     ParticleSystem* spark = new ParticleSystem;
     spark->Initialize();
-    material = new Material;
-    material->SetTint(01.0f,0.4f,0.0f,1.0f);
-    material->shader = GraphicsManager::GetRef()->GetShader("Texture");
-    material->alphaBlend = true;
     graphic = new Billboard;
-    graphic->SetMaterial(material);
+    graphic->SetTint(01.0f,0.4f,0.0f,1.0f);
+    graphic->SetShader("Texture");
+    graphic->SetAlphaBlend(true);
     graphic->SetTexture("particle_point");
     graphic->Initialize();
     // Set up transforms

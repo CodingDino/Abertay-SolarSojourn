@@ -20,10 +20,10 @@
 Graphic::Graphic() :
     m_model(0),
     m_texture(0),
-    m_material(0),
     m_scale(1.0f,1.0f,1.0f),
     m_orientation(0.0f,0.0f,0.0f),
-    m_position(0.0f,0.0f,0.0f)
+    m_position(0.0f,0.0f,0.0f),
+    Material()
 {
 }
 
@@ -91,20 +91,17 @@ void Graphic::Render(Coord position)
 	DebugLog ("Graphic::Render() called.", DB_GRAPHICS, 10);
 
     // Get correct shader to use from material
-    Shader* shader = m_material->shader;
+    Shader* shader = m_shader;
 
     // Pipeline settings
-    if (m_material)
-    {
-        if (m_material->alphaBlend)
-            D3DManager::GetRef()->TurnOnAlphaBlending();
-        if (m_material->particleBlend)
-            D3DManager::GetRef()->TurnOnParticleBlending();
-        if (!m_material->backfaceCull)
-            D3DManager::GetRef()->TurnOffBackCulling();
-        if (!m_material->zBuffer)
-            D3DManager::GetRef()->TurnZBufferOff();
-    }
+    if (m_alphaBlend)
+        D3DManager::GetRef()->TurnOnAlphaBlending();
+    if (m_particleBlend)
+        D3DManager::GetRef()->TurnOnParticleBlending();
+    if (!m_backfaceCull)
+        D3DManager::GetRef()->TurnOffBackCulling();
+    if (!m_zBuffer)
+        D3DManager::GetRef()->TurnZBufferOff();
 
     // Put the model in the buffer
     if(m_model) m_model->Render();
@@ -114,11 +111,11 @@ void Graphic::Render(Coord position)
 
     // Determine view matrix to use
     D3DXMATRIX viewMatrix = GraphicsManager::GetRef()->GetViewMatrix();
-    if (m_material && m_material->baseView) viewMatrix = GraphicsManager::GetRef()->GetBaseViewMatrix();
+    if (m_baseView) viewMatrix = GraphicsManager::GetRef()->GetBaseViewMatrix();
 
     // Determine projection matrix to use
     D3DXMATRIX projMatrix = GraphicsManager::GetRef()->GetProjectionMatrix();
-    if (m_material && m_material->ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
+    if (m_ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
 
     // Render using the shader and a self pointer.
     shader->Render(D3DManager::GetRef()->GetDeviceContext(),

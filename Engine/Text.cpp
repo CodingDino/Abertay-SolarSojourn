@@ -50,16 +50,12 @@ bool Text::Initialize()
 
 	bool result;
 
-	// If there's not a material, make a blank one
-	if (!m_material)
-	{
-		m_material = new Material;
-		m_material->shader = GraphicsManager::GetRef()->GetShader("Texture");
-		m_material->alphaBlend = true;
-		m_material->zBuffer = false;
-		m_material->baseView = true;
-		m_material->ortho = true;
-	}
+	// Material settings
+	if (!m_shader) m_shader = GraphicsManager::GetRef()->GetShader("Texture");
+	m_alphaBlend = true;
+	m_zBuffer = false;
+	m_baseView = true;
+	m_ortho = true;
 
 	// If there's not a model, make a setence
 	if (!m_model)
@@ -151,5 +147,5 @@ void Text::SetText(const char* string)
 // |----------------------------------------------------------------------------|
 void Text::SetColor(float r, float g, float b)
 {
-	m_material->SetTint(r,g,b,1.0f);
+	SetTint(r,g,b,1.0f);
 }

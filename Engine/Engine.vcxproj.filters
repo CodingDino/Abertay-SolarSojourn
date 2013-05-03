@@ -163,9 +163,6 @@
     <ClInclude Include="Screen.h">
       <Filter>Game\Screens</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Singleton.h">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -229,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="AssetManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Graphics\Graphic Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

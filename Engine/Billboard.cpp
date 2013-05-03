@@ -48,13 +48,9 @@ bool Billboard::Initialize()
     
 	bool result;
 
-	// If there's not a material, make a blank one
-	if (!m_material)
-	{
-		m_material = new Material;
-		m_material->shader = GraphicsManager::GetRef()->GetShader("Texture");
-		m_material->alphaBlend = true;
-	}
+	// Material settings
+	if (!m_shader) m_shader = GraphicsManager::GetRef()->GetShader("Texture");
+	m_alphaBlend = true;
 
 	// If there's not a model, make a quad
 	if (!m_model)
