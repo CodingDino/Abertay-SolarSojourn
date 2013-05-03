@@ -12,16 +12,17 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include "Util.h"
+#include "Material.h"
 #include "Model.h"
 #include "Texture.h"
-#include "Material.h"
 #include "GraphicsManager.h"
+#include "AssetManager.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                              Class: Graphic                                |
 // |----------------------------------------------------------------------------|
-class Graphic
+class Graphic : public Material
 {
 
 public:
@@ -44,7 +45,7 @@ public:
     // Getter functions
     virtual Model* GetModel() { return m_model; }
     virtual Texture* GetTexture() { return m_texture; }
-    virtual Material* GetMaterial() { return m_material; }
+    //virtual Material* GetMaterial() { return m_material; }
     virtual Coord GetPosition() {return m_position; }
     virtual Coord GetOrientation() {return m_orientation; }
     virtual Coord GetScale() {return m_scale; }
@@ -52,7 +53,8 @@ public:
     // Setter functions
     virtual void SetModel(Model* model) { m_model = model; }
     virtual void SetTexture(Texture* texture) { m_texture = texture; }
-    virtual void SetMaterial(Material* material) { m_material = material; }
+    virtual void SetTexture(std::string name) { m_texture = AssetManager::GetRef()->GetTexture(name); }
+    //virtual void SetMaterial(Material* material) { m_material = material; }
     virtual void SetPosition(Coord position) {m_position = position;}
     virtual void SetOrientation(Coord orientation) {m_orientation = orientation;}
     virtual void SetScale(Coord scale) {m_scale = scale;}
@@ -60,6 +62,9 @@ public:
 protected:
 
     //|------------------------------Protected Functions------------------------|
+    
+    // Performs the transforms on the graphic
+    virtual D3DXMATRIX PerformTransforms(Coord position);
 
 protected:
 
@@ -68,7 +73,7 @@ protected:
     // Main Graphic Components
     Model* m_model;
     Texture* m_texture;
-    Material* m_material;
+    //Material* m_material;
 
     // Graphic Parameters
     Coord m_scale;

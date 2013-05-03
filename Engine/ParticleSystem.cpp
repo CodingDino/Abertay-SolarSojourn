@@ -117,7 +117,7 @@ bool ParticleSystem::Draw() {
     std::list<ParticleType>::iterator it;
     for (it=m_particles.begin(); it!=m_particles.end(); ++it)
     {
-        m_graphic->GetMaterial()->SetTint(it->red,it->green,it->blue,it->alpha);
+        m_graphic->SetTint(it->red,it->green,it->blue,it->alpha);
         m_graphic->Render(it->position);
     }
 

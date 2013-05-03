@@ -46,7 +46,7 @@ public:
 
     // Initialize the model, reads in a vertex and texture file
 	virtual bool Initialize() {return true;}
-    virtual bool Initialize(char* modelFilename);
+    virtual bool Initialize(const char* modelFilename);
 
     // Releases data associated with the model
     virtual void Shutdown();
@@ -74,7 +74,7 @@ protected:
     virtual void RenderBuffers();
 
     // Loads the given model from file
-    virtual bool LoadModel(char*);
+    virtual bool LoadModel(const char*);
 
     // Releases the model data
     virtual void ReleaseModel();

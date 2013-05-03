@@ -3,7 +3,7 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// GraphicsClass
+// GraphicsManager
 //      Overall control of graphics and rendering, holds model objects and other graphics objects
 #pragma once
 
@@ -66,7 +66,7 @@ public:
     D3DXMATRIX GetBaseViewMatrix() {return baseViewMatrix;}
 
     // Get shaders
-    Shader* GetShader(const char* key);
+    Shader* GetShader(std::string key);
 
     // Get camera
     Camera* GetCamera() {return m_Camera; }

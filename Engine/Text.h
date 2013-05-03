@@ -36,17 +36,19 @@ public:
     virtual bool Initialize();
     virtual void Shutdown();
 
-    // Renders the graphic to the supplied context
-    virtual void Render();
-
 	// Getter and Setter functions
 	char* GetText();
 	void SetText(const char*); // Rebuilds the buffer from Font.
 	void SetColor(float r, float g, float b);
+    void SetFont(std::string name) { m_texture = AssetManager::GetRef()->GetFont(name); }
+
 
 protected:
 
     //|------------------------------Protected Functions------------------------|
+    
+    // Performs the transforms on the graphic
+    virtual D3DXMATRIX PerformTransforms(Coord position);
 
 protected:
 

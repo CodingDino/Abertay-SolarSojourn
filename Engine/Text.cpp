@@ -51,13 +51,9 @@ bool Text::Initialize()
 	bool result;
 
 	// If there's not a material, make a blank one
-	if (!m_material)
-	{
-		m_material = new Material;
-		m_material->shader = GraphicsManager::GetRef()->GetShader("Texture");
-		m_material->alphaBlend = true;
-		m_material->zBuffer = false;
-	}
+	m_shader = GraphicsManager::GetRef()->GetShader("Texture");
+	m_alphaBlend = true;
+	m_zBuffer = false;
 
 	// If there's not a model, make a sentence
 	if (!m_model)
@@ -86,30 +82,11 @@ void Text::Shutdown()
 
 
 // |----------------------------------------------------------------------------|
-// |                               Render                                       |
+// |                          PerformTransforms                                 |
 // |----------------------------------------------------------------------------|
-void Text::Render()
+D3DXMATRIX Text::PerformTransforms(Coord position)
 {
-	DebugLog ("Text::Render() called.", DB_GRAPHICS, 10);
-
-    // Get correct shader to use from material
-    Shader* shader = m_material->shader;
-
-    // Pipeline settings
-    if (m_material)
-    {
-        if (m_material->alphaBlend)
-            D3DManager::GetRef()->TurnOnAlphaBlending();
-        if (m_material->particleBlend)
-            D3DManager::GetRef()->TurnOnParticleBlending();
-        if (!m_material->backfaceCull)
-            D3DManager::GetRef()->TurnOffBackCulling();
-        if (!m_material->zBuffer)
-            D3DManager::GetRef()->TurnZBufferOff();
-    }
-
-    // Put the model in the buffer
-    if(m_model) m_model->Render();
+	DebugLog ("Text::PerformTransforms() called.", DB_GRAPHICS, 10);
 
     // Scale, Translate, and Rotate
     D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();
@@ -120,26 +97,13 @@ void Text::Render()
 	D3DXMatrixRotationYawPitchRoll(&rotate, 0.0f, 0.0f, m_orientation.z);
 	// Translate first to the upper left corner, then based on position factor
     D3DXMatrixTranslation(&translate, 
-        0.0f + m_position.x,
-        0.0f - m_position.y,
+        0.0f + position.x,
+        0.0f - position.y,
         0.0f);
 	// Modify world matrix by scale, rotation, and translation
     worldMatrix = scale * rotate * translate;
 
-    // Render using the shader and a self pointer.
-    shader->Render(D3DManager::GetRef()->GetDeviceContext(),
-        m_model->GetIndexCount(),
-        worldMatrix,
-        GraphicsManager::GetRef()->GetBaseViewMatrix(),
-        GraphicsManager::GetRef()->GetOrthoMatrix(),
-        this);
-    
-    // Reset pipeline settings
-    D3DManager::GetRef()->TurnOffAlphaBlending();
-    D3DManager::GetRef()->TurnOnBackCulling();
-    D3DManager::GetRef()->TurnZBufferOn();
-
-    return;
+    return worldMatrix;
 }
 
 
@@ -176,5 +140,5 @@ void Text::SetText(const char* string)
 // |----------------------------------------------------------------------------|
 void Text::SetColor(float r, float g, float b)
 {
-	m_material->SetTint(r,g,b,1.0f);
+	SetTint(r,g,b,1.0f);
 }

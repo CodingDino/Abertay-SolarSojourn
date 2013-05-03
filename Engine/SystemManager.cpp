@@ -21,6 +21,7 @@ SystemManager::SystemManager() :
     m_input(0),
     m_graphics(0),
     //m_sound(0),
+    m_assets(0),
     m_game(0)
 {
 }
@@ -121,6 +122,22 @@ bool SystemManager::Initialize()
         return false;
     }
 
+    // Create the asset object.
+    m_assets = new AssetManager();
+    if(!m_assets)
+    {
+        DebugPopup(L"Could not get instance of AssetManager. Aborting.");
+        return false;
+    }
+
+    // Initialize the asset object.
+    result = m_assets->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize AssetManager. Aborting.");
+        return false;
+    }
+
     // Create the game object.
     m_game = new GameManager();
     if(!m_game)
@@ -171,7 +188,7 @@ void SystemManager::Shutdown()
     //    m_sound = 0;
     //}
 
-    // Release the game object.
+    // Release the m_timer object.
     if(m_timer)
     {
         m_timer->Shutdown();
@@ -185,6 +202,14 @@ void SystemManager::Shutdown()
         m_game->Shutdown();
         delete m_game;
         m_game = 0;
+    }
+
+    // Release the assets object.
+    if(m_assets)
+    {
+        m_assets->Shutdown();
+        delete m_assets;
+        m_assets = 0;
     }
 
     // Shutdown the window.
