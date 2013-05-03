@@ -96,7 +96,7 @@ private:
     Camera* m_Camera;
 
     // Shaders
-    ColorShader* m_colorShader;
+    //ColorShader* m_colorShader;
     TextureShader* m_textureShader;
     LightShader* m_lightShader;
 

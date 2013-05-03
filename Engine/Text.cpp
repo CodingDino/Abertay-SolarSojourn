@@ -60,7 +60,8 @@ bool Text::Initialize()
 	// If there's not a model, make a setence
 	if (!m_model)
 	{
-		m_model = AssetManager::GetRef()->GetModel("sentence");
+        m_model = new Sentence;
+        m_model->Initialize();
 	}
 
 	// If there's not a font, use default
@@ -84,6 +85,11 @@ bool Text::Initialize()
 // |----------------------------------------------------------------------------|
 void Text::Shutdown()
 {
+    // Owns sentence
+    m_model->Shutdown();
+    delete m_model;
+    m_model = 0;
+
     return Graphic::Shutdown();
 }
 

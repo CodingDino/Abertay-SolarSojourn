@@ -49,10 +49,6 @@ bool AssetManager::Initialize()
     Quad* quad = new Quad;
     quad->Initialize();
     m_models["quad"] = quad;
-    // Create sentence
-    Sentence* sentence = new Sentence;
-    sentence->Initialize();
-    m_models["sentence"] = sentence;
 
     return true;
 }
@@ -122,7 +118,7 @@ Texture* AssetManager::GetTexture(std::string name)
     if (!result)
     {
 	    DebugLog ("AssetManager: Unable to load texture.", DB_GRAPHICS, 1);
-        return 0;
+        return m_textures["default"];
     }
 
     // If it was loaded, add it to the map and return it.
@@ -165,7 +161,7 @@ Font* AssetManager::GetFont(std::string name)
     if (!result)
     {
 	    DebugLog ("AssetManager: Unable to load font.", DB_GRAPHICS, 1);
-        return 0;
+        return m_fonts["default"];
     }
 
     // If it was loaded, add it to the map and return it.
@@ -202,7 +198,7 @@ Model* AssetManager::GetModel(std::string name)
     if (!result)
     {
 	    DebugLog ("AssetManager: Unable to load model.", DB_GRAPHICS, 1);
-        return 0;
+        return m_models["sphere"];
     }
 
     // If it was loaded, add it to the map and return it.

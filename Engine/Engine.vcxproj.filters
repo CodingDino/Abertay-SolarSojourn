@@ -15,9 +15,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Graphics\Shader Files\ColorShader">
-      <UniqueIdentifier>{2a8e335d-6382-4db8-bc8a-016162e99cc7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{3ce96684-e8b1-4bdd-b7b2-714705ffd91b}</UniqueIdentifier>
     </Filter>
@@ -67,9 +64,6 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Graphics\Shader Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorShader.cpp">
-      <Filter>Graphics\Shader Files\ColorShader</Filter>
     </ClCompile>
     <ClCompile Include="GameManager.cpp">
       <Filter>Managers</Filter>
@@ -154,9 +148,6 @@
     <ClInclude Include="Shader.h">
       <Filter>Graphics\Shader Files</Filter>
     </ClInclude>
-    <ClInclude Include="ColorShader.h">
-      <Filter>Graphics\Shader Files\ColorShader</Filter>
-    </ClInclude>
     <ClInclude Include="GameManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
@@ -235,12 +226,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="color.vs">
-      <Filter>Graphics\Shader Files\ColorShader</Filter>
-    </None>
-    <None Include="color.ps">
-      <Filter>Graphics\Shader Files\ColorShader</Filter>
-    </None>
     <None Include="texture.ps">
       <Filter>Graphics\Shader Files\TextureShader</Filter>
     </None>

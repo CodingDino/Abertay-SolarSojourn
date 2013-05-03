@@ -79,7 +79,7 @@ bool TitleScreen::Initialize() {
     planet->Initialize();
     graphic = new Graphic;
     graphic->SetTint(1.0f,0.0f,0.0f,1.0f);
-    graphic->SetShader("Color");
+    graphic->SetShader("Texture");
     graphic->Initialize();
     // Set up transforms
     graphic->SetScale(Coord(0.2f,0.2f,0.2f));
@@ -96,7 +96,7 @@ bool TitleScreen::Initialize() {
     floor->Initialize();
     graphic = new Graphic;
     graphic->SetTint(0.7f,0.6f,0.5f,1.0f);
-    graphic->SetShader("Color");
+    graphic->SetShader("Texture");
     graphic->SetModel("quad");
     graphic->Initialize();
     // Set up transforms

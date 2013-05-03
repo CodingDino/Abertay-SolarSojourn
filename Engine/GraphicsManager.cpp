@@ -19,7 +19,7 @@
 GraphicsManager::GraphicsManager() :
     m_D3D(0),
     m_Camera(0),
-    m_colorShader(0),
+    //m_colorShader(0),
     m_textureShader(0),
     m_lightShader(0),
     m_screen(0),
@@ -95,12 +95,12 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     m_Camera->SetPosition(Coord(0.0f, 0.0f, -10.0f));
 
     // Create the shader objects.
-    m_colorShader = new ColorShader;
-    if(!m_colorShader)
-    {
-        DebugPopup(L"Could not create ColorShader.");
-        return false;
-    }
+    //m_colorShader = new ColorShader;
+    //if(!m_colorShader)
+    //{
+    //    DebugPopup(L"Could not create ColorShader.");
+    //    return false;
+    //}
     m_textureShader = new TextureShader;
     if(!m_textureShader)
     {
@@ -114,12 +114,12 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     }
     
     // Initialize the shader objects.
-    result = m_colorShader->Initialize();
-    if(!result)
-    {
-        DebugPopup(L"Could not initialize ColorShader.");
-        return false;
-    }
+    //result = m_colorShader->Initialize();
+    //if(!result)
+    //{
+    //    DebugPopup(L"Could not initialize ColorShader.");
+    //    return false;
+    //}
     result = m_textureShader->Initialize();
     if(!result)
     {
@@ -143,12 +143,12 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
 void GraphicsManager::Shutdown()
 {
     // Release the shader objects.
-    if(m_colorShader)
-    {
-        m_colorShader->Shutdown();
-        delete m_colorShader;
-        m_colorShader = 0;
-    }
+    //if(m_colorShader)
+    //{
+    //    m_colorShader->Shutdown();
+    //    delete m_colorShader;
+    //    m_colorShader = 0;
+    //}
     if(m_textureShader)
     {
         m_textureShader->Shutdown();
@@ -317,11 +317,11 @@ bool GraphicsManager::EndRender()
 // |----------------------------------------------------------------------------|
 Shader* GraphicsManager::GetShader(const std::string key)
 {
-    if (key == "Color")
-    {
-        return m_colorShader;
-    }
-    else if (key == "Texture")
+    //if (key == "Color")
+    //{
+    //    return m_colorShader;
+    //}
+    if (key == "Texture")
     {
         return m_textureShader;
     }
