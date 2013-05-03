@@ -46,7 +46,7 @@ Font::~Font()
 // |----------------------------------------------------------------------------|
 // |						      Initialize									|
 // |----------------------------------------------------------------------------|
-bool Font::Initialize(ID3D11Device* device, const char* fontFilename, WCHAR* textureFilename) 
+bool Font::Initialize(ID3D11Device* device, char* fontFilename, WCHAR* textureFilename) 
 {
 	DebugLog ("Font::Initialize() called.", DB_GRAPHICS, 1);
 	bool result;
@@ -89,7 +89,7 @@ void Font::Shutdown()
 // |----------------------------------------------------------------------------|
 // |							 LoadFontData									|
 // |----------------------------------------------------------------------------|
-bool Font::LoadFontData(const char* filename)
+bool Font::LoadFontData(char* filename)
 {
 	DebugLog ("Font::LoadFontData() called.", DB_GRAPHICS, 1);
 	int i(0);

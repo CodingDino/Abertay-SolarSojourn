@@ -81,7 +81,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Image.cpp" />
@@ -112,7 +111,6 @@
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Image.h" />

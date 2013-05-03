@@ -20,10 +20,10 @@
 Graphic::Graphic() :
     m_model(0),
     m_texture(0),
+    m_material(0),
     m_scale(1.0f,1.0f,1.0f),
     m_orientation(0.0f,0.0f,0.0f),
-    m_position(0.0f,0.0f,0.0f),
-    Material()
+    m_position(0.0f,0.0f,0.0f)
 {
 }
 
@@ -77,48 +77,24 @@ void Graphic::Render(Coord position)
 {
 	DebugLog ("Graphic::Render() called.", DB_GRAPHICS, 10);
 
-    // If there's no shader specified, exit.
-    if (!m_shader) return;
+    // Get correct shader to use from material
+    Shader* shader = m_material->shader;
 
     // Pipeline settings
-    if (m_alphaBlend)
-        D3DManager::GetRef()->TurnOnAlphaBlending();
-    if (m_particleBlend)
-        D3DManager::GetRef()->TurnOnParticleBlending();
-    if (!m_backfaceCull)
-        D3DManager::GetRef()->TurnOffBackCulling();
-    if (!m_zBuffer)
-        D3DManager::GetRef()->TurnZBufferOff();
+    if (m_material)
+    {
+        if (m_material->alphaBlend)
+            D3DManager::GetRef()->TurnOnAlphaBlending();
+        if (m_material->particleBlend)
+            D3DManager::GetRef()->TurnOnParticleBlending();
+        if (!m_material->backfaceCull)
+            D3DManager::GetRef()->TurnOffBackCulling();
+        if (!m_material->zBuffer)
+            D3DManager::GetRef()->TurnZBufferOff();
+    }
 
     // Put the model in the buffer
     if(m_model) m_model->Render();
-
-    // Scale, Translate, and Rotate
-    D3DXMATRIX worldMatrix = PerformTransforms(position);
-    
-    // Render using the shader and a self pointer.
-    m_shader->Render(D3DManager::GetRef()->GetDeviceContext(),
-        m_model->GetIndexCount(),
-        worldMatrix,
-        GraphicsManager::GetRef()->GetBaseViewMatrix(),
-        GraphicsManager::GetRef()->GetOrthoMatrix(),
-        this);
-
-    // Reset pipeline settings
-    D3DManager::GetRef()->TurnOffAlphaBlending();
-    D3DManager::GetRef()->TurnOnBackCulling();
-    D3DManager::GetRef()->TurnZBufferOn();
-
-    return;
-}
-
-
-// |----------------------------------------------------------------------------|
-// |                               Render                                       |
-// |----------------------------------------------------------------------------|
-D3DXMATRIX Graphic::PerformTransforms(Coord position)
-{
-	DebugLog ("Graphic::PerformTransforms() called.", DB_GRAPHICS, 10);
 
     // Scale, Translate, and Rotate
     D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();
@@ -128,5 +104,18 @@ D3DXMATRIX Graphic::PerformTransforms(Coord position)
 	D3DXMatrixTranslation(&translate, position.x, position.y, position.z);
     worldMatrix = scale * rotate * translate;
 
-    return worldMatrix;
+    // Render using the shader and a self pointer.
+    shader->Render(D3DManager::GetRef()->GetDeviceContext(),
+        m_model->GetIndexCount(),
+        worldMatrix,
+        GraphicsManager::GetRef()->GetViewMatrix(),
+        GraphicsManager::GetRef()->GetProjectionMatrix(),
+        this);
+
+    // Reset pipeline settings
+    D3DManager::GetRef()->TurnOffAlphaBlending();
+    D3DManager::GetRef()->TurnOnBackCulling();
+    D3DManager::GetRef()->TurnZBufferOn();
+
+    return;
 }

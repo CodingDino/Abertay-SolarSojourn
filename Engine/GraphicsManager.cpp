@@ -315,17 +315,17 @@ bool GraphicsManager::EndRender()
 // |----------------------------------------------------------------------------|
 // |						      GetShader				    					|
 // |----------------------------------------------------------------------------|
-Shader* GraphicsManager::GetShader(std::string key)
+Shader* GraphicsManager::GetShader(const char* key)
 {
-    if (key == "Color")
+    if (!strcmp(key, "Color"))
     {
         return m_colorShader;
     }
-    else if (key == "Texture")
+    else if (!strcmp(key, "Texture"))
     {
         return m_textureShader;
     }
-    else if (key == "Light")
+    else if (!strcmp(key, "Light"))
     {
         return m_lightShader;
     }

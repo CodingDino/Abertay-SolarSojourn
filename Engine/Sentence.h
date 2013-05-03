@@ -31,7 +31,7 @@ public:
 	virtual ~Sentence();
 	
     // Initialization and shutdown
-	virtual bool Initialize() {return Initialize(1000);}
+	virtual bool Initialize() {return Initialize(100);}
 	virtual bool Initialize(int maxLength);
 
     // Updates the buffers based on the supplied string and font

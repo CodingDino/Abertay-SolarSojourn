@@ -48,9 +48,12 @@ bool Billboard::Initialize()
     
 	bool result;
 
-	// Default material settings
-	m_shader = GraphicsManager::GetRef()->GetShader("Texture");
-	m_alphaBlend = true;
+	// If there's not a material, make a blank one
+	if (!m_material)
+	{
+		m_material = new Material;
+		m_material->shader = GraphicsManager::GetRef()->GetShader("Texture");
+	}
 
 	// If there's not a model, make a quad
 	if (!m_model)
@@ -79,11 +82,30 @@ void Billboard::Shutdown()
 
 
 // |----------------------------------------------------------------------------|
-// |                          PerformTransforms                                 |
+// |                               Render                                       |
 // |----------------------------------------------------------------------------|
-D3DXMATRIX Billboard::PerformTransforms(Coord position)
+void Billboard::Render(Coord position)
 {
-	DebugLog ("Billboard::PerformTransforms() called.", DB_GRAPHICS, 10);
+	DebugLog ("Billboard::Render() called.", DB_GRAPHICS, 10);
+
+    // Get correct shader to use from material
+    Shader* shader = m_material->shader;
+
+    // Pipeline settings
+    if (m_material)
+    {
+        if (m_material->alphaBlend)
+            D3DManager::GetRef()->TurnOnAlphaBlending();
+        if (m_material->particleBlend)
+            D3DManager::GetRef()->TurnOnParticleBlending();
+        if (!m_material->backfaceCull)
+            D3DManager::GetRef()->TurnOffBackCulling();
+        if (!m_material->zBuffer)
+            D3DManager::GetRef()->TurnZBufferOff();
+    }
+
+    // Put the quad in the buffer
+    if(m_model) m_model->Render();
 
     // Scale, Translate, and Rotate
     D3DXMATRIX worldMatrix = GraphicsManager::GetRef()->GetWorldMatrix();
@@ -95,8 +117,10 @@ D3DXMATRIX Billboard::PerformTransforms(Coord position)
     else
 	    D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, m_scale.z);
 
+
 	// Rotate to face camera
     Camera* camera = GraphicsManager::GetRef()->GetCamera();
+    //D3DXVECTOR3 positionVec(position.x, position.y, position.z);
     D3DXVECTOR3 cameraPosition(camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
     D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
     D3DXVECTOR3 direction(position.x - camera->GetPosition().x, 
@@ -115,6 +139,20 @@ D3DXMATRIX Billboard::PerformTransforms(Coord position)
 	// Modify world matrix by scale, rotation, and translation
     worldMatrix = scale * rotate * translate;
 
-    return worldMatrix;
+    // Render using the shader and a self pointer.
+    shader->Render(D3DManager::GetRef()->GetDeviceContext(),
+        m_model->GetIndexCount(),
+        worldMatrix,
+        GraphicsManager::GetRef()->GetViewMatrix(),
+        GraphicsManager::GetRef()->GetProjectionMatrix(),
+        this);
+    
+
+    // Reset pipeline settings
+    D3DManager::GetRef()->TurnOffAlphaBlending();
+    D3DManager::GetRef()->TurnOnBackCulling();
+    D3DManager::GetRef()->TurnZBufferOn();
+
+    return;
 }
 

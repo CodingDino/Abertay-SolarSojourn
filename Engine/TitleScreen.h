@@ -19,7 +19,6 @@
 #include "MouseLookCamera.h"
 #include "Billboard.h"
 #include "ParticleSystem.h"
-#include "AssetManager.h"
 
 
 // |----------------------------------------------------------------------------|

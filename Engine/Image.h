@@ -33,12 +33,8 @@ public:
     virtual bool Initialize();
     virtual void Shutdown();
 
-protected:
-
-    //|------------------------------Protected Functions------------------------|
-    
-    // Performs the transforms on the graphic
-    virtual D3DXMATRIX PerformTransforms(Coord position);
+    // Renders the graphic to the supplied context
+    virtual void Render();
 
 protected:
 

@@ -155,7 +155,8 @@ bool TextureShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 	t_psbuffer = (PSBufferType*)mappedResource.pData;
 
 	// Copy the color into the constant buffer.
-    t_psbuffer->color = D3DXVECTOR4(graphic->GetTintR(), graphic->GetTintG(), graphic->GetTintB(), graphic->GetAlpha());
+    Material* material = graphic->GetMaterial();
+    t_psbuffer->color = D3DXVECTOR4(material->tintR, material->tintG, material->tintB, material->alpha);
         
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_psBuffer, 0);

@@ -128,9 +128,6 @@
     <ClCompile Include="LightShader.cpp">
       <Filter>Graphics\Shader Files\LightShader</Filter>
     </ClCompile>
-    <ClCompile Include="AssetManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -162,6 +159,9 @@
     </ClInclude>
     <ClInclude Include="Screen.h">
       <Filter>Game\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
       <Filter>Utility</Filter>
@@ -223,12 +223,6 @@
     </ClInclude>
     <ClInclude Include="LightShader.h">
       <Filter>Graphics\Shader Files\LightShader</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Graphics\Graphic Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
