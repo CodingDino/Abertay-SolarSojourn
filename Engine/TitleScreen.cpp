@@ -45,7 +45,7 @@ bool TitleScreen::Initialize() {
 
     // Set lighting
     LightManager::GetRef()->SetAmbient(0.0f,0.0f,0.0f);
-    LightManager::GetRef()->SetDiffuseColor(1.0f,1.0f,1.0f);
+    LightManager::GetRef()->SetDiffuseColor(0.2f,0.0f,0.0f);
     LightManager::GetRef()->SetDiffuseDirection(1.0f,0.0f,0.0f);
 
     // Set next screen to SCREEN_QUIT
@@ -58,9 +58,10 @@ bool TitleScreen::Initialize() {
     Planet* gameObject = new Planet;
     gameObject->Initialize();
     Graphic* graphic = new Graphic;
-    graphic->SetTint(1.0f,0.5f,0.0f,1.0f);
+    graphic->SetTint(1.0f,1.0f,1.0f,1.0f);
     graphic->SetShader("Light");
     graphic->Initialize();
+    graphic->SetReflectiveness(0.9f);
     // Add graphic to game object
     gameObject->SetGraphic(graphic);
     // Set up game object as planet

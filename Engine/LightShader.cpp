@@ -115,9 +115,12 @@ bool LightShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
     t_vsbuffer = (VSBufferType*)mappedResource.pData;
 
     // Copy the matrices into the constant buffer.
+    Camera* camera = GraphicsManager::GetRef()->GetCamera();
     t_vsbuffer->world = worldMatrix;
     t_vsbuffer->view = viewMatrix;
     t_vsbuffer->projection = projectionMatrix;
+    t_vsbuffer->cameraPosition = D3DXVECTOR3(camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
+    t_vsbuffer->padding = 0.0f;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_vsBuffer, 0);
@@ -160,7 +163,15 @@ bool LightShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
     t_psbuffer->ambientColor = LightManager::GetRef()->GetAmbient();
     t_psbuffer->diffuseColor = LightManager::GetRef()->GetDiffuseColor();
     t_psbuffer->lightDirection = LightManager::GetRef()->GetDiffuseDirection();
-    t_psbuffer->padding = 0.0f;
+    if (graphic->GetReflectiveness())
+        t_psbuffer->specularPower = (1-graphic->GetReflectiveness())*100.0f;
+    else
+        t_psbuffer->specularPower = 100000.0f;
+    t_psbuffer->specularColor = D3DXVECTOR4(
+        Clamp(t_psbuffer->diffuseColor.x+0.5,0.0f,1.0f),
+        Clamp(t_psbuffer->diffuseColor.y+0.5,0.0f,1.0f),
+        Clamp(t_psbuffer->diffuseColor.z+0.5,0.0f,1.0f),
+        Clamp(t_psbuffer->diffuseColor.w+0.5,0.0f,1.0f) );
  
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_psBuffer, 0);

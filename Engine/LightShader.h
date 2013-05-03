@@ -27,6 +27,8 @@ protected:
         D3DXMATRIX world;
         D3DXMATRIX view;
         D3DXMATRIX projection;
+		D3DXVECTOR3 cameraPosition;
+		float padding;
     };
 
     struct PSBufferType
@@ -35,7 +37,8 @@ protected:
 		D3DXVECTOR4 ambientColor;
 		D3DXVECTOR4 diffuseColor;
 		D3DXVECTOR3 lightDirection;
-		float padding;
+		float specularPower;
+		D3DXVECTOR4 specularColor;
     };
 
 public:
