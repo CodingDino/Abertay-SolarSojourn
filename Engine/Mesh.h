@@ -23,6 +23,16 @@
 class Mesh : public Model
 {
 
+private:
+    
+    //|-------------------------------Private Typedefs--------------------------|
+
+    struct HeightMapType 
+	{ 
+		float x, y, z;
+		float nx, ny, nz;
+	};
+
 public:
 
     //|-------------------------------Public Functions--------------------------|
@@ -48,6 +58,7 @@ protected:
 
     // Populates buffers with data
     virtual bool PopulateBuffers(VertexType*&, unsigned long*&);
+    bool CalculateNormals();
 
     // Renders the buffers
     virtual void RenderBuffers();
@@ -66,5 +77,5 @@ protected:
     int m_meshWidth;
     int m_meshLength;
     float m_meshHeight;
-    Coord* m_heightMap;
+    HeightMapType* m_heightMap;
 };

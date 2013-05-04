@@ -52,8 +52,15 @@ bool Mesh::Initialize()
     // Generate a Height Map
     GenerateHeightMap();
 
+    // Calculate the normals for the terrain data.
+	result = CalculateNormals();
+	if(!result)
+	{
+		return false;
+	}
+
 	// Set the number of vertices and indices.
-	m_vertexCount = (m_meshWidth - 1) * (m_meshLength - 1) * 12;
+	m_vertexCount = (m_meshWidth - 1) * (m_meshLength - 1) * 6;
 	m_indexCount = m_vertexCount;
 
 	// Set buffer flags
@@ -121,84 +128,42 @@ bool Mesh::PopulateBuffers(VertexType*& vertices, unsigned long*& indices)
 			// Upper left.
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index3].x, m_heightMap[index3].y, m_heightMap[index3].z);
 			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+			vertices[index].normal = D3DXVECTOR3(m_heightMap[index3].nx, m_heightMap[index3].ny, m_heightMap[index3].nz);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index4].x, m_heightMap[index4].y, m_heightMap[index4].z);
 			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-			indices[index] = index;
-			index++;
-
-			// Upper right.
-			vertices[index].position = D3DXVECTOR3(m_heightMap[index4].x, m_heightMap[index4].y, m_heightMap[index4].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+			vertices[index].normal = D3DXVECTOR3(m_heightMap[index4].nx, m_heightMap[index4].ny, m_heightMap[index4].nz);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index1].x, m_heightMap[index1].y, m_heightMap[index1].z);
 			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+			vertices[index].normal = D3DXVECTOR3(m_heightMap[index1].nx, m_heightMap[index1].ny, m_heightMap[index1].nz);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index1].x, m_heightMap[index1].y, m_heightMap[index1].z);
 			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-			indices[index] = index;
-			index++;
-
-			// Upper left.
-			vertices[index].position = D3DXVECTOR3(m_heightMap[index3].x, m_heightMap[index3].y, m_heightMap[index3].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-			indices[index] = index;
-			index++;
-
-			// Bottom left.
-			vertices[index].position = D3DXVECTOR3(m_heightMap[index1].x, m_heightMap[index1].y, m_heightMap[index1].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+			vertices[index].normal = D3DXVECTOR3(m_heightMap[index1].nx, m_heightMap[index1].ny, m_heightMap[index1].nz);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index4].x, m_heightMap[index4].y, m_heightMap[index4].z);
 			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-			indices[index] = index;
-			index++;
-
-			// Upper right.
-			vertices[index].position = D3DXVECTOR3(m_heightMap[index4].x, m_heightMap[index4].y, m_heightMap[index4].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+			vertices[index].normal = D3DXVECTOR3(m_heightMap[index4].nx, m_heightMap[index4].ny, m_heightMap[index4].nz);
 			indices[index] = index;
 			index++;
 
 			// Bottom right.
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index2].x, m_heightMap[index2].y, m_heightMap[index2].z);
 			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-			indices[index] = index;
-			index++;
-
-			// Bottom right.
-			vertices[index].position = D3DXVECTOR3(m_heightMap[index2].x, m_heightMap[index2].y, m_heightMap[index2].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-			indices[index] = index;
-			index++;
-
-			// Bottom left.
-			vertices[index].position = D3DXVECTOR3(m_heightMap[index1].x, m_heightMap[index1].y, m_heightMap[index1].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[index].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+			vertices[index].normal = D3DXVECTOR3(m_heightMap[index2].nx, m_heightMap[index2].ny, m_heightMap[index2].nz);
 			indices[index] = index;
 			index++;
 
@@ -233,7 +198,7 @@ void Mesh::RenderBuffers()
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	D3DManager::GetRef()->GetDeviceContext()
-		->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	return;
 }
@@ -263,7 +228,7 @@ void Mesh::InitializeHeightMap()
     float startX = 0.0f - m_meshWidth/2;
     float startZ = 0.0f - m_meshLength/2;
 
-    m_heightMap = new Coord[m_meshWidth*m_meshLength];
+    m_heightMap = new HeightMapType[m_meshWidth*m_meshLength];
     
 	// Read the image data into the height map.
 	for(j=0; j<m_meshLength; j++)
@@ -275,6 +240,10 @@ void Mesh::InitializeHeightMap()
 			m_heightMap[index].x = startX+(float)i;
 			m_heightMap[index].y = (float)0;
 			m_heightMap[index].z = startZ+(float)j;
+
+			m_heightMap[index].nx = (float)0;
+			m_heightMap[index].ny = (float)1;
+			m_heightMap[index].nz = (float)0;
 		}
 	}
 }
@@ -333,4 +302,144 @@ void Mesh::ShutdownHeightMap()
 	}
 
 	return;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |						    CalculateNormals								|
+// |----------------------------------------------------------------------------|
+bool Mesh::CalculateNormals()
+{
+	int i, j, index1, index2, index3, index, count;
+	float vertex1[3], vertex2[3], vertex3[3], vector1[3], vector2[3], sum[3], length;
+	Coord* normals;
+
+
+	// Create a temporary array to hold the un-normalized normal vectors.
+	normals = new Coord[(m_meshLength-1) * (m_meshWidth-1)];
+	if(!normals)
+	{
+		return false;
+	}
+
+	// Go through all the faces in the mesh and calculate their normals.
+	for(j=0; j<(m_meshLength-1); j++)
+	{
+		for(i=0; i<(m_meshWidth-1); i++)
+		{
+			index1 = (j * m_meshWidth) + i;
+			index2 = (j * m_meshWidth) + (i+1);
+			index3 = ((j+1) * m_meshWidth) + i;
+
+			// Get three vertices from the face.
+			vertex1[0] = m_heightMap[index1].x;
+			vertex1[1] = m_heightMap[index1].y;
+			vertex1[2] = m_heightMap[index1].z;
+		
+			vertex2[0] = m_heightMap[index2].x;
+			vertex2[1] = m_heightMap[index2].y;
+			vertex2[2] = m_heightMap[index2].z;
+		
+			vertex3[0] = m_heightMap[index3].x;
+			vertex3[1] = m_heightMap[index3].y;
+			vertex3[2] = m_heightMap[index3].z;
+
+			// Calculate the two vectors for this face.
+			vector1[0] = vertex1[0] - vertex3[0];
+			vector1[1] = vertex1[1] - vertex3[1];
+			vector1[2] = vertex1[2] - vertex3[2];
+			vector2[0] = vertex3[0] - vertex2[0];
+			vector2[1] = vertex3[1] - vertex2[1];
+			vector2[2] = vertex3[2] - vertex2[2];
+
+			index = (j * (m_meshWidth-1)) + i;
+
+			// Calculate the cross product of those two vectors to get the un-normalized value for this face normal.
+			normals[index].x = (vector1[1] * vector2[2]) - (vector1[2] * vector2[1]);
+			normals[index].y = (vector1[2] * vector2[0]) - (vector1[0] * vector2[2]);
+			normals[index].z = (vector1[0] * vector2[1]) - (vector1[1] * vector2[0]);
+		}
+	}
+
+	// Now go through all the vertices and take an average of each face normal 	
+	// that the vertex touches to get the averaged normal for that vertex.
+	for(j=0; j<m_meshLength; j++)
+	{
+		for(i=0; i<m_meshWidth; i++)
+		{
+			// Initialize the sum.
+			sum[0] = 0.0f;
+			sum[1] = 0.0f;
+			sum[2] = 0.0f;
+
+			// Initialize the count.
+			count = 0;
+
+			// Bottom left face.
+			if(((i-1) >= 0) && ((j-1) >= 0))
+			{
+				index = ((j-1) * (m_meshWidth-1)) + (i-1);
+
+				sum[0] += normals[index].x;
+				sum[1] += normals[index].y;
+				sum[2] += normals[index].z;
+				count++;
+			}
+
+			// Bottom right face.
+			if((i < (m_meshWidth-1)) && ((j-1) >= 0))
+			{
+				index = ((j-1) * (m_meshWidth-1)) + i;
+
+				sum[0] += normals[index].x;
+				sum[1] += normals[index].y;
+				sum[2] += normals[index].z;
+				count++;
+			}
+
+			// Upper left face.
+			if(((i-1) >= 0) && (j < (m_meshLength-1)))
+			{
+				index = (j * (m_meshWidth-1)) + (i-1);
+
+				sum[0] += normals[index].x;
+				sum[1] += normals[index].y;
+				sum[2] += normals[index].z;
+				count++;
+			}
+
+			// Upper right face.
+			if((i < (m_meshWidth-1)) && (j < (m_meshLength-1)))
+			{
+				index = (j * (m_meshWidth-1)) + i;
+
+				sum[0] += normals[index].x;
+				sum[1] += normals[index].y;
+				sum[2] += normals[index].z;
+				count++;
+			}
+			
+			// Take the average of the faces touching this vertex.
+			sum[0] = (sum[0] / (float)count);
+			sum[1] = (sum[1] / (float)count);
+			sum[2] = (sum[2] / (float)count);
+
+			// Calculate the length of this normal.
+			length = sqrt((sum[0] * sum[0]) + (sum[1] * sum[1]) + (sum[2] * sum[2]));
+			
+			// Get an index to the vertex location in the height map array.
+			index = (j * m_meshWidth) + i;
+
+			// Normalize the final shared normal for this vertex and store it in the height map array.
+			m_heightMap[index].nx = (sum[0] / length);
+			m_heightMap[index].ny = (sum[1] / length);
+			m_heightMap[index].nz = (sum[2] / length);
+		}
+	}
+
+	// Release the temporary normals.
+	delete [] normals;
+	normals = 0;
+
+	return true;
 }

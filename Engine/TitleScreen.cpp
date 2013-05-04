@@ -44,18 +44,18 @@ TitleScreen::~TitleScreen() {
 bool TitleScreen::Initialize() {
 
     // Set lighting
-    LightManager::GetRef()->SetAmbient(0.15f,0.15f,0.15f);
+    LightManager::GetRef()->SetAmbient(0.05f,0.05f,0.05f);
     LightManager::GetRef()->SetDiffuseColor(0.7f,0.7f,0.7f);
     LightManager::GetRef()->SetDiffuseDirection(0.0f,-1.0f,0.0f);
     PointLight pLight;
     pLight.SetPosition(Coord(0.0f,-4.0f,0.0f));
     pLight.SetColor(0.0f,1.0f,0.0f,1.0f);
     pLight.SetBrightness(1.0f);
-    LightManager::GetRef()->AddLight(pLight);
-    pLight.SetPosition(Coord(5.0f,0.0f,0.0f));
+    //LightManager::GetRef()->AddLight(pLight); // Green Light
+    pLight.SetPosition(Coord(1.5f,0.0f,0.0f));
     pLight.SetColor(0.0f,0.0f,1.0f,1.0f);
     pLight.SetBrightness(1.0f);
-    LightManager::GetRef()->AddLight(pLight);
+    LightManager::GetRef()->AddLight(pLight); // Blue Light
 
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
@@ -88,7 +88,7 @@ bool TitleScreen::Initialize() {
     Planet* planet = new Planet;
     planet->Initialize();
     graphic = new Graphic;
-    graphic->SetTint(1.0f,0.0f,0.0f,1.0f);
+    //graphic->SetTint(1.0f,0.0f,0.0f,1.0f);
     graphic->SetShader("Light");
     graphic->Initialize();
     // Set up transforms
@@ -106,7 +106,7 @@ bool TitleScreen::Initialize() {
     floor->Initialize();
     graphic = new Graphic;
     graphic->SetTint(1.0f,1.0f,1.0f,1.0f);
-    graphic->SetShader("Texture");
+    graphic->SetShader("Light");
     // Create mesh
     Mesh* mesh = new Mesh;
     mesh->Initialize(10,20,3.0f);
