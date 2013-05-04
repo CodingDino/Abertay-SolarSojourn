@@ -6,6 +6,10 @@
 // light.ps
 //      Pixel shader for handling simple textured shapes with lighting
 
+// |----------------------------------------------------------------------------|
+// |                                 Defines                                    |
+// |----------------------------------------------------------------------------|
+#define NUM_LIGHTS 4
 
 // |----------------------------------------------------------------------------|
 // |                                 Globals                                    |
@@ -15,12 +19,12 @@ SamplerState SampleType;
 cbuffer PixelBuffer
 {
 	float4 tint;
-    float4 ambientColor;
-    float4 diffuseColor;
-    float3 lightDirection;
+    float4 ambientLightColor;
+    float4 directionalLightColor;
+    float3 directionalLightDirection;
     float specularPower;
     float4 specularColor;
-    float padding;
+    float4 pointLightColor[NUM_LIGHTS];
 };
 
 
@@ -33,6 +37,7 @@ struct PixelInputType
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
     float3 viewDirection : TEXCOORD1;
+    float4 pointLightPos[NUM_LIGHTS] : TEXCOORD4;
 };
 
 // |----------------------------------------------------------------------------|
@@ -43,40 +48,62 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
     float4 color;
     float4 textureColor;
     float4 lightColor;
-    float3 lightDir;
-    float lightIntensity;
+
+    // Directional Light
+    float3 directionalLightDir;
+    float directionalLightIntensity;
+
+    // Specular stuff
     float3 reflection;
     float4 specular;
+
+    // Point Light
+    float4 pointLightCol[NUM_LIGHTS];
+    float4 pointLightIntensity[NUM_LIGHTS];
 
     // Sample the pixel color from the texture using the sampler at this texture coordinate location.
     textureColor = shaderTexture.Sample(SampleType, input.tex);
     
     // Set default light color to ambient color
-    lightColor = ambientColor;
+    lightColor = ambientLightColor;
 
     // Initialize the specular color.
     specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Invert the light direction for calculations.
-    lightDir = -lightDirection;
+    directionalLightDir = -directionalLightDirection;
 
     // Calculate the amount of light on this pixel.
-    lightIntensity = saturate(dot(input.normal, lightDir));
+    directionalLightIntensity = saturate(dot(input.normal, directionalLightDir));
 
-    if(lightIntensity > 0.0f)
+    // Point Light Calculations
+    for( uint i = 0; i < NUM_LIGHTS; i++ )
     {
-        // Determine the final diffuse color based on the diffuse color and the amount of light intensity.
-        lightColor += (diffuseColor * lightIntensity);
+        // Calculate the different amounts of light on this pixel based on the positions of the lights.
+        pointLightIntensity[i] = saturate(dot(input.normal, input.pointLightPos[i]));
+
+        // Determine the diffuse color amount of each of the four lights.
+        pointLightCol[i] = pointLightColor[0] * pointLightIntensity[i];
         
-        // Saturate the ambient and diffuse color.
-        lightColor = saturate(lightColor);
+        // Add each of the point lights to the lightColor
+        lightColor += pointLightCol[i];
+    }
 
+    //if(directionalLightIntensity > 0.0f && !(directionalLightColor.r == 0.0f && directionalLightColor.g == 0.0f && directionalLightColor.b == 0.0f) )
+    if(directionalLightIntensity > 0.0f )
+    {
+        // Determine the final directional color based on the diffuse color and the amount of light intensity.
+        lightColor += (directionalLightColor * directionalLightIntensity);
+    
         // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
-        reflection = normalize(2 * lightIntensity * input.normal - lightDir); 
-
+        reflection = normalize(2 * directionalLightIntensity * input.normal - directionalLightDir); 
+    
         // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
         specular = pow(saturate(dot(reflection, input.viewDirection)), specularPower);
     }
+        
+    // Saturate the combination of ambient, directional, and point lights.
+    lightColor = saturate(lightColor);
 
     // Combine texture, tint, and light to get final color
     color = textureColor * tint * lightColor;

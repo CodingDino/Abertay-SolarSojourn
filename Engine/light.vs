@@ -6,6 +6,10 @@
 // light.vs
 //      Vertex shader for handling simple textured shapes with lighting
 
+// |----------------------------------------------------------------------------|
+// |                                 Defines                                    |
+// |----------------------------------------------------------------------------|
+#define NUM_LIGHTS 4
 
 // |----------------------------------------------------------------------------|
 // |                                 Globals                                    |
@@ -17,6 +21,7 @@ cbuffer MatrixBuffer
 	matrix projectionMatrix;
     float3 cameraPosition;
     float padding;
+    float4 pointLightPosition[NUM_LIGHTS];
 };
 
 // |----------------------------------------------------------------------------|
@@ -35,6 +40,7 @@ struct PixelInputType
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
     float3 viewDirection : TEXCOORD1;
+    float4 pointLightPos[NUM_LIGHTS] : TEXCOORD4;
 };
 
 
@@ -71,6 +77,15 @@ PixelInputType LightVertexShader(VertexInputType input)
 	
     // Normalize the viewing direction vector.
     output.viewDirection = normalize(output.viewDirection);
+
+    for( uint i = 0; i < NUM_LIGHTS; i++ )
+    {
+        // Determine the light positions based on the position of the lights and the position of the vertex in the world.
+        output.pointLightPos[i] = pointLightPosition[i] - worldPosition;
+
+        // Normalize the light position vectors.
+        output.pointLightPos[i] = normalize(output.pointLightPos[i]);
+    }
     
     return output;
 }

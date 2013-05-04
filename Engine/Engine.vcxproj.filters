@@ -125,6 +125,9 @@
     <ClCompile Include="AssetManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">

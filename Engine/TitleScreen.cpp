@@ -44,9 +44,14 @@ TitleScreen::~TitleScreen() {
 bool TitleScreen::Initialize() {
 
     // Set lighting
-    LightManager::GetRef()->SetAmbient(0.0f,0.0f,0.0f);
-    LightManager::GetRef()->SetDiffuseColor(0.2f,0.0f,0.0f);
-    LightManager::GetRef()->SetDiffuseDirection(1.0f,0.0f,0.0f);
+    LightManager::GetRef()->SetAmbient(0.15f,0.15f,0.15f);
+    LightManager::GetRef()->SetDiffuseColor(0.7f,0.7f,0.7f);
+    LightManager::GetRef()->SetDiffuseDirection(0.0f,-1.0f,0.0f);
+    PointLight pLight;
+    pLight.SetPosition(Coord(0.0f,-4.0f,0.0f));
+    pLight.SetColor(0.0f,1.0f,0.0f,1.0f);
+    pLight.SetBrightness(1.0f);
+    //LightManager::GetRef()->AddLight(pLight);
 
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
@@ -80,7 +85,7 @@ bool TitleScreen::Initialize() {
     planet->Initialize();
     graphic = new Graphic;
     graphic->SetTint(1.0f,0.0f,0.0f,1.0f);
-    graphic->SetShader("Texture");
+    graphic->SetShader("Light");
     graphic->Initialize();
     // Set up transforms
     graphic->SetScale(Coord(0.2f,0.2f,0.2f));
@@ -96,8 +101,8 @@ bool TitleScreen::Initialize() {
     GameObject* floor = new GameObject;
     floor->Initialize();
     graphic = new Graphic;
-    graphic->SetTint(0.7f,0.6f,0.5f,1.0f);
-    graphic->SetShader("Texture");
+    graphic->SetTint(1.0f,1.0f,1.0f,1.0f);
+    graphic->SetShader("Light");
     graphic->SetModel("quad");
     graphic->Initialize();
     // Set up transforms
@@ -128,9 +133,9 @@ bool TitleScreen::Initialize() {
     spark->SetParticleLifetime(10.0f);
     spark->SetParticleFadeout(5.0f);
     spark->SetMaxParticles(100000);
-    spark->SetTint(1.0f,1.0f,0.8f);
-    spark->SetTintVar(0.5f,0.5f,0.5f);
-    //spark->SetOrientation(Coord(0.0f,90.0f * PI / 180,0.0f));
+    spark->SetTint(1.0f,1.0f,1.0f);
+    spark->SetTintVar(0.0f,0.0f,0.0f);
+    //spark->SetTintVar(0.5f,0.5f,0.5f);
     // Add planet to array
     m_gameObjects[4] = spark;
 

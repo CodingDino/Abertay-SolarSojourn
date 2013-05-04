@@ -14,6 +14,13 @@
 #include "Shader.h"
 #include "LightManager.h"
 
+
+// |----------------------------------------------------------------------------|
+// |                                 Defines                                    |
+// |----------------------------------------------------------------------------|
+#define NUM_LIGHTS 4
+
+
 // |----------------------------------------------------------------------------|
 // |                            Class: LightShader                              |
 // |----------------------------------------------------------------------------|
@@ -29,16 +36,18 @@ protected:
         D3DXMATRIX projection;
 		D3DXVECTOR3 cameraPosition;
 		float padding;
+		D3DXVECTOR4 pointLightPosition[NUM_LIGHTS];
     };
 
     struct PSBufferType
     {
 		D3DXVECTOR4 tint;
 		D3DXVECTOR4 ambientColor;
-		D3DXVECTOR4 diffuseColor;
-		D3DXVECTOR3 lightDirection;
+		D3DXVECTOR4 directionalLightColor;
+		D3DXVECTOR3 directionalLightDirection;
 		float specularPower;
 		D3DXVECTOR4 specularColor;
+		D3DXVECTOR4 pointLightColor[NUM_LIGHTS];
     };
 
 public:

@@ -15,7 +15,7 @@
 
 
 // |----------------------------------------------------------------------------|
-// |                           Default Constructor                              |
+// |                                Initialize                                  |
 // |----------------------------------------------------------------------------|
 bool LightShader::Initialize()
 {
@@ -121,6 +121,21 @@ bool LightShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
     t_vsbuffer->projection = projectionMatrix;
     t_vsbuffer->cameraPosition = D3DXVECTOR3(camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
     t_vsbuffer->padding = 0.0f;
+    
+    // Point Lights
+    std::list<PointLight*> pointLights = LightManager::GetRef()->GetLights(graphic->GetPosition(),NUM_LIGHTS);
+    // Initialize lights
+    for (int i=0; i < NUM_LIGHTS; ++i)
+    {
+        t_vsbuffer->pointLightPosition[i] = D3DXVECTOR4(0.0f,0.0f,0.0f,1.0f);
+    }
+    // Copy lights from list
+    int i= 0;
+    for (std::list<PointLight*>::iterator it=pointLights.begin(); it != pointLights.end(); ++it)
+    {
+        t_vsbuffer->pointLightPosition[i] = (*it)->position;
+        ++i;
+    }
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_vsBuffer, 0);
@@ -158,20 +173,34 @@ bool LightShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 	t_psbuffer = (PSBufferType*)mappedResource.pData;
 
 	// Copy the color and light into the constant buffer.
-    // TODO: Get lights from scene rather than hardcode
     t_psbuffer->tint = D3DXVECTOR4(graphic->GetTintR(), graphic->GetTintG(), graphic->GetTintB(), graphic->GetAlpha());
+    t_psbuffer->directionalLightColor = LightManager::GetRef()->GetDiffuseColor();
+    t_psbuffer->directionalLightDirection = LightManager::GetRef()->GetDiffuseDirection();
     t_psbuffer->ambientColor = LightManager::GetRef()->GetAmbient();
-    t_psbuffer->diffuseColor = LightManager::GetRef()->GetDiffuseColor();
-    t_psbuffer->lightDirection = LightManager::GetRef()->GetDiffuseDirection();
     if (graphic->GetReflectiveness())
         t_psbuffer->specularPower = (1-graphic->GetReflectiveness())*100.0f;
     else
         t_psbuffer->specularPower = 100000.0f;
     t_psbuffer->specularColor = D3DXVECTOR4(
-        Clamp(t_psbuffer->diffuseColor.x+0.5,0.0f,1.0f),
-        Clamp(t_psbuffer->diffuseColor.y+0.5,0.0f,1.0f),
-        Clamp(t_psbuffer->diffuseColor.z+0.5,0.0f,1.0f),
-        Clamp(t_psbuffer->diffuseColor.w+0.5,0.0f,1.0f) );
+        Clamp(t_psbuffer->directionalLightColor.x+0.5,0.0f,1.0f),
+        Clamp(t_psbuffer->directionalLightColor.y+0.5,0.0f,1.0f),
+        Clamp(t_psbuffer->directionalLightColor.z+0.5,0.0f,1.0f),
+        Clamp(t_psbuffer->directionalLightColor.w+0.5,0.0f,1.0f) );
+
+    // Point Lights
+    std::list<PointLight*> pointLights = LightManager::GetRef()->GetLights(graphic->GetPosition(),NUM_LIGHTS);
+    // Initialize lights
+    for (int i=0; i < NUM_LIGHTS; ++i)
+    {
+        t_psbuffer->pointLightColor[i] = D3DXVECTOR4(0.0f,0.0f,0.0f,1.0f);
+    }
+    // Copy lights from list
+    int i= 0;
+    for (std::list<PointLight*>::iterator it=pointLights.begin(); it != pointLights.end(); ++it)
+    {
+        t_psbuffer->pointLightColor[i] = (*it)->color;
+        ++i;
+    }
  
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_psBuffer, 0);

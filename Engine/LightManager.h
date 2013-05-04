@@ -15,6 +15,37 @@
 #include "Singleton.h"
 #include <d3dx10math.h>
 #include "Coord.h"
+#include <list>
+
+
+// |----------------------------------------------------------------------------|
+// |                             Struct: PointLight                             |
+// |----------------------------------------------------------------------------|
+struct PointLight
+{
+    D3DXVECTOR4 position;
+    D3DXVECTOR4 color;
+    float brightness; // Controlls how far this light reaches (range/attenuation)
+
+    void SetPosition(Coord pos)
+    {
+        position.x = pos.x;
+        position.y = pos.y;
+        position.z = pos.z;
+        position.w = 1.0f;
+    }
+    void SetColor(float r, float g, float b, float a)
+    {
+        color.x = r;
+        color.y = g;
+        color.z = b;
+        color.w = a;
+    }
+    void SetBrightness(float val)
+    {
+        brightness = val;
+    }
+};
 
 // |----------------------------------------------------------------------------|
 // |                             Class: LightManager                            |
@@ -26,14 +57,13 @@ public:
     //|-------------------------------Public Functions--------------------------|
     
 	// Constructors and Destructors
-    LightManager() : m_ambient(0.0f,0.0f,0.0f,1.0f) 
-        {}
+    LightManager();
 	LightManager(const LightManager&) {}
 	~LightManager() {}
     
     // Initialization and shutdown
     bool Initialize() {return true;}
-    void Shutdown() {}
+    void Shutdown() {m_pointLights.clear();} // TODO: Deallocate properly
 
     // Getters
     D3DXVECTOR4 GetAmbient() {return m_ambient;}
@@ -46,6 +76,11 @@ public:
     void SetDiffuseDirection(float x, float y, float z) {m_diffuseDirection = D3DXVECTOR3(x,y,z);}
     void SetDiffuseDirection(Coord coord) {m_diffuseDirection = D3DXVECTOR3(coord.x,coord.y,coord.z);}
 
+    // Point light managers
+    void AddLight(PointLight to_add);
+    bool RemoveLight(PointLight* to_remove);
+    std::list<PointLight*> GetLights(Coord position, int num_lights);
+
 private:
 
     //|-------------------------------Private Functions-------------------------|
@@ -56,6 +91,6 @@ private:
     D3DXVECTOR4 m_ambient;
     D3DXVECTOR4 m_diffuseColor;
     D3DXVECTOR3 m_diffuseDirection;
-    
+    std::list<PointLight*> m_pointLights;
 
 };
