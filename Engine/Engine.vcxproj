@@ -54,13 +54,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>tinyxml2;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>libnoise\include;tinyxml2;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\temp\Sarah\Solar-Sojourn\Debug;tinyxml2\tinyxml2\Debug;tinyxml2;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>..\Debug\tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\temp\Sarah\Solar-Sojourn\Debug;tinyxml2\tinyxml2\Debug;libnoise\bin;libnoise;tinyxml2;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>..\Debug\tinyxml2.lib;..\Engine\libnoise\bin\libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -100,6 +100,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MouseLookCamera.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Sentence.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="MouseLookCamera.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="resource.h" />

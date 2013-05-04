@@ -15,6 +15,8 @@
 #include "Coord.h"
 #include <stdlib.h>
 #include <time.h>
+#include "PerlinNoise.h"
+#include "noise/noise.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -69,6 +71,7 @@ protected:
     void GenerateHeightMap();
     void InitializeHeightMap();
     void RandomizeHeightMap();
+    void PerlinNoiseHeightMap();
     //void SmoothHeightMap();
     void NormalizeHeightMap();
     void SmoothHeightMap(int smoothFactor);

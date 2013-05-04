@@ -46,7 +46,7 @@ bool TitleScreen::Initialize() {
     // Set lighting
     LightManager::GetRef()->SetAmbient(0.05f,0.05f,0.05f);
     LightManager::GetRef()->SetDiffuseColor(0.7f,0.7f,0.7f);
-    LightManager::GetRef()->SetDiffuseDirection(0.0f,-1.0f,0.0f);
+    LightManager::GetRef()->SetDiffuseDirection(1.0f,-1.0f,0.0f);
     PointLight pLight;
     pLight.SetPosition(Coord(0.0f,-4.0f,0.0f));
     pLight.SetColor(0.0f,1.0f,0.0f,1.0f);
@@ -55,7 +55,7 @@ bool TitleScreen::Initialize() {
     pLight.SetPosition(Coord(1.5f,0.0f,0.0f));
     pLight.SetColor(0.0f,0.0f,1.0f,1.0f);
     pLight.SetBrightness(1.0f);
-    LightManager::GetRef()->AddLight(pLight); // Blue Light
+    //LightManager::GetRef()->AddLight(pLight); // Blue Light
 
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
@@ -105,12 +105,12 @@ bool TitleScreen::Initialize() {
     GameObject* floor = new GameObject;
     floor->Initialize();
     graphic = new Graphic;
-    graphic->SetTint(1.0f,1.0f,1.0f,1.0f);
-    graphic->SetTexture("seafloor");
+    //graphic->SetTint(1.0f,1.0f,0.0f,1.0f);
+    //graphic->SetTexture("seafloor");
     graphic->SetShader("Light");
     // Create mesh
     Mesh* mesh = new Mesh;
-    mesh->Initialize(100,100,10.0f);
+    mesh->Initialize(1000,1000,10.0f);
     graphic->SetModel(mesh);
     graphic->Initialize();
     // Set up transforms

@@ -245,8 +245,8 @@ void Mesh::GenerateHeightMap()
         return;
 
     InitializeHeightMap();
-    RandomizeHeightMap();
-    SmoothHeightMap(2);
+    PerlinNoiseHeightMap();
+    //SmoothHeightMap(6);
     //NormalizeHeightMap();
 }
 
@@ -300,6 +300,31 @@ void Mesh::RandomizeHeightMap()
 			index = (m_meshWidth * j) + i;
 
 			m_heightMap[index].y = (((float)rand()-(float)rand())/RAND_MAX) * m_meshHeight;
+		}
+	}
+}
+
+
+// |----------------------------------------------------------------------------|
+// |						  PerlinNoiseHeightMap								|
+// |----------------------------------------------------------------------------|
+void Mesh::PerlinNoiseHeightMap()
+{
+	int i, j, index;
+
+    // Initialize perlin noise generator
+    PerlinNoise noise(0.1,5,10,8,0);
+    noise::module::Perlin libnoisePerlin;
+
+	// Read the image data into the height map.
+	for(j=0; j<m_meshLength; j++)
+	{
+		for(i=0; i<m_meshWidth; i++)
+		{
+			index = (m_meshLength * j) + i;
+
+			//m_heightMap[index].y = noise.GetHeight(i,j);
+			m_heightMap[index].y = exp(2*libnoisePerlin.GetValue (m_heightMap[index].x/70,m_heightMap[index].z/70,0.5));
 		}
 	}
 }
@@ -556,9 +581,6 @@ bool Mesh::CalculateNormals()
 
 	return true;
 }
-
-
-
 
 
 // |----------------------------------------------------------------------------|

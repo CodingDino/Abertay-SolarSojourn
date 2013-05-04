@@ -131,6 +131,9 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Graphics\Model Types</Filter>
     </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Graphics\Model Types</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
