@@ -21,6 +21,7 @@ Mesh::Mesh() :
     m_meshLength(0),
     m_meshHeight(0),
     m_heightMap(0),
+    m_textureRepeat(0),
     Model()
 {
 }
@@ -49,6 +50,9 @@ bool Mesh::Initialize()
 	DebugLog ("Mesh::Initialize() called.", DB_GRAPHICS, 1);
 	bool result;
 
+    // Set texture repeat if not provided
+    if(!m_textureRepeat) m_textureRepeat = 8;
+
     // Generate a Height Map
     GenerateHeightMap();
 
@@ -58,6 +62,9 @@ bool Mesh::Initialize()
 	{
 		return false;
 	}
+
+    // Calculate the texture coordinates.
+	CalculateTextureCoordinates();
 
 	// Set the number of vertices and indices.
 	m_vertexCount = (m_meshWidth - 1) * (m_meshLength - 1) * 6;
@@ -107,6 +114,7 @@ bool Mesh::PopulateBuffers(VertexType*& vertices, unsigned long*& indices)
 	int index, i, j;
     float startX, startZ;
 	int index1, index2, index3, index4;
+	float tu, tv;
 
     // Initialize the index to the vertex array.
 	index = 0;
@@ -126,43 +134,67 @@ bool Mesh::PopulateBuffers(VertexType*& vertices, unsigned long*& indices)
 			index4 = (m_meshWidth * (j+1)) + (i+1);  // Upper right.
 
 			// Upper left.
+			tv = m_heightMap[index3].tv;
+
+			// Modify the texture coordinates to cover the top edge.
+			if(tv == 1.0f) { tv = 0.0f; }
+
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index3].x, m_heightMap[index3].y, m_heightMap[index3].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
+			vertices[index].texture = D3DXVECTOR2(m_heightMap[index3].tu, tv);
 			vertices[index].normal = D3DXVECTOR3(m_heightMap[index3].nx, m_heightMap[index3].ny, m_heightMap[index3].nz);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
+			tu = m_heightMap[index4].tu;
+			tv = m_heightMap[index4].tv;
+
+			// Modify the texture coordinates to cover the top and right edge.
+			if(tu == 0.0f) { tu = 1.0f; }
+			if(tv == 1.0f) { tv = 0.0f; }
+
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index4].x, m_heightMap[index4].y, m_heightMap[index4].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
+			vertices[index].texture = D3DXVECTOR2(tu, tv);
 			vertices[index].normal = D3DXVECTOR3(m_heightMap[index4].nx, m_heightMap[index4].ny, m_heightMap[index4].nz);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index1].x, m_heightMap[index1].y, m_heightMap[index1].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
+			vertices[index].texture = D3DXVECTOR2(m_heightMap[index1].tu, m_heightMap[index1].tv);
 			vertices[index].normal = D3DXVECTOR3(m_heightMap[index1].nx, m_heightMap[index1].ny, m_heightMap[index1].nz);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index1].x, m_heightMap[index1].y, m_heightMap[index1].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
+			vertices[index].texture = D3DXVECTOR2(m_heightMap[index1].tu, m_heightMap[index1].tv);
 			vertices[index].normal = D3DXVECTOR3(m_heightMap[index1].nx, m_heightMap[index1].ny, m_heightMap[index1].nz);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
+			tu = m_heightMap[index4].tu;
+			tv = m_heightMap[index4].tv;
+
+			// Modify the texture coordinates to cover the top and right edge.
+			if(tu == 0.0f) { tu = 1.0f; }
+			if(tv == 1.0f) { tv = 0.0f; }
+
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index4].x, m_heightMap[index4].y, m_heightMap[index4].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
+			vertices[index].texture = D3DXVECTOR2(tu, tv);
 			vertices[index].normal = D3DXVECTOR3(m_heightMap[index4].nx, m_heightMap[index4].ny, m_heightMap[index4].nz);
 			indices[index] = index;
 			index++;
 
 			// Bottom right.
+			tu = m_heightMap[index2].tu;
+
+			// Modify the texture coordinates to cover the right edge.
+			if(tu == 0.0f) { tu = 1.0f; }
+
 			vertices[index].position = D3DXVECTOR3(m_heightMap[index2].x, m_heightMap[index2].y, m_heightMap[index2].z);
-			vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
+			vertices[index].texture = D3DXVECTOR2(tu, m_heightMap[index2].tv);
 			vertices[index].normal = D3DXVECTOR3(m_heightMap[index2].nx, m_heightMap[index2].ny, m_heightMap[index2].nz);
 			indices[index] = index;
 			index++;
@@ -442,4 +474,66 @@ bool Mesh::CalculateNormals()
 	normals = 0;
 
 	return true;
+}
+
+
+
+
+
+// |----------------------------------------------------------------------------|
+// |				     CalculateTextureCoordinates							|
+// |----------------------------------------------------------------------------|
+void Mesh::CalculateTextureCoordinates()
+{
+	int incrementCount, i, j, tuCount, tvCount;
+	float incrementValue, tuCoordinate, tvCoordinate;
+
+	// Calculate how much to increment the texture coordinates by.
+	incrementValue = (float)m_textureRepeat / (float)m_meshWidth;
+
+	// Calculate how many times to repeat the texture.
+	incrementCount = m_meshWidth / m_textureRepeat;
+
+	// Initialize the tu and tv coordinate values.
+	tuCoordinate = 0.0f;
+	tvCoordinate = 1.0f;
+
+	// Initialize the tu and tv coordinate indexes.
+	tuCount = 0;
+	tvCount = 0;
+
+	// Loop through the entire height map and calculate the tu and tv texture coordinates for each vertex.
+	for(j=0; j<m_meshLength; j++)
+	{
+		for(i=0; i<m_meshWidth; i++)
+		{
+			// Store the texture coordinate in the height map.
+			m_heightMap[(m_meshWidth * j) + i].tu = tuCoordinate;
+			m_heightMap[(m_meshWidth * j) + i].tv = tvCoordinate;
+
+			// Increment the tu texture coordinate by the increment value and increment the index by one.
+			tuCoordinate += incrementValue;
+			tuCount++;
+
+			// Check if at the far right end of the texture and if so then start at the beginning again.
+			if(tuCount == incrementCount)
+			{
+				tuCoordinate = 0.0f;
+				tuCount = 0;
+			}
+		}
+
+		// Increment the tv texture coordinate by the increment value and increment the index by one.
+		tvCoordinate -= incrementValue;
+		tvCount++;
+
+		// Check if at the top of the texture and if so then start at the bottom again.
+		if(tvCount == incrementCount)
+		{
+			tvCoordinate = 1.0f;
+			tvCount = 0;
+		}
+	}
+
+	return;
 }

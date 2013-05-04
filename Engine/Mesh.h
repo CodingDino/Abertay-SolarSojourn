@@ -30,6 +30,7 @@ private:
     struct HeightMapType 
 	{ 
 		float x, y, z;
+		float tu, tv;
 		float nx, ny, nz;
 	};
 
@@ -59,6 +60,7 @@ protected:
     // Populates buffers with data
     virtual bool PopulateBuffers(VertexType*&, unsigned long*&);
     bool CalculateNormals();
+    void CalculateTextureCoordinates();
 
     // Renders the buffers
     virtual void RenderBuffers();
@@ -78,4 +80,6 @@ protected:
     int m_meshLength;
     float m_meshHeight;
     HeightMapType* m_heightMap;
+
+    int m_textureRepeat;
 };

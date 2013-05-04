@@ -106,6 +106,7 @@ bool TitleScreen::Initialize() {
     floor->Initialize();
     graphic = new Graphic;
     graphic->SetTint(1.0f,1.0f,1.0f,1.0f);
+    graphic->SetTexture("seafloor");
     graphic->SetShader("Light");
     // Create mesh
     Mesh* mesh = new Mesh;
