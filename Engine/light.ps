@@ -83,7 +83,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
         pointLightIntensity[i] = saturate(dot(input.normal, input.pointLightPos[i]));
 
         // Determine the diffuse color amount of each of the four lights.
-        pointLightCol[i] = pointLightColor[0] * pointLightIntensity[i];
+        pointLightCol[i] = pointLightColor[i] * pointLightIntensity[i];
         
         // Add each of the point lights to the lightColor
         lightColor += pointLightCol[i];

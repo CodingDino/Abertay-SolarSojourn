@@ -51,7 +51,11 @@ bool TitleScreen::Initialize() {
     pLight.SetPosition(Coord(0.0f,-4.0f,0.0f));
     pLight.SetColor(0.0f,1.0f,0.0f,1.0f);
     pLight.SetBrightness(1.0f);
-    //LightManager::GetRef()->AddLight(pLight);
+    LightManager::GetRef()->AddLight(pLight);
+    pLight.SetPosition(Coord(5.0f,0.0f,0.0f));
+    pLight.SetColor(0.0f,0.0f,1.0f,1.0f);
+    pLight.SetBrightness(1.0f);
+    LightManager::GetRef()->AddLight(pLight);
 
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
