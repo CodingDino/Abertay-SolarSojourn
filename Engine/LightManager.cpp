@@ -24,7 +24,21 @@ LightManager::LightManager() :
 {
 	DebugLog ("LightManager: object instantiated.");
 }
+    
 
+// |----------------------------------------------------------------------------|
+// |							      GetLights		   						    |
+// |----------------------------------------------------------------------------|
+void LightManager::Shutdown()
+{
+    // De-allocate all point lights
+    for (std::list<PointLight*>::iterator it=m_pointLights.begin(); it!=m_pointLights.end(); ++it)
+    {
+        delete *it;
+        *it = 0;
+    }
+    m_pointLights.clear();
+}
 
 // |----------------------------------------------------------------------------|
 // |							     AddLight									|

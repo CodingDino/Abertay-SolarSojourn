@@ -63,7 +63,7 @@ public:
     
     // Initialization and shutdown
     bool Initialize() {return true;}
-    void Shutdown() {m_pointLights.clear();} // TODO: Deallocate properly
+    void Shutdown();
 
     // Getters
     D3DXVECTOR4 GetAmbient() {return m_ambient;}

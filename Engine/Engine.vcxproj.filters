@@ -128,6 +128,9 @@
     <ClCompile Include="LightManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Graphics\Model Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="LightManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Graphics\Model Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

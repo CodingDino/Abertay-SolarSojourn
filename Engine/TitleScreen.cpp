@@ -106,15 +106,17 @@ bool TitleScreen::Initialize() {
     floor->Initialize();
     graphic = new Graphic;
     graphic->SetTint(1.0f,1.0f,1.0f,1.0f);
-    graphic->SetShader("Light");
-    graphic->SetModel("quad");
+    graphic->SetShader("Texture");
+    // Create mesh
+    Mesh* mesh = new Mesh;
+    mesh->Initialize();
+    graphic->SetModel(mesh);
     graphic->Initialize();
     // Set up transforms
     graphic->SetScale(Coord(20.0f,20.0f,20.0f));
     // Add graphic to game object
     floor->SetGraphic(graphic);
     floor->SetPosition(Coord(0.0f,-5.0f,0.0f));
-    floor->SetOrientation(Coord(0.0f,90.0f * PI / 180,0.0f));
     // Add planet to array
     m_gameObjects[3] = floor;
     

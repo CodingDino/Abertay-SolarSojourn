@@ -20,6 +20,7 @@
 #include "Billboard.h"
 #include "ParticleSystem.h"
 #include "LightManager.h"
+#include "Mesh.h"
 
 
 // |----------------------------------------------------------------------------|
