@@ -51,7 +51,7 @@ bool Mesh::Initialize()
 	bool result;
 
     // Set texture repeat if not provided
-    if(!m_textureRepeat) m_textureRepeat = 8;
+    if(!m_textureRepeat) m_textureRepeat = ((m_meshWidth+m_meshLength)/2)/4;
 
     // Generate a Height Map
     GenerateHeightMap();
@@ -246,6 +246,7 @@ void Mesh::GenerateHeightMap()
 
     InitializeHeightMap();
     RandomizeHeightMap();
+    SmoothHeightMap(2);
     //NormalizeHeightMap();
 }
 
@@ -301,6 +302,86 @@ void Mesh::RandomizeHeightMap()
 			m_heightMap[index].y = (((float)rand()-(float)rand())/RAND_MAX) * m_meshHeight;
 		}
 	}
+}
+
+
+// |----------------------------------------------------------------------------|
+// |						  RandomizeHeightMap								|
+// |----------------------------------------------------------------------------|
+void Mesh::SmoothHeightMap(int smoothFactor)
+{
+	int i, j, total(0);
+    float sum = 0.0f;
+
+    // Initialize randomizer
+    srand (time(0));
+    
+    for(int s=0; s<smoothFactor; ++s)
+    {
+        // Read the image data into the height map.
+        for(j=0; j<m_meshLength; j++)
+        {
+	        for(i=0; i<m_meshWidth; i++)
+	        {
+                // Sum all nearby heights
+
+                if (j != 0 && i != 0) 
+                {
+                    sum += m_heightMap[(m_meshWidth * (j-1)) + (i-1)].y; 
+                    ++total;
+                }
+                if (i != 0)
+                {
+                    sum += m_heightMap[(m_meshWidth * (j)) + (i-1)].y; 
+                    ++total;
+                }
+                if (j != m_meshLength-1 && i != 0) 
+                {
+                    sum += m_heightMap[(m_meshWidth * (j+1)) + (i-1)].y; 
+                    ++total;
+                }
+                if (j != 0) 
+                {
+                    sum += m_heightMap[(m_meshWidth * (j-1)) + (i)].y; 
+                    ++total;
+                }
+
+                sum += m_heightMap[(m_meshWidth * (j)) + (i)].y; 
+                ++total;
+
+                if (j != m_meshLength-1) 
+                {
+                    sum += m_heightMap[(m_meshWidth * (j+1)) + (i)].y; 
+                    ++total;
+                }
+
+                if (j != 0 && i != m_meshWidth-1) 
+                {
+                    sum += m_heightMap[(m_meshWidth * (j-1)) + (i+1)].y; 
+                    ++total;
+                }
+
+                if (i != m_meshWidth-1) 
+                {
+                    sum += m_heightMap[(m_meshWidth * (j)) + (i+1)].y; 
+                    ++total;
+                }
+
+                if (j != m_meshLength-1 && i != m_meshWidth-1)
+                {
+                    sum += m_heightMap[(m_meshWidth * (j+1)) + (i+1)].y; 
+                    ++total;
+                }
+
+                // Set this height to the average
+		        m_heightMap[(m_meshWidth * (j)) + (i)].y = sum / total;
+
+                // Reset sum
+                sum = 0.0f;
+                total = 0;
+	        }
+        }
+    }
 }
 
 

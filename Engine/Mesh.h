@@ -71,6 +71,7 @@ protected:
     void RandomizeHeightMap();
     //void SmoothHeightMap();
     void NormalizeHeightMap();
+    void SmoothHeightMap(int smoothFactor);
     void ShutdownHeightMap();
 	
 protected:

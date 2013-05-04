@@ -110,7 +110,7 @@ bool TitleScreen::Initialize() {
     graphic->SetShader("Light");
     // Create mesh
     Mesh* mesh = new Mesh;
-    mesh->Initialize(10,20,3.0f);
+    mesh->Initialize(100,100,10.0f);
     graphic->SetModel(mesh);
     graphic->Initialize();
     // Set up transforms
