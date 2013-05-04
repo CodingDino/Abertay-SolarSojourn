@@ -15,7 +15,6 @@
 #include "Coord.h"
 #include <stdlib.h>
 #include <time.h>
-#include "PerlinNoise.h"
 #include "noise/noise.h"
 
 

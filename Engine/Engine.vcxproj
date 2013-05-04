@@ -100,7 +100,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MouseLookCamera.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Sentence.cpp" />
@@ -133,7 +132,6 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="MouseLookCamera.h" />
     <ClInclude Include="ParticleSystem.h" />
-    <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="resource.h" />
