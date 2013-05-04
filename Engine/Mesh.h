@@ -12,6 +12,9 @@
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
 #include "Model.h"
+#include "Coord.h"
+#include <stdlib.h>
+#include <time.h>
 
 
 // |----------------------------------------------------------------------------|
@@ -31,6 +34,12 @@ public:
 	
     // Initialization and shutdown
 	virtual bool Initialize();
+    virtual bool Initialize(int width, int length, float height = 1.0f) {
+	    m_meshWidth = width;
+	    m_meshLength = length;
+	    m_meshHeight = height;
+        return Initialize(); 
+    }
     virtual void Shutdown();
 	
 protected:
@@ -42,11 +51,20 @@ protected:
 
     // Renders the buffers
     virtual void RenderBuffers();
+
+    // Height map
+    void GenerateHeightMap();
+    void InitializeHeightMap();
+    void RandomizeHeightMap();
+    //void SmoothHeightMap();
+    void NormalizeHeightMap();
+    void ShutdownHeightMap();
 	
 protected:
 
     //|----------------------------Protected Data Members-----------------------|
     int m_meshWidth;
     int m_meshLength;
-
+    float m_meshHeight;
+    Coord* m_heightMap;
 };

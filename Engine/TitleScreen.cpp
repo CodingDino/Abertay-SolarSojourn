@@ -109,11 +109,11 @@ bool TitleScreen::Initialize() {
     graphic->SetShader("Texture");
     // Create mesh
     Mesh* mesh = new Mesh;
-    mesh->Initialize();
+    mesh->Initialize(10,20,3.0f);
     graphic->SetModel(mesh);
     graphic->Initialize();
     // Set up transforms
-    graphic->SetScale(Coord(20.0f,20.0f,20.0f));
+    //graphic->SetScale(Coord(20.0f,20.0f,20.0f));
     // Add graphic to game object
     floor->SetGraphic(graphic);
     floor->SetPosition(Coord(0.0f,-5.0f,0.0f));
