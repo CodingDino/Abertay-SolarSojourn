@@ -113,8 +113,7 @@ Texture* AssetManager::GetTexture(std::string name)
 
     // Attempt to load
     Texture* texture = new Texture;
-    bool result = texture->Initialize(D3DManager::GetRef()->GetDevice(),
-		filePathC);
+    bool result = texture->Initialize(filePathC);
     if (!result)
     {
 	    DebugLog ("AssetManager: Unable to load texture.", DB_GRAPHICS, 1);
@@ -156,8 +155,7 @@ Font* AssetManager::GetFont(std::string name)
 
     // Attempt to load
     Font* font = new Font;
-    bool result = font->Initialize(D3DManager::GetRef()->GetDevice(),
-		filtPathC, filePathWC);
+    bool result = font->Initialize(filtPathC, filePathWC);
     if (!result)
     {
 	    DebugLog ("AssetManager: Unable to load font.", DB_GRAPHICS, 1);

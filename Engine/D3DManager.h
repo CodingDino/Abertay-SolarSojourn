@@ -73,6 +73,10 @@ public:
     // Culling modification
     void TurnOnBackCulling();
     void TurnOffBackCulling();
+
+    // Render to Texture utility
+    ID3D11DepthStencilView* GetDepthStencilView();
+    void SetAsRenderTarget();
     
 private:
 

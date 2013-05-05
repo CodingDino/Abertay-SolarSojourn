@@ -49,7 +49,7 @@ public:
 	virtual ~Font();
 	
     // Initialization and shutdown
-	virtual bool Initialize(ID3D11Device* device, const char* fontFilename, WCHAR* textureFilename);
+	virtual bool Initialize(const char* fontFilename, WCHAR* textureFilename);
     virtual void Shutdown();
 
 	// Builds the array of triangles that will render the characte sentence

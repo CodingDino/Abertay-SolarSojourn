@@ -772,3 +772,24 @@ void D3DManager::TurnOffBackCulling()
     m_deviceContext->RSSetState(m_cullingDisabledRasterState);
     return;
 }
+
+
+// |----------------------------------------------------------------------------|
+// |                           GetDepthStencilView                              |
+// |----------------------------------------------------------------------------|
+ID3D11DepthStencilView* D3DManager::GetDepthStencilView()
+{
+	return m_depthStencilView;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                            SetAsRenderTarget                               |
+// |----------------------------------------------------------------------------|
+void D3DManager::SetAsRenderTarget()
+{
+	// Bind the render target view and depth stencil buffer to the output render pipeline.
+	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+
+	return;
+}

@@ -16,7 +16,9 @@
 // |----------------------------------------------------------------------------|
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
-TitleScreen::TitleScreen()
+TitleScreen::TitleScreen() :
+    m_RenderTarget(0),
+    Screen()
 {
 	DebugLog ("TitleScreen: object instantiated.");
 }
@@ -46,7 +48,7 @@ bool TitleScreen::Initialize() {
     // Set lighting
     LightManager::GetRef()->SetAmbient(0.05f,0.05f,0.05f);
     LightManager::GetRef()->SetDiffuseColor(0.7f,0.7f,0.7f);
-    LightManager::GetRef()->SetDiffuseDirection(1.0f,-1.0f,0.0f);
+    LightManager::GetRef()->SetDiffuseDirection(1.0f,-0.5f,0.0f);
     PointLight pLight;
     pLight.SetPosition(Coord(0.0f,-4.0f,0.0f));
     pLight.SetColor(0.0f,1.0f,0.0f,1.0f);
@@ -60,7 +62,7 @@ bool TitleScreen::Initialize() {
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
 
-    m_numGameObjects = 5;
+    m_numGameObjects = 7;
     m_gameObjects = new GameObject*[m_numGameObjects];
 
     // Set up sun
@@ -88,7 +90,7 @@ bool TitleScreen::Initialize() {
     Planet* planet = new Planet;
     planet->Initialize();
     graphic = new Graphic;
-    //graphic->SetTint(1.0f,0.0f,0.0f,1.0f);
+    graphic->SetTint(1.0f,0.0f,0.0f,1.0f);
     graphic->SetShader("Light");
     graphic->Initialize();
     // Set up transforms
@@ -100,6 +102,24 @@ bool TitleScreen::Initialize() {
     planet->SetOrbitSpeed(1.0f);
     // Add planet to array
     m_gameObjects[2] = planet;
+
+    // Set up planet label
+    planet = new Planet;
+    planet->Initialize();
+    graphic = new Billboard;
+    graphic->SetTint(0.0f,1.0f,0.0f,1.0f);
+    graphic->SetShader("Texture");
+    graphic->Initialize();
+    // Set up transforms
+    graphic->SetScale(Coord(0.3f,0.05f,0.2f));
+    // Add graphic to game object
+    planet->SetGraphic(graphic);
+    // Set up game object as planet
+    planet->SetOrbitRadius(2.0);
+    planet->SetOrbitSpeed(1.0f);
+    planet->SetOrbitCenter(Coord(0.0f,0.3f,0.0f));
+    // Add planet to array
+    m_gameObjects[3] = planet;
     
     // Set up floor
     GameObject* floor = new GameObject;
@@ -119,7 +139,7 @@ bool TitleScreen::Initialize() {
     floor->SetGraphic(graphic);
     floor->SetPosition(Coord(0.0f,-5.0f,0.0f));
     // Add planet to array
-    m_gameObjects[3] = floor;
+    m_gameObjects[4] = floor;
     
     // Set up particle system
     ParticleSystem* spark = new ParticleSystem;
@@ -144,12 +164,12 @@ bool TitleScreen::Initialize() {
     spark->SetTintVar(0.0f,0.0f,0.0f);
     //spark->SetTintVar(0.5f,0.5f,0.5f);
     // Add planet to array
-    m_gameObjects[4] = spark;
+    m_gameObjects[6] = spark;
 
 
 
     // Set up text for coord display
-    m_numOverlayObjects = 2;
+    m_numOverlayObjects = 3;
     m_overlayObjects = new GameObject*[m_numOverlayObjects];
 
     Text* text = new Text;
@@ -164,6 +184,37 @@ bool TitleScreen::Initialize() {
     m_overlayObjects[1] = new GameObject;
 	m_overlayObjects[1]->SetGraphic(rotation);
 	m_overlayObjects[1]->SetPosition(Coord(0.0f,30.0f,0.0f));
+
+    // Render to texture
+    graphic = new Image;
+    m_RenderTarget = new Texture;
+    m_RenderTarget->Initialize();
+    graphic->SetTexture(m_RenderTarget);
+    m_RenderTarget = graphic->GetTexture();
+    graphic->Initialize();
+    //graphic->SetTint(01.0f,0.4f,0.0f,1.0f);
+    graphic->SetScale(Coord(0.1f,0.1f,0.1f));
+    m_overlayObjects[2] = new GameObject;
+	m_overlayObjects[2]->SetGraphic(graphic);
+    m_overlayObjects[2]->SetPosition(Coord(0.0f,0.0f,0.0f));
+    
+    // Set up cube
+    GameObject* cube = new GameObject;
+    cube->Initialize();
+    graphic = new Graphic;
+    graphic->SetTint(0.0f,0.0f,1.0f,1.0f);
+    //graphic->SetTexture("seafloor");
+    graphic->SetShader("Texture");
+    graphic->SetModel("cube");
+    graphic->Initialize();
+    graphic->SetRenderTarget(m_RenderTarget);
+    // Set up transforms
+    //graphic->SetScale(Coord(20.0f,20.0f,20.0f));
+    // Add graphic to game object
+    cube->SetGraphic(graphic);
+    cube->SetPosition(Coord(0.0f,0.0f,0.0f));
+    // Add planet to array
+    m_gameObjects[5] = cube;
 
 	DebugLog ("TitleScreen: object initialized.");
 	return true;
@@ -198,6 +249,7 @@ bool TitleScreen::Logic() {
 // The draw function, which will be called by the main game loop.
 bool TitleScreen::Draw() {
 	DebugLog ("TitleScreen: Draw() called.", DB_GRAPHICS, 10);
+    m_RenderTarget->ClearRenderTarget(01.0f,1.0f,0.0f,1.0f);
     Screen::Draw();
 	return true;
 }

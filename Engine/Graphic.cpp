@@ -102,6 +102,11 @@ void Graphic::Render(Coord position)
         D3DManager::GetRef()->TurnOffBackCulling();
     if (!m_zBuffer)
         D3DManager::GetRef()->TurnZBufferOff();
+    if (m_renderTarget)
+    {
+        m_renderTarget->SetAsRenderTarget();
+        m_renderTarget->ClearRenderTarget(0.0f,1.0f,0.0f,1.0f);
+    }
 
     // Put the model in the buffer
     if(m_model) m_model->Render();
@@ -129,6 +134,7 @@ void Graphic::Render(Coord position)
     D3DManager::GetRef()->TurnOffAlphaBlending();
     D3DManager::GetRef()->TurnOnBackCulling();
     D3DManager::GetRef()->TurnZBufferOn();
+    D3DManager::GetRef()->SetAsRenderTarget();
 
     return;
 }

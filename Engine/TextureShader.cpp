@@ -167,7 +167,7 @@ bool TextureShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_psBuffer);
 
 	// Send the texture sampler to the pixel shader.
-    ID3D11ShaderResourceView* texture = graphic->GetTexture()->GetResource();
+    ID3D11ShaderResourceView* texture = graphic->GetTexture()->GetShaderResourceView();
 	deviceContext->PSSetShaderResources(0, 1, &texture);
 
     return true;

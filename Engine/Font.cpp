@@ -46,13 +46,16 @@ Font::~Font()
 // |----------------------------------------------------------------------------|
 // |						      Initialize									|
 // |----------------------------------------------------------------------------|
-bool Font::Initialize(ID3D11Device* device, const char* fontFilename, WCHAR* textureFilename) 
+bool Font::Initialize(const char* fontFilename, WCHAR* textureFilename) 
 {
 	DebugLog ("Font::Initialize() called.", DB_GRAPHICS, 1);
 	bool result;
 
+    // Get device
+    ID3D11Device* device = D3DManager::GetRef()->GetDevice();
+
 	// Initialize the parent class
-	result = Texture::Initialize(device,textureFilename);
+	result = Texture::Initialize(textureFilename);
 	if(!result)
 	{
 		DebugLog("Couldn't initialize font's texture.");

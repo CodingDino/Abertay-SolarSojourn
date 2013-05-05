@@ -56,4 +56,5 @@ public:
 protected:
     
     //|----------------------------Protected Data Members-----------------------|
+    Texture* m_RenderTarget;
 };
