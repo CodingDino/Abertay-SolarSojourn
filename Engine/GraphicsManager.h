@@ -15,6 +15,7 @@
 #include "ColorShader.h"
 #include "TextureShader.h"
 #include "LightShader.h"
+#include "HorizontalBlurShader.h"
 #include "Singleton.h"
 #include "Camera.h"
 #include <cstring>
@@ -99,6 +100,7 @@ private:
     //ColorShader* m_colorShader;
     TextureShader* m_textureShader;
     LightShader* m_lightShader;
+    HorizontalBlurShader* m_horizontalBlurShader;
 
     // Matrices
     D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix, baseViewMatrix;

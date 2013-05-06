@@ -3,13 +3,14 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// light.vs
-//      Vertex shader for handling simple textured shapes with lighting
+// horizontalblur.vs
+//      Vertex shader for handling horizontal blurring of textures
 
 // |----------------------------------------------------------------------------|
 // |                                 Defines                                    |
 // |----------------------------------------------------------------------------|
-#define NUM_LIGHTS 4
+#define NUM_PIXELS 11
+
 
 // |----------------------------------------------------------------------------|
 // |                                 Globals                                    |
@@ -19,10 +20,10 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
-    float3 cameraPosition;
-    float padding;
-    float4 pointLightPosition[NUM_LIGHTS];
+    float screenWidth;
+    float3 padding;
 };
+
 
 // |----------------------------------------------------------------------------|
 // |                            Type Definitions                                |
@@ -38,20 +39,19 @@ struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
-    float3 normal : NORMAL;
-    float3 viewDirection : TEXCOORD1;
-    float4 pointLightPos[NUM_LIGHTS] : TEXCOORD2;
+    float2 texCoord[NUM_PIXELS] : TEXCOORD1;
 };
 
 
 // |----------------------------------------------------------------------------|
 // |                              Vertex Shader                                 |
 // |----------------------------------------------------------------------------|
-PixelInputType LightVertexShader(VertexInputType input)
+PixelInputType HorizontalBlurVertexShader(VertexInputType input)
 {
     PixelInputType output;
-    float4 worldPosition;
-    
+    float texelSize;
+
+
     // Change the position vector to be 4 units for proper matrix calculations.
     input.position.w = 1.0f;
 
@@ -59,35 +59,20 @@ PixelInputType LightVertexShader(VertexInputType input)
     output.position = mul(input.position, worldMatrix);
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
-
+    
     // Store the texture coordinates for the pixel shader.
     output.tex = input.tex;
 
-    // Calculate the normal vector against the world matrix only.
-    output.normal = mul(input.normal, (float3x3)worldMatrix);
-	
-    // Normalize the normal vector.
-    output.normal = normalize(output.normal);
+    // Determine the floating point size of a texel for a screen with this specific width.
+    texelSize = 1.0f / screenWidth;
 
-    // Calculate the position of the vertex in the world.
-    worldPosition = mul(input.position, worldMatrix);
-
-    // Determine the viewing direction based on the position of the camera and the position of the vertex in the world.
-    output.viewDirection = cameraPosition.xyz - worldPosition.xyz;
-	
-    // Normalize the viewing direction vector.
-    output.viewDirection = normalize(output.viewDirection);
-
-    int test = ((int)(NUM_LIGHTS/2));
-
-    for( uint i = 0; i < NUM_LIGHTS; i++ )
-    {
-        // Determine the light positions based on the position of the lights and the position of the vertex in the world.
-        output.pointLightPos[i] = pointLightPosition[i] - worldPosition;
-
-        // Normalize the light position vectors.
-        output.pointLightPos[i] = normalize(output.pointLightPos[i]);
-    }
+    // Create UV coordinates for the pixel and its four horizontal neighbors on either side.
     
+    for( uint i = 0; i < NUM_PIXELS; i++ )
+    {
+        float neighbor = (float)i - (float)(NUM_PIXELS/2);
+        output.texCoord[i] = input.tex + float2(texelSize * neighbor, 0.0f);
+    }
+
     return output;
 }

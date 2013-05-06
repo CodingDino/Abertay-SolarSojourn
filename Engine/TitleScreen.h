@@ -56,5 +56,6 @@ public:
 protected:
     
     //|----------------------------Protected Data Members-----------------------|
-    Texture* m_RenderTarget;
+    Texture* m_toBlur;
+    Texture* m_blurred;
 };

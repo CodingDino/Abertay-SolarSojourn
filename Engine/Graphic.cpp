@@ -105,36 +105,61 @@ void Graphic::Render(Coord position)
     if (m_renderTarget)
     {
         m_renderTarget->SetAsRenderTarget();
-        m_renderTarget->ClearRenderTarget(0.0f,1.0f,0.0f,1.0f);
+
+        // Put the model in the buffer
+        if(m_model) m_model->Render();
+
+        // Scale, Translate, and Rotate
+        D3DXMATRIX worldMatrix = TransformWorldMatrix(position);
+
+        // Determine view matrix to use
+        D3DXMATRIX viewMatrix = GraphicsManager::GetRef()->GetViewMatrix();
+        if (m_baseView) viewMatrix = GraphicsManager::GetRef()->GetBaseViewMatrix();
+
+        // Determine projection matrix to use
+        D3DXMATRIX projMatrix = GraphicsManager::GetRef()->GetProjectionMatrix();
+        if (m_ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
+
+        // Render using the shader and a self pointer.
+        shader->Render(D3DManager::GetRef()->GetDeviceContext(),
+            m_model->GetIndexCount(),
+            worldMatrix,
+            viewMatrix,
+            projMatrix,
+            this);
     }
 
-    // Put the model in the buffer
-    if(m_model) m_model->Render();
+    D3DManager::GetRef()->SetAsRenderTarget();
 
-    // Scale, Translate, and Rotate
-    D3DXMATRIX worldMatrix = TransformWorldMatrix(position);
+    if (m_renderToBackBuffer)
+    {
+        // Put the model in the buffer
+        if(m_model) m_model->Render();
 
-    // Determine view matrix to use
-    D3DXMATRIX viewMatrix = GraphicsManager::GetRef()->GetViewMatrix();
-    if (m_baseView) viewMatrix = GraphicsManager::GetRef()->GetBaseViewMatrix();
+        // Scale, Translate, and Rotate
+        D3DXMATRIX worldMatrix = TransformWorldMatrix(position);
 
-    // Determine projection matrix to use
-    D3DXMATRIX projMatrix = GraphicsManager::GetRef()->GetProjectionMatrix();
-    if (m_ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
+        // Determine view matrix to use
+        D3DXMATRIX viewMatrix = GraphicsManager::GetRef()->GetViewMatrix();
+        if (m_baseView) viewMatrix = GraphicsManager::GetRef()->GetBaseViewMatrix();
 
-    // Render using the shader and a self pointer.
-    shader->Render(D3DManager::GetRef()->GetDeviceContext(),
-        m_model->GetIndexCount(),
-        worldMatrix,
-        viewMatrix,
-        projMatrix,
-        this);
+        // Determine projection matrix to use
+        D3DXMATRIX projMatrix = GraphicsManager::GetRef()->GetProjectionMatrix();
+        if (m_ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
+
+        // Render using the shader and a self pointer.
+        shader->Render(D3DManager::GetRef()->GetDeviceContext(),
+            m_model->GetIndexCount(),
+            worldMatrix,
+            viewMatrix,
+            projMatrix,
+            this);
+    }
 
     // Reset pipeline settings
     D3DManager::GetRef()->TurnOffAlphaBlending();
     D3DManager::GetRef()->TurnOnBackCulling();
     D3DManager::GetRef()->TurnZBufferOn();
-    D3DManager::GetRef()->SetAsRenderTarget();
 
     return;
 }

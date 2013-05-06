@@ -17,7 +17,8 @@
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
 TitleScreen::TitleScreen() :
-    m_RenderTarget(0),
+    m_toBlur(0),
+    m_blurred(0),
     Screen()
 {
 	DebugLog ("TitleScreen: object instantiated.");
@@ -169,7 +170,7 @@ bool TitleScreen::Initialize() {
 
 
     // Set up text for coord display
-    m_numOverlayObjects = 3;
+    m_numOverlayObjects = 4;
     m_overlayObjects = new GameObject*[m_numOverlayObjects];
 
     Text* text = new Text;
@@ -187,16 +188,30 @@ bool TitleScreen::Initialize() {
 
     // Render to texture
     graphic = new Image;
-    m_RenderTarget = new Texture;
-    m_RenderTarget->Initialize();
-    graphic->SetTexture(m_RenderTarget);
-    m_RenderTarget = graphic->GetTexture();
+    m_toBlur = new Texture;
+    m_toBlur->Initialize();
+    graphic->SetTexture(m_toBlur);
     graphic->Initialize();
+    graphic->SetShader("HorizontalBlur");
+    graphic->SetRenderTarget(m_blurred);
     //graphic->SetTint(01.0f,0.4f,0.0f,1.0f);
-    graphic->SetScale(Coord(0.1f,0.1f,0.1f));
+    //graphic->SetScale(Coord(0.3f,0.3f,0.3f));
+    //graphic->SetRenderToBackBuffer(false);
     m_overlayObjects[2] = new GameObject;
 	m_overlayObjects[2]->SetGraphic(graphic);
     m_overlayObjects[2]->SetPosition(Coord(0.0f,0.0f,0.0f));
+
+    // Render to texture2
+    graphic = new Image;
+    m_blurred = new Texture;
+    m_blurred->Initialize();
+    graphic->SetTexture(m_blurred);
+    graphic->Initialize();
+    //graphic->SetTint(01.0f,0.4f,0.0f,1.0f);
+    //graphic->SetScale(Coord(0.1f,0.1f,0.1f));
+    m_overlayObjects[3] = new GameObject;
+	m_overlayObjects[3]->SetGraphic(graphic);
+    m_overlayObjects[3]->SetPosition(Coord(0.0f,0.0f,0.0f));
     
     // Set up cube
     GameObject* cube = new GameObject;
@@ -204,10 +219,10 @@ bool TitleScreen::Initialize() {
     graphic = new Graphic;
     graphic->SetTint(0.0f,0.0f,1.0f,1.0f);
     //graphic->SetTexture("seafloor");
-    graphic->SetShader("Texture");
+    graphic->SetShader("Light");
     graphic->SetModel("cube");
     graphic->Initialize();
-    graphic->SetRenderTarget(m_RenderTarget);
+    graphic->SetRenderTarget(m_toBlur);
     // Set up transforms
     //graphic->SetScale(Coord(20.0f,20.0f,20.0f));
     // Add graphic to game object
@@ -249,7 +264,8 @@ bool TitleScreen::Logic() {
 // The draw function, which will be called by the main game loop.
 bool TitleScreen::Draw() {
 	DebugLog ("TitleScreen: Draw() called.", DB_GRAPHICS, 10);
-    m_RenderTarget->ClearRenderTarget(01.0f,1.0f,0.0f,1.0f);
+    m_toBlur->ClearRenderTarget(1.0f,1.0f,1.0f,0.0f);
+    m_blurred->ClearRenderTarget(1.0f,1.0f,1.0f,0.0f);
     Screen::Draw();
 	return true;
 }

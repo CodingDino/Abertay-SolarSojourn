@@ -37,6 +37,7 @@ public:
     Material() : 
         m_shader(0),
         m_renderTarget(0),
+        m_renderToBackBuffer(true),
         m_reflectiveness(0.0f),
         m_tintR(1.0),
         m_tintG(1.0),
@@ -53,6 +54,7 @@ public:
     // Getters
     Shader* GetShader() {return m_shader; }
     Texture* GetRenderTarget() {return m_renderTarget; }
+    bool GetRenderToBackBuffer() {return m_renderToBackBuffer; }
     float GetReflectiveness() {return m_reflectiveness; }
     float GetTintR() {return m_tintR; }
     float GetTintG() {return m_tintG; }
@@ -69,6 +71,7 @@ public:
     void SetShader(Shader* shader) {m_shader = shader;}
     void SetShader(std::string name) {m_shader = GraphicsManager::GetRef()->GetShader(name);}
     void SetRenderTarget(Texture* value) {m_renderTarget = value;}
+    void SetRenderToBackBuffer(bool value) {m_renderToBackBuffer = value;}
     void SetReflectiveness(float value) {m_reflectiveness = Clamp(value,0.0f,1.0f);}
     void SetTint(float r, float g, float b, float a = 1.0f) {
         m_tintR = r;
@@ -87,6 +90,7 @@ protected:
 
     Shader* m_shader;
     Texture* m_renderTarget;
+    bool m_renderToBackBuffer;
     float m_reflectiveness;
     float m_tintR, m_tintG, m_tintB;
     float m_alpha;

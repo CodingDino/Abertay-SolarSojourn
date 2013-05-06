@@ -39,6 +39,9 @@
     <Filter Include="Graphics\Shader Files\LightShader">
       <UniqueIdentifier>{3cb480c3-ae70-431b-9717-8fd6973457db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Shader Files\HorizontalBlurShader">
+      <UniqueIdentifier>{4ac081f2-8975-4137-a4ec-698f6c0cf8a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Graphics\Model Types</Filter>
+    </ClCompile>
+    <ClCompile Include="HorizontalBlurShader.cpp">
+      <Filter>Graphics\Shader Files\HorizontalBlurShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +239,9 @@
     <ClInclude Include="Mesh.h">
       <Filter>Graphics\Model Types</Filter>
     </ClInclude>
+    <ClInclude Include="HorizontalBlurShader.h">
+      <Filter>Graphics\Shader Files\HorizontalBlurShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="texture.ps">
@@ -246,6 +255,12 @@
     </None>
     <None Include="light.ps">
       <Filter>Graphics\Shader Files\LightShader</Filter>
+    </None>
+    <None Include="horizontalblur.vs">
+      <Filter>Graphics\Shader Files\HorizontalBlurShader</Filter>
+    </None>
+    <None Include="horizontalblur.ps">
+      <Filter>Graphics\Shader Files\HorizontalBlurShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

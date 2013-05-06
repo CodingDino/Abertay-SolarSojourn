@@ -84,6 +84,7 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="HorizontalBlurShader.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Coord.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="Font.h" />
+    <ClInclude Include="HorizontalBlurShader.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Coord.h" />
@@ -149,6 +151,8 @@
     <ClInclude Include="VertexType.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="horizontalblur.ps" />
+    <None Include="horizontalblur.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
     <None Include="texture.ps" />

@@ -1,0 +1,88 @@
+// Solar Exploration Sim
+// Developed a coursework for Abertay University
+// Based on tutorials from http://www.rastertek.com
+// Copyright Sarah Herzog, 2013, all rights reserved.
+//
+// horizontalblur.ps
+//      Pixel shader for handling horizontal blurring of textures
+
+// |----------------------------------------------------------------------------|
+// |                                 Defines                                    |
+// |----------------------------------------------------------------------------|
+#define NUM_PIXELS 11
+
+
+// |----------------------------------------------------------------------------|
+// |                                 Globals                                    |
+// |----------------------------------------------------------------------------|
+Texture2D shaderTexture;
+SamplerState SampleType;
+cbuffer ColorBuffer
+{
+    float4 padding;
+};
+
+
+// |----------------------------------------------------------------------------|
+// |                             Type Definitions                               |
+// |----------------------------------------------------------------------------|
+
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+    float2 texCoord[NUM_PIXELS] : TEXCOORD1;
+};
+
+// |----------------------------------------------------------------------------|
+// |                              Pixel Shader                                  |
+// |----------------------------------------------------------------------------|
+float4 HorizontalBlurPixelShader(PixelInputType input) : SV_TARGET
+{
+    float weight[NUM_PIXELS/2+1];
+    float normalization;
+    float4 color;
+    float4 test;
+
+    // Create the weights that each neighbor pixel will contribute to the blur.
+    for( uint i = 0; i < NUM_PIXELS/2+1; i++ )
+    {
+        weight[i] = 1.0f - ((float)i) / ((float)(NUM_PIXELS/2+1));
+    }
+
+    // Create a normalized value to average the weights out a bit.
+    normalization = weight[0];
+    for( uint j = 1; j < NUM_PIXELS/2+1; j++ )
+    {
+        normalization += 2.0f * weight[j];
+    }
+
+    // Normalize the weights.
+    for( uint k = 0; k < NUM_PIXELS/2+1; k++ )
+    {
+        weight[k] = weight[k] / normalization;
+    }
+
+    // Initialize the color to black.
+    color = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    // Add the nine horizontal pixels to the color by the specific weight of each.
+    
+    for( uint l = 0; l < NUM_PIXELS; l++ )
+    {
+        uint weightIndex;
+        if (l < NUM_PIXELS/2)
+            weightIndex = NUM_PIXELS/2 - l;
+        else if (l > NUM_PIXELS/2)
+            weightIndex = l - NUM_PIXELS/2;
+        else if (l == NUM_PIXELS/2)
+            weightIndex = 0;
+        float weighting = weight[weightIndex];
+        color += shaderTexture.Sample(SampleType, input.texCoord[l]) * weighting;
+    }
+
+    // Set the alpha channel to one.
+    color.a = 1.0f;
+
+    return color;
+}

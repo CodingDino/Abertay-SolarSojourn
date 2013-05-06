@@ -22,6 +22,7 @@ GraphicsManager::GraphicsManager() :
     //m_colorShader(0),
     m_textureShader(0),
     m_lightShader(0),
+    m_horizontalBlurShader(0),
     m_screen(0),
     m_screenCounter(0),
     m_screenWidth(0),
@@ -95,12 +96,6 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     m_Camera->SetPosition(Coord(0.0f, 0.0f, -10.0f));
 
     // Create the shader objects.
-    //m_colorShader = new ColorShader;
-    //if(!m_colorShader)
-    //{
-    //    DebugPopup(L"Could not create ColorShader.");
-    //    return false;
-    //}
     m_textureShader = new TextureShader;
     if(!m_textureShader)
     {
@@ -110,16 +105,17 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     m_lightShader = new LightShader;
     if(!m_lightShader)
     {
+        DebugPopup(L"Could not create LightShader.");
+        return false;
+    }
+    m_horizontalBlurShader = new HorizontalBlurShader;
+    if(!m_horizontalBlurShader)
+    {
+        DebugPopup(L"Could not create HorizontalBlurShader.");
         return false;
     }
     
     // Initialize the shader objects.
-    //result = m_colorShader->Initialize();
-    //if(!result)
-    //{
-    //    DebugPopup(L"Could not initialize ColorShader.");
-    //    return false;
-    //}
     result = m_textureShader->Initialize();
     if(!result)
     {
@@ -130,6 +126,12 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     if(!result)
     {
         DebugPopup(L"Could not initialize LightShader.");
+        return false;
+    }
+    result = m_horizontalBlurShader->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize HorizontalBlurShader.");
         return false;
     }
 
@@ -143,12 +145,6 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
 void GraphicsManager::Shutdown()
 {
     // Release the shader objects.
-    //if(m_colorShader)
-    //{
-    //    m_colorShader->Shutdown();
-    //    delete m_colorShader;
-    //    m_colorShader = 0;
-    //}
     if(m_textureShader)
     {
         m_textureShader->Shutdown();
@@ -160,6 +156,12 @@ void GraphicsManager::Shutdown()
         m_lightShader->Shutdown();
         delete m_lightShader;
         m_lightShader = 0;
+    }
+    if(m_horizontalBlurShader)
+    {
+        m_horizontalBlurShader->Shutdown();
+        delete m_horizontalBlurShader;
+        m_horizontalBlurShader = 0;
     }
 
     // Release the camera object.
@@ -328,6 +330,10 @@ Shader* GraphicsManager::GetShader(const std::string key)
     else if (key == "Light")
     {
         return m_lightShader;
+    }
+    else if (key == "HorizontalBlur")
+    {
+        return m_horizontalBlurShader;
     }
     else return 0;
 }
