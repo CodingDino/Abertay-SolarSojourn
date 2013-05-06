@@ -37,7 +37,7 @@ public:
     Material() : 
         m_shader(0),
         m_renderTarget(0),
-        m_renderToBackBuffer(true),
+        m_renderToBackBuffer(false),
         m_reflectiveness(0.0f),
         m_tintR(1.0),
         m_tintG(1.0),
@@ -48,7 +48,8 @@ public:
         m_backfaceCull(true),
         m_zBuffer(true),
         m_baseView(false),
-        m_ortho(false)
+        m_ortho(false),
+        m_reBlur(false)
     {}
 
     // Getters
@@ -66,6 +67,7 @@ public:
     bool GetZBuffer() {return m_zBuffer; }
     bool GetBaseView() {return m_baseView; }
     bool GetOrtho() {return m_ortho; }
+    bool GetReBlur() {return m_reBlur; }
 
     // Setters
     void SetShader(Shader* shader) {m_shader = shader;}
@@ -85,6 +87,7 @@ public:
     void SetZBuffer(bool value){m_zBuffer = value;}
     void SetBaseView(bool value){m_baseView = value;}
     void SetOrtho(bool value){m_ortho = value;}
+    void SetReBlur(bool value){m_reBlur = value;}
 
 protected:
 
@@ -100,5 +103,6 @@ protected:
     bool m_zBuffer;
     bool m_baseView;
     bool m_ortho;
+    bool m_reBlur;
 
 };

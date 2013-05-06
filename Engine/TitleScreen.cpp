@@ -17,9 +17,9 @@
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
 TitleScreen::TitleScreen() :
-    m_toBlur(0),
-    m_blurred(0),
-    Screen()
+    Screen(),
+    m_position(0),
+    m_rotation(0)
 {
 	DebugLog ("TitleScreen: object instantiated.");
 }
@@ -46,70 +46,81 @@ TitleScreen::~TitleScreen() {
 // |----------------------------------------------------------------------------|
 bool TitleScreen::Initialize() {
 
-    // Set lighting
-    LightManager::GetRef()->SetAmbient(0.05f,0.05f,0.05f);
-    LightManager::GetRef()->SetDiffuseColor(0.7f,0.7f,0.7f);
-    LightManager::GetRef()->SetDiffuseDirection(1.0f,-0.5f,0.0f);
+    // Initialize parent class
+    Screen::Initialize();
+
+    // Define Variables
+    Planet* planet;
+    GameObject* gameObject;
     PointLight pLight;
-    pLight.SetPosition(Coord(0.0f,-4.0f,0.0f));
-    pLight.SetColor(0.0f,1.0f,0.0f,1.0f);
-    pLight.SetBrightness(1.0f);
-    //LightManager::GetRef()->AddLight(pLight); // Green Light
-    pLight.SetPosition(Coord(1.5f,0.0f,0.0f));
-    pLight.SetColor(0.0f,0.0f,1.0f,1.0f);
-    pLight.SetBrightness(1.0f);
-    //LightManager::GetRef()->AddLight(pLight); // Blue Light
+    Graphic* graphic;
+    ParticleSystem* particleSystem;
+    Text* text;
 
     // Set next screen to SCREEN_QUIT
 	SetNextScreen(SCREEN_QUIT);
 
-    m_numGameObjects = 7;
-    m_gameObjects = new GameObject*[m_numGameObjects];
+    // Set Post-Processing Effects
+    m_blur = true;
+
+    // Set lighting
+    LightManager::GetRef()->SetAmbient(0.05f,0.05f,0.05f);
+    LightManager::GetRef()->SetDiffuseColor(0.0f,0.0f,0.0f);
+    LightManager::GetRef()->SetDiffuseDirection(1.0f,-0.5f,0.0f);
+    
+    // Set up camera
+    m_camera = new MouseLookCamera;
+    m_camera->SetPosition(Coord(0.0f, 0.0f, -10.0f));
 
     // Set up sun
-    Planet* gameObject = new Planet;
-    gameObject->Initialize();
-    Graphic* graphic = new Graphic;
-    graphic->SetTint(1.0f,1.0f,1.0f,1.0f);
-    graphic->SetShader("Light");
-    graphic->Initialize();
-    graphic->SetReflectiveness(0.9f);
-    // Add graphic to game object
-    gameObject->SetGraphic(graphic);
-    // Set up game object as planet
-    gameObject->SetOrbitRadius(0);
-    gameObject->SetOrbitSpeed(0.1f);
-    // Add planet to array
-    m_gameObjects[0] = gameObject;
-
-
-    // Set up camera
-    m_gameObjects[1] = new MouseLookCamera;
-    m_gameObjects[1]->SetPosition(Coord(0.0f, 0.0f, -10.0f));
-    
-    // Set up planet
-    Planet* planet = new Planet;
+    planet = new Planet;
     planet->Initialize();
+    // Add graphic to game object
+    graphic = new Graphic;
+    graphic->SetTint(1.0f,1.0f,0.8f,1.0f);
+    graphic->SetRenderTarget(m_renderTexture);
+    graphic->SetShader("Texture");
+    graphic->Initialize();
+    planet->SetGraphic(graphic);
+    // Set up game object as planet
+    planet->SetOrbitRadius(0);
+    planet->SetOrbitSpeed(0.1f);
+    // Add planet to list
+    m_gameObjects.push_back(planet);
+
+    // Sun Light
+    pLight.SetPosition(Coord(0.0f,0.0f,0.0f));
+    pLight.SetColor(1.0f,1.0f,1.0f,1.0f);
+    pLight.SetBrightness(3.0f);
+    LightManager::GetRef()->AddLight(pLight);
+
+    // Set up planet
+    planet = new Planet;
+    planet->Initialize();
+    // Add graphic to game object
     graphic = new Graphic;
     graphic->SetTint(1.0f,0.0f,0.0f,1.0f);
+    graphic->SetRenderTarget(m_renderTexture);
     graphic->SetShader("Light");
     graphic->Initialize();
+    planet->SetGraphic(graphic);
     // Set up transforms
     graphic->SetScale(Coord(0.2f,0.2f,0.2f));
-    // Add graphic to game object
-    planet->SetGraphic(graphic);
     // Set up game object as planet
     planet->SetOrbitRadius(2.0);
     planet->SetOrbitSpeed(1.0f);
-    // Add planet to array
-    m_gameObjects[2] = planet;
+    // Add planet to list
+    m_gameObjects.push_back(planet);
 
-    // Set up planet label
+    // Set up planet "health bar"
     planet = new Planet;
     planet->Initialize();
     graphic = new Billboard;
     graphic->SetTint(0.0f,1.0f,0.0f,1.0f);
+    //graphic->SetRenderTarget(m_renderTexture);
     graphic->SetShader("Texture");
+    graphic->SetRenderToBackBuffer(true);
+    graphic->SetZBuffer(false);
     graphic->Initialize();
     // Set up transforms
     graphic->SetScale(Coord(0.3f,0.05f,0.2f));
@@ -120,15 +131,16 @@ bool TitleScreen::Initialize() {
     planet->SetOrbitSpeed(1.0f);
     planet->SetOrbitCenter(Coord(0.0f,0.3f,0.0f));
     // Add planet to array
-    m_gameObjects[3] = planet;
-    
+    m_overlayObjects.push_back(planet);
+ 
+
     // Set up floor
-    GameObject* floor = new GameObject;
-    floor->Initialize();
+    gameObject = new GameObject;
+    gameObject->Initialize();
     graphic = new Graphic;
-    //graphic->SetTint(1.0f,1.0f,0.0f,1.0f);
-    //graphic->SetTexture("seafloor");
+    graphic->SetTint(0.5f,0.5f,0.3f,1.0f);
     graphic->SetShader("Light");
+    graphic->SetRenderTarget(m_renderTexture);
     // Create mesh
     Mesh* mesh = new Mesh;
     mesh->Initialize(1000,1000,10.0f);
@@ -137,99 +149,61 @@ bool TitleScreen::Initialize() {
     // Set up transforms
     //graphic->SetScale(Coord(20.0f,20.0f,20.0f));
     // Add graphic to game object
-    floor->SetGraphic(graphic);
-    floor->SetPosition(Coord(0.0f,-5.0f,0.0f));
+    gameObject->SetGraphic(graphic);
+    gameObject->SetPosition(Coord(0.0f,-5.0f,0.0f));
     // Add planet to array
-    m_gameObjects[4] = floor;
+    m_gameObjects.push_back(gameObject);
     
     // Set up particle system
-    ParticleSystem* spark = new ParticleSystem;
-    spark->Initialize();
+    particleSystem = new ParticleSystem;
+    particleSystem->Initialize();
     graphic = new Billboard;
     graphic->SetTint(01.0f,0.4f,0.0f,1.0f);
     graphic->SetShader("Texture");
+    graphic->SetRenderTarget(m_renderTexture);
     graphic->SetAlphaBlend(true);
     graphic->SetTexture("particle_point");
     graphic->Initialize();
     // Set up transforms
     graphic->SetScale(Coord(0.005f,0.005f,0.005f));
     // Add graphic to game object
-    spark->SetGraphic(graphic);
-    spark->SetParticleVelocity(Coord(0.0f,0.0f,0.0f));
-    spark->SetParticleVelocityVariation(Coord(1.0f,0.5f,1.0f));
-    spark->SetParticleSpawnFrequency(0.000001f);
-    spark->SetParticleLifetime(10.0f);
-    spark->SetParticleFadeout(5.0f);
-    spark->SetMaxParticles(100000);
-    spark->SetTint(1.0f,1.0f,1.0f);
-    spark->SetTintVar(0.0f,0.0f,0.0f);
-    //spark->SetTintVar(0.5f,0.5f,0.5f);
-    // Add planet to array
-    m_gameObjects[6] = spark;
+    particleSystem->SetGraphic(graphic);
+    particleSystem->SetParticleVelocity(Coord(0.0f,0.0f,0.0f));
+    particleSystem->SetParticleVelocityVariation(Coord(1.0f,0.5f,1.0f));
+    particleSystem->SetParticleSpawnFrequency(0.1f);
+    particleSystem->SetParticleLifetime(100.0f);
+    particleSystem->SetParticleFadeout(5.0f);
+    particleSystem->SetMaxParticles(100);
+    particleSystem->SetTint(1.0f,1.0f,1.0f);
+    particleSystem->SetTintVar(0.5f,0.5f,0.5f);
+    // Add to list
+    m_gameObjects.push_back(particleSystem);
 
 
+    // Coordinate display
+    m_position = new Text;
+    m_position->SetFont("manaspace_regular_20");
+    m_position->Initialize();
+    m_position->SetRenderToBackBuffer(true);
+	m_position->SetText(("pos: "+m_camera->GetPosition().ToString()).c_str());
+    // Set up game object
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(m_position);
+    m_overlayObjects.push_back(gameObject);
 
-    // Set up text for coord display
-    m_numOverlayObjects = 4;
-    m_overlayObjects = new GameObject*[m_numOverlayObjects];
-
-    Text* text = new Text;
-    text->SetFont("manaspace_regular_20");
-    text->Initialize();
-    m_overlayObjects[0] = new GameObject;
-	m_overlayObjects[0]->SetGraphic(text);
-    // Set up text for rotation display
-    Text* rotation = new Text;
-    rotation->SetFont("manaspace_regular_20");
-    rotation->Initialize();
-    m_overlayObjects[1] = new GameObject;
-	m_overlayObjects[1]->SetGraphic(rotation);
-	m_overlayObjects[1]->SetPosition(Coord(0.0f,30.0f,0.0f));
-
-    // Render to texture
-    graphic = new Image;
-    m_toBlur = new Texture;
-    m_toBlur->Initialize();
-    graphic->SetTexture(m_toBlur);
-    graphic->Initialize();
-    graphic->SetShader("HorizontalBlur");
-    graphic->SetRenderTarget(m_blurred);
-    //graphic->SetTint(01.0f,0.4f,0.0f,1.0f);
-    //graphic->SetScale(Coord(0.3f,0.3f,0.3f));
-    //graphic->SetRenderToBackBuffer(false);
-    m_overlayObjects[2] = new GameObject;
-	m_overlayObjects[2]->SetGraphic(graphic);
-    m_overlayObjects[2]->SetPosition(Coord(0.0f,0.0f,0.0f));
-
-    // Render to texture2
-    graphic = new Image;
-    m_blurred = new Texture;
-    m_blurred->Initialize();
-    graphic->SetTexture(m_blurred);
-    graphic->Initialize();
-    //graphic->SetTint(01.0f,0.4f,0.0f,1.0f);
-    //graphic->SetScale(Coord(0.1f,0.1f,0.1f));
-    m_overlayObjects[3] = new GameObject;
-	m_overlayObjects[3]->SetGraphic(graphic);
-    m_overlayObjects[3]->SetPosition(Coord(0.0f,0.0f,0.0f));
-    
-    // Set up cube
-    GameObject* cube = new GameObject;
-    cube->Initialize();
-    graphic = new Graphic;
-    graphic->SetTint(0.0f,0.0f,1.0f,1.0f);
-    //graphic->SetTexture("seafloor");
-    graphic->SetShader("Light");
-    graphic->SetModel("cube");
-    graphic->Initialize();
-    graphic->SetRenderTarget(m_toBlur);
-    // Set up transforms
-    //graphic->SetScale(Coord(20.0f,20.0f,20.0f));
-    // Add graphic to game object
-    cube->SetGraphic(graphic);
-    cube->SetPosition(Coord(0.0f,0.0f,0.0f));
-    // Add planet to array
-    m_gameObjects[5] = cube;
+    // Rotation display
+    m_rotation = new Text;
+    m_rotation->SetFont("manaspace_regular_20");
+    m_rotation->Initialize();
+    m_rotation->SetRenderToBackBuffer(true);
+	m_rotation->SetText(("rot: "+m_camera->GetOrientation().ToString()).c_str());
+    // Set up game object
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(m_rotation);
+	gameObject->SetPosition(Coord(0.0f,30.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
 
 	DebugLog ("TitleScreen: object initialized.");
 	return true;
@@ -252,9 +226,13 @@ bool TitleScreen::Shutdown() {
 // The logic function, which will be called by the main game loop.
 bool TitleScreen::Logic() {
 	DebugLog ("TitleScreen: Logic() called.", DB_LOGIC, 10);
+
     Screen::Logic();
-	((Text*)(m_overlayObjects[0]->GetGraphic()))->SetText(("pos: "+m_gameObjects[1]->GetPosition().ToString()).c_str());
-	((Text*)(m_overlayObjects[1]->GetGraphic()))->SetText(("rot: "+m_gameObjects[1]->GetOrientation().ToString()).c_str());
+
+    // Update position / rotation readout
+	m_position->SetText(("pos: "+m_camera->GetPosition().ToString()).c_str());
+	m_rotation->SetText(("rot: "+m_camera->GetOrientation().ToString()).c_str());
+
 	return true;
 }
 
@@ -264,9 +242,9 @@ bool TitleScreen::Logic() {
 // The draw function, which will be called by the main game loop.
 bool TitleScreen::Draw() {
 	DebugLog ("TitleScreen: Draw() called.", DB_GRAPHICS, 10);
-    m_toBlur->ClearRenderTarget(1.0f,1.0f,1.0f,0.0f);
-    m_blurred->ClearRenderTarget(1.0f,1.0f,1.0f,0.0f);
+
     Screen::Draw();
+
 	return true;
 }
 

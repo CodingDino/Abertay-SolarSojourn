@@ -40,6 +40,7 @@ public:
     
     // Sends any models or bitmaps associated with the object to the renderer
     bool virtual Draw();
+    bool virtual Draw(Texture* renderTexture);
 
     // Getter functions
     Coord virtual GetPosition() {return m_position; }

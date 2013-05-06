@@ -56,6 +56,8 @@ public:
 protected:
     
     //|----------------------------Protected Data Members-----------------------|
-    Texture* m_toBlur;
-    Texture* m_blurred;
+    
+    // Special game objects
+    Text* m_position;
+    Text* m_rotation;
 };

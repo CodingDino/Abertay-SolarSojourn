@@ -84,7 +84,7 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Font.cpp" />
-    <ClCompile Include="HorizontalBlurShader.cpp" />
+    <ClCompile Include="BlurShader.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Coord.cpp" />
@@ -103,6 +103,7 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Quad.cpp" />
+    <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Sentence.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SystemManager.cpp" />
@@ -117,7 +118,7 @@
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="Font.h" />
-    <ClInclude Include="HorizontalBlurShader.h" />
+    <ClInclude Include="BlurShader.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Coord.h" />
@@ -151,8 +152,8 @@
     <ClInclude Include="VertexType.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="horizontalblur.ps" />
-    <None Include="horizontalblur.vs" />
+    <None Include="blur.ps" />
+    <None Include="blur.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
     <None Include="texture.ps" />

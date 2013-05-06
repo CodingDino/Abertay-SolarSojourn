@@ -3,13 +3,13 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// horizontalblur.ps
-//      Pixel shader for handling horizontal blurring of textures
+// blur.ps
+//      Pixel shader for handling 2-pass Gaussian blurring of textures
 
 // |----------------------------------------------------------------------------|
 // |                                 Defines                                    |
 // |----------------------------------------------------------------------------|
-#define NUM_PIXELS 11
+#define NUM_PIXELS 9
 
 
 // |----------------------------------------------------------------------------|
@@ -37,7 +37,7 @@ struct PixelInputType
 // |----------------------------------------------------------------------------|
 // |                              Pixel Shader                                  |
 // |----------------------------------------------------------------------------|
-float4 HorizontalBlurPixelShader(PixelInputType input) : SV_TARGET
+float4 BlurPixelShader(PixelInputType input) : SV_TARGET
 {
     float weight[NUM_PIXELS/2+1];
     float normalization;

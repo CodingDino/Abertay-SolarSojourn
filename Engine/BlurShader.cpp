@@ -7,21 +7,20 @@
 //      Wraps and interacts with vertex and pixel shader.
 
 
-
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
-#include "HorizontalBlurShader.h"
+#include "BlurShader.h"
 #include "Graphic.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
-bool HorizontalBlurShader::Initialize()
+bool BlurShader::Initialize()
 {
     // Set up the shader files
-    return Shader::Initialize("HorizontalBlurVertexShader", "HorizontalBlurPixelShader", L"../Engine/horizontalblur.vs", L"../Engine/horizontalblur.ps");
+    return Shader::Initialize("BlurVertexShader", "BlurPixelShader", L"../Engine/blur.vs", L"../Engine/blur.ps");
 
     // Initialize vertex shader buffers
     if (! InitializeVertexShaderBuffers(D3DManager::GetRef()->GetDevice()) )
@@ -33,7 +32,7 @@ bool HorizontalBlurShader::Initialize()
 // |----------------------------------------------------------------------------|
 // |                           InitializeSamplerState                           |
 // |----------------------------------------------------------------------------|
-bool HorizontalBlurShader::InitializeSamplerState(ID3D11Device* device)
+bool BlurShader::InitializeSamplerState(ID3D11Device* device)
 {	
     HRESULT result;
     D3D11_SAMPLER_DESC samplerDesc;
@@ -68,7 +67,7 @@ bool HorizontalBlurShader::InitializeSamplerState(ID3D11Device* device)
 // |----------------------------------------------------------------------------|
 // |                                RenderShader                                |
 // |----------------------------------------------------------------------------|
-void HorizontalBlurShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void BlurShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
     // Set the vertex input layout.
     deviceContext->IASetInputLayout(m_layout);
@@ -90,11 +89,11 @@ void HorizontalBlurShader::RenderShader(ID3D11DeviceContext* deviceContext, int 
 // |----------------------------------------------------------------------------|
 // |                               SetVSBuffer                                  |
 // |----------------------------------------------------------------------------|
-bool HorizontalBlurShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
+bool BlurShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
         D3DXMATRIX projectionMatrix, Graphic* graphic)
 {
-	DebugLog ("HorizontalBlurShader::SetVSBuffer() called.", DB_GRAPHICS, 10);
+	DebugLog ("BlurShader::SetVSBuffer() called.", DB_GRAPHICS, 10);
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     unsigned int bufferNumber;
@@ -119,9 +118,12 @@ bool HorizontalBlurShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
     t_vsbuffer->world = worldMatrix;
     t_vsbuffer->view = viewMatrix;
     t_vsbuffer->projection = projectionMatrix;
-	t_vsbuffer->screenWidth = graphic->GetTexture()->GetWidth(); 
-        // TODO: This may need to be the graphic's renderTo texture, rather than the texture we're rendering FROM
-	t_vsbuffer->padding = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	t_vsbuffer->horizontal = graphic->GetReBlur();
+    if(t_vsbuffer->horizontal)
+	    t_vsbuffer->texelScale = graphic->GetTexture()->GetWidth(); 
+    else
+	    t_vsbuffer->texelScale = graphic->GetTexture()->GetHeight(); 
+    t_vsbuffer->padding = D3DXVECTOR2(0.0f, 0.0f);
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_vsBuffer, 0);
@@ -138,10 +140,10 @@ bool HorizontalBlurShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
 // |----------------------------------------------------------------------------|
 // |                               SetPSBuffer                                  |
 // |----------------------------------------------------------------------------|
-bool HorizontalBlurShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
+bool BlurShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
         Graphic* graphic)
 {
-	DebugLog ("HorizontalBlurShader::SetPSBuffer() called.", DB_GRAPHICS, 10);
+	DebugLog ("BlurShader::SetPSBuffer() called.", DB_GRAPHICS, 10);
 
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;

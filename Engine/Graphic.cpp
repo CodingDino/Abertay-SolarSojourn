@@ -102,23 +102,26 @@ void Graphic::Render(Coord position)
         D3DManager::GetRef()->TurnOffBackCulling();
     if (!m_zBuffer)
         D3DManager::GetRef()->TurnZBufferOff();
+    
+    // Scale, Translate, and Rotate
+    D3DXMATRIX worldMatrix = TransformWorldMatrix(position);
+
+    // Determine view matrix to use
+    D3DXMATRIX viewMatrix = GraphicsManager::GetRef()->GetViewMatrix();
+    if (m_baseView) viewMatrix = GraphicsManager::GetRef()->GetBaseViewMatrix();
+
+    // Determine projection matrix to use
+    D3DXMATRIX projMatrix = GraphicsManager::GetRef()->GetProjectionMatrix();
+    if (m_ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
+    
+    // Put the model in the buffer
+    if(m_model) m_model->Render();
+
+    // Render Target
     if (m_renderTarget)
     {
+        // Set texture as render target
         m_renderTarget->SetAsRenderTarget();
-
-        // Put the model in the buffer
-        if(m_model) m_model->Render();
-
-        // Scale, Translate, and Rotate
-        D3DXMATRIX worldMatrix = TransformWorldMatrix(position);
-
-        // Determine view matrix to use
-        D3DXMATRIX viewMatrix = GraphicsManager::GetRef()->GetViewMatrix();
-        if (m_baseView) viewMatrix = GraphicsManager::GetRef()->GetBaseViewMatrix();
-
-        // Determine projection matrix to use
-        D3DXMATRIX projMatrix = GraphicsManager::GetRef()->GetProjectionMatrix();
-        if (m_ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
 
         // Render using the shader and a self pointer.
         shader->Render(D3DManager::GetRef()->GetDeviceContext(),
@@ -127,26 +130,12 @@ void Graphic::Render(Coord position)
             viewMatrix,
             projMatrix,
             this);
+
+        // Reset backbuffer as render target
+        D3DManager::GetRef()->SetAsRenderTarget();
     }
-
-    D3DManager::GetRef()->SetAsRenderTarget();
-
     if (m_renderToBackBuffer)
     {
-        // Put the model in the buffer
-        if(m_model) m_model->Render();
-
-        // Scale, Translate, and Rotate
-        D3DXMATRIX worldMatrix = TransformWorldMatrix(position);
-
-        // Determine view matrix to use
-        D3DXMATRIX viewMatrix = GraphicsManager::GetRef()->GetViewMatrix();
-        if (m_baseView) viewMatrix = GraphicsManager::GetRef()->GetBaseViewMatrix();
-
-        // Determine projection matrix to use
-        D3DXMATRIX projMatrix = GraphicsManager::GetRef()->GetProjectionMatrix();
-        if (m_ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
-
         // Render using the shader and a self pointer.
         shader->Render(D3DManager::GetRef()->GetDeviceContext(),
             m_model->GetIndexCount(),
@@ -166,7 +155,7 @@ void Graphic::Render(Coord position)
 
 
 // |----------------------------------------------------------------------------|
-// |                               TransformWorldMatrix                                       |
+// |                         TransformWorldMatrix                               |
 // |----------------------------------------------------------------------------|
 D3DXMATRIX Graphic::TransformWorldMatrix(Coord position)
 {

@@ -3,7 +3,7 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// HorizontalBlurShader
+// BlurShader
 //      Wraps and interacts with vertex and pixel shader.
 #pragma once
 
@@ -16,7 +16,7 @@
 // |----------------------------------------------------------------------------|
 // |                            Class: TextureShader                            |
 // |----------------------------------------------------------------------------|
-class HorizontalBlurShader: public Shader
+class BlurShader: public Shader
 {
 protected:
 
@@ -26,8 +26,9 @@ protected:
         D3DXMATRIX world;
         D3DXMATRIX view;
         D3DXMATRIX projection;
-        float screenWidth;
-		D3DXVECTOR3 padding;
+        float texelScale;
+        bool horizontal;
+		D3DXVECTOR2 padding;
     };
 
     struct PSBufferType
@@ -40,7 +41,7 @@ public:
     //|-------------------------------Public Functions--------------------------|
     
     // Constructors and Destructors
-    HorizontalBlurShader() : 
+    BlurShader() : 
         m_sampleState(0) 
     {}
     

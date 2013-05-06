@@ -15,6 +15,9 @@
 #include "Util.h"
 #include "GameObject.h"
 #include "AssetManager.h"
+#include <list>
+#include "Image.h"
+#include "MouseLookCamera.h"
 
 // |----------------------------------------------------------------------------|
 // |						  Class Definition: Screen							|
@@ -26,57 +29,19 @@ public:
     //|-------------------------------Public Functions--------------------------|
 
 	// Constructors and Destructors
-    Screen() : 
-      m_done(0), 
-      m_nextScreen(SCREEN_QUIT),
-      m_backgroundObjects(0),
-      m_gameObjects(0),
-      m_overlayObjects(0) {}
+    Screen();
     Screen(const Screen&) {}
     virtual ~Screen() {}
 
     // Initialization and shutdown
-	bool virtual Initialize() {return true;}
-	bool virtual Shutdown() {return true;}
+	bool virtual Initialize();
+	bool virtual Shutdown();
     
 	// The logic function, which will be called by the main game loop.
-    bool virtual Logic() 
-    { 
-        bool result = true;
-        if (m_backgroundObjects)
-            for (int i = 0; i < m_numBackgroundObjects; ++ i) 
-                if (m_backgroundObjects[i])
-                    result = result && m_backgroundObjects[i]->Logic();
-        if (m_gameObjects)
-            for (int i = 0; i < m_numGameObjects; ++ i) 
-                if (m_gameObjects[i])
-                    result = result && m_gameObjects[i]->Logic();
-        if (m_overlayObjects)
-            for (int i = 0; i < m_numOverlayObjects; ++ i) 
-                if (m_overlayObjects[i])
-                    result = result && m_overlayObjects[i]->Logic();
-        return result;
-    }
+    bool virtual Logic();
     
 	// The draw function, which will be called by the main game loop.
-	bool virtual Draw()
-    { 
-	    DebugLog ("Screen: Draw() called.", DB_GRAPHICS, 10);
-        bool result = true;
-        if (m_backgroundObjects)
-            for (int i = 0; i < m_numBackgroundObjects; ++ i) 
-                if (m_backgroundObjects[i])
-                    result = result && m_backgroundObjects[i]->Draw();
-        if (m_gameObjects)
-            for (int i = 0; i < m_numGameObjects; ++ i) 
-                if (m_gameObjects[i])
-                    result = result && m_gameObjects[i]->Draw();
-        if (m_overlayObjects)
-            for (int i = 0; i < m_numOverlayObjects; ++ i) 
-                if (m_overlayObjects[i])
-                    result = result && m_overlayObjects[i]->Draw();
-        return result;
-    }
+	bool virtual Draw();
     
 	// Called when the screen is loaded.
 	bool virtual OnLoad() = 0;
@@ -94,22 +59,32 @@ public:
 	
 protected:
     
+    //|------------------------------Protected Functions------------------------|
+
+    // PostProcessing
+    bool Blur();
+	
+protected:
+    
     //|----------------------------Protected Data Members-----------------------|
 
 	bool m_done;
 	SCREEN m_nextScreen;
 
-    // GameObject Array
-    int m_numBackgroundObjects;
-    int m_numGameObjects;
-    int m_numOverlayObjects;
-    GameObject** m_backgroundObjects;
-    GameObject** m_gameObjects;
-    GameObject** m_overlayObjects;
+    // Render texture for post-processing
+    Texture* m_renderTexture;
+    Texture* m_intermediate;
+    Graphic* m_postProcessing;
 
-    // TODO
-    // Array of models, materials, and textures
-    // Loaded when Screen is initialized, removed when screen is shutdown
-    // Pointed to by the GameObjects in this screen
+    // Post processing options
+    bool m_blur;
+
+    // GameObject Array
+    std::list<GameObject*> m_backgroundObjects;
+    std::list<GameObject*> m_gameObjects;
+    std::list<GameObject*> m_overlayObjects;
+
+    // Special game objects
+    GameObject* m_camera; // TODO: Make a game object camera base class
 
 };

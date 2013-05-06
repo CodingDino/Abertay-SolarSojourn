@@ -3,13 +3,13 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// horizontalblur.vs
-//      Vertex shader for handling horizontal blurring of textures
+// blur.vs
+//      Vertex shader for handling 2-pass Gaussian blurring of textures
 
 // |----------------------------------------------------------------------------|
 // |                                 Defines                                    |
 // |----------------------------------------------------------------------------|
-#define NUM_PIXELS 11
+#define NUM_PIXELS 9
 
 
 // |----------------------------------------------------------------------------|
@@ -20,8 +20,9 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
-    float screenWidth;
-    float3 padding;
+    float texelScale;
+    bool horizontal;
+    float2 padding;
 };
 
 
@@ -46,7 +47,7 @@ struct PixelInputType
 // |----------------------------------------------------------------------------|
 // |                              Vertex Shader                                 |
 // |----------------------------------------------------------------------------|
-PixelInputType HorizontalBlurVertexShader(VertexInputType input)
+PixelInputType BlurVertexShader(VertexInputType input)
 {
     PixelInputType output;
     float texelSize;
@@ -64,14 +65,17 @@ PixelInputType HorizontalBlurVertexShader(VertexInputType input)
     output.tex = input.tex;
 
     // Determine the floating point size of a texel for a screen with this specific width.
-    texelSize = 1.0f / screenWidth;
+    texelSize = 1.0f / texelScale;
 
     // Create UV coordinates for the pixel and its four horizontal neighbors on either side.
     
     for( uint i = 0; i < NUM_PIXELS; i++ )
     {
         float neighbor = (float)i - (float)(NUM_PIXELS/2);
-        output.texCoord[i] = input.tex + float2(texelSize * neighbor, 0.0f);
+        if (horizontal)
+            output.texCoord[i] = input.tex + float2(texelSize * neighbor, 0.0f);
+        else
+            output.texCoord[i] = input.tex + float2(0.0f, texelSize * neighbor);
     }
 
     return output;

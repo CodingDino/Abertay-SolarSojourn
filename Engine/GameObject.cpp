@@ -88,3 +88,19 @@ bool GameObject::Draw() {
 	return true;
 }
 
+
+// |----------------------------------------------------------------------------|
+// |							     Draw()										|
+// |----------------------------------------------------------------------------|
+bool GameObject::Draw(Texture* renderTexture) {
+	DebugLog ("GameObject: Draw() called.", DB_GRAPHICS, 10);
+
+    if (m_graphic)
+    {
+        m_graphic->SetRenderTarget(renderTexture);
+    }
+    Draw();
+
+	return true;
+}
+
