@@ -25,6 +25,7 @@ cbuffer PixelBuffer
     float specularPower;
     float4 specularColor;
     float4 pointLightColor[NUM_LIGHTS];
+    float4 fogColor;
 };
 
 
@@ -38,6 +39,7 @@ struct PixelInputType
     float3 normal : NORMAL;
     float3 viewDirection : TEXCOORD1;
     float4 pointLightPos[NUM_LIGHTS] : TEXCOORD4;
+    float fogFactor : FOG;
 };
 
 // |----------------------------------------------------------------------------|
@@ -110,6 +112,9 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
     // Add the specular component last to the output color.
     color = saturate(color + specular);
+
+    // Calculate the final color using the fog effect equation.
+    color = input.fogFactor * color + (1.0 - input.fogFactor) * fogColor;
 
     return color;
 }

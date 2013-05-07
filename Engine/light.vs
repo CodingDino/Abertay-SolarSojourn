@@ -22,6 +22,10 @@ cbuffer MatrixBuffer
     float3 cameraPosition;
     float padding;
     float4 pointLightPosition[NUM_LIGHTS];
+    float fogStart;
+    float fogEnd;
+    float padding1;
+    float padding2;
 };
 
 // |----------------------------------------------------------------------------|
@@ -41,6 +45,7 @@ struct PixelInputType
     float3 normal : NORMAL;
     float3 viewDirection : TEXCOORD1;
     float4 pointLightPos[NUM_LIGHTS] : TEXCOORD2;
+    float fogFactor : FOG;
 };
 
 
@@ -88,6 +93,14 @@ PixelInputType LightVertexShader(VertexInputType input)
         // Normalize the light position vectors.
         output.pointLightPos[i] = normalize(output.pointLightPos[i]);
     }
+
+    
+    // Calculate the camera position.
+    cameraPosition = mul(input.position, worldMatrix);
+    cameraPosition = mul(cameraPosition, viewMatrix);
+
+    // Calculate linear fog.    
+    output.fogFactor = saturate((fogEnd - cameraPosition.z) / (fogEnd - fogStart));
     
     return output;
 }

@@ -37,6 +37,9 @@ protected:
 		D3DXVECTOR3 cameraPosition;
 		float padding;
 		D3DXVECTOR4 pointLightPosition[NUM_LIGHTS];
+		float fogStart;
+		float fogEnd;
+		float padding1, padding2;
     };
 
     struct PSBufferType
@@ -48,6 +51,7 @@ protected:
 		float specularPower;
 		D3DXVECTOR4 specularColor;
 		D3DXVECTOR4 pointLightColor[NUM_LIGHTS];
+		D3DXVECTOR4 fogColor;
     };
 
 public:

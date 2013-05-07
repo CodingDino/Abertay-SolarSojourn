@@ -137,6 +137,11 @@ bool LightShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
         ++i;
     }
 
+    // Fog
+    // TODO
+    t_vsbuffer->fogStart = 0.0f;
+    t_vsbuffer->fogEnd = 0.0f;
+
     // Unlock the constant buffer.
     deviceContext->Unmap(m_vsBuffer, 0);
 
@@ -201,6 +206,11 @@ bool LightShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
         t_psbuffer->pointLightColor[i] = (*it)->color;
         ++i;
     }
+    
+    // Fog Color
+    // TODO
+    t_psbuffer->fogColor = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+
  
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_psBuffer, 0);
