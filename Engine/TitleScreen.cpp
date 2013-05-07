@@ -61,11 +61,11 @@ bool TitleScreen::Initialize() {
 	SetNextScreen(SCREEN_QUIT);
 
     // Set Post-Processing Effects
-    m_blur = true;
+    m_glow = true;
 
     // Set lighting
     LightManager::GetRef()->SetAmbient(0.05f,0.05f,0.05f);
-    LightManager::GetRef()->SetDiffuseColor(0.0f,0.0f,0.0f);
+    LightManager::GetRef()->SetDiffuseColor(0.7f,0.7f,0.7f);
     LightManager::GetRef()->SetDiffuseDirection(1.0f,-0.5f,0.0f);
     
     // Set up camera
@@ -103,6 +103,7 @@ bool TitleScreen::Initialize() {
     graphic->SetRenderTarget(m_renderTexture);
     graphic->SetShader("Light");
     graphic->Initialize();
+    graphic->SetReflectiveness(0.9f);
     planet->SetGraphic(graphic);
     // Set up transforms
     graphic->SetScale(Coord(0.2f,0.2f,0.2f));

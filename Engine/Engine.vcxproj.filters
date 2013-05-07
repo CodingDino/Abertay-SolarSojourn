@@ -45,6 +45,9 @@
     <Filter Include="Graphics\Shader Files\GlowMapShader">
       <UniqueIdentifier>{b909c97d-7db3-4f14-81d0-f23ac80e6f69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Shader Files\GlowShader">
+      <UniqueIdentifier>{9ddc5589-5d3f-483d-a144-39d2f2c0f324}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -145,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="GlowMapShader.cpp">
       <Filter>Graphics\Shader Files\GlowMapShader</Filter>
+    </ClCompile>
+    <ClCompile Include="GlowShader.cpp">
+      <Filter>Graphics\Shader Files\GlowShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,6 +260,9 @@
     <ClInclude Include="GlowMapShader.h">
       <Filter>Graphics\Shader Files\GlowMapShader</Filter>
     </ClInclude>
+    <ClInclude Include="GlowShader.h">
+      <Filter>Graphics\Shader Files\GlowShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="texture.ps">
@@ -279,6 +288,12 @@
     </None>
     <None Include="glowmap.vs">
       <Filter>Graphics\Shader Files\GlowMapShader</Filter>
+    </None>
+    <None Include="glow.ps">
+      <Filter>Graphics\Shader Files\GlowShader</Filter>
+    </None>
+    <None Include="glow.vs">
+      <Filter>Graphics\Shader Files\GlowShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

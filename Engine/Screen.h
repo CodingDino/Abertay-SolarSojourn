@@ -63,9 +63,10 @@ protected:
 
     // PostProcessing
     bool ApplyGlowMask();
-    bool BlurDownsampledTexture();
+    bool BlurDownsampledTexture(int numTimes=1);
 	bool DownSampleTexture();
 	bool UpSampleTexture();
+	bool CombineGlowTexture();
 	
 protected:
     
@@ -76,14 +77,17 @@ protected:
 
     // Render texture for post-processing
     Texture* m_renderTexture;
+    Texture* m_glowMapTexture;
     Texture* m_glowTexture;
     Texture* m_downSampleTexture;
     Texture* m_intermediate;
+    Texture* m_upSampleTexture;
     Graphic* m_postProcessing;
     Graphic* m_downSampleImage;
 
     // Post processing options
     bool m_blur;
+    bool m_glow;
     int m_downSampleFactor;
 
     // GameObject Array

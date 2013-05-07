@@ -3,32 +3,33 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// GlowMapShader
+// GlowShader
 //      Wraps and interacts with vertex and pixel shader.
 
 
 // |----------------------------------------------------------------------------|
 // |                                Includes                                    |
 // |----------------------------------------------------------------------------|
-#include "GlowMapShader.h"
+#include "GlowShader.h"
 #include "Graphic.h"
 
 
 // |----------------------------------------------------------------------------|
 // |                           Default Constructor                              |
 // |----------------------------------------------------------------------------|
-bool GlowMapShader::Initialize()
+bool GlowShader::Initialize()
 {
     // Set up the shader files
-    return Shader::Initialize("GlowMapVertexShader", "GlowMapPixelShader", L"../Engine/glowmap.vs", L"../Engine/glowmap.ps");
-
+    bool result = Shader::Initialize("GlowVertexShader", "GlowPixelShader", L"../Engine/glow.vs", L"../Engine/glow.ps");
+    
+    return result;
 }
 
 
 // |----------------------------------------------------------------------------|
 // |                           InitializeSamplerState                           |
 // |----------------------------------------------------------------------------|
-bool GlowMapShader::InitializeSamplerState(ID3D11Device* device)
+bool GlowShader::InitializeSamplerState(ID3D11Device* device)
 {	
     HRESULT result;
     D3D11_SAMPLER_DESC samplerDesc;
@@ -63,7 +64,7 @@ bool GlowMapShader::InitializeSamplerState(ID3D11Device* device)
 // |----------------------------------------------------------------------------|
 // |                                RenderShader                                |
 // |----------------------------------------------------------------------------|
-void GlowMapShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void GlowShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
     // Set the vertex input layout.
     deviceContext->IASetInputLayout(m_layout);
@@ -85,11 +86,11 @@ void GlowMapShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCo
 // |----------------------------------------------------------------------------|
 // |                               SetVSBuffer                                  |
 // |----------------------------------------------------------------------------|
-bool GlowMapShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
+bool GlowShader::SetVSBuffer(ID3D11DeviceContext* deviceContext, 
         D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
         D3DXMATRIX projectionMatrix, Graphic* graphic)
 {
-	DebugLog ("GlowMapShader::SetVSBuffer() called.", DB_GRAPHICS, 10);
+	DebugLog ("GlowShader::SetVSBuffer() called.", DB_GRAPHICS, 10);
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     unsigned int bufferNumber;
@@ -130,10 +131,10 @@ bool GlowMapShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
 // |----------------------------------------------------------------------------|
 // |                               SetPSBuffer                                  |
 // |----------------------------------------------------------------------------|
-bool GlowMapShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
+bool GlowShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
         Graphic* graphic)
 {
-	DebugLog ("GlowMapShader::SetPSBuffer() called.", DB_GRAPHICS, 10);
+	DebugLog ("GlowShader::SetPSBuffer() called.", DB_GRAPHICS, 10);
 
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -151,8 +152,8 @@ bool GlowMapShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 	t_psbuffer = (PSBufferType*)mappedResource.pData;
 
 	// Copy the color into the constant buffer.
-    t_psbuffer->color = D3DXVECTOR4(graphic->GetTintR(), graphic->GetTintG(), graphic->GetTintB(), graphic->GetAlpha());
-        
+    t_psbuffer->glowStrength = graphic->GetGlowStrength();
+
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_psBuffer, 0);
 
@@ -164,7 +165,9 @@ bool GlowMapShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
 
 	// Send the texture sampler to the pixel shader.
     ID3D11ShaderResourceView* texture = graphic->GetTexture()->GetShaderResourceView();
+    ID3D11ShaderResourceView* glowTexture = graphic->GetGlowTexture()->GetShaderResourceView();
 	deviceContext->PSSetShaderResources(0, 1, &texture);
+	deviceContext->PSSetShaderResources(1, 1, &glowTexture);
 
     return true;
 }

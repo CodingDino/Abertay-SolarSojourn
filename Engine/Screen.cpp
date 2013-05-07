@@ -21,13 +21,16 @@ Screen::Screen() :
     m_done(0), 
     m_nextScreen(SCREEN_QUIT),
     m_renderTexture(0),
+    m_glowMapTexture(0),
     m_glowTexture(0),
     m_intermediate(0),
     m_downSampleTexture(0),
+    m_upSampleTexture(0),
     m_postProcessing(0),
     m_downSampleImage(0),
     m_blur(false),
-    m_downSampleFactor(2),
+    m_glow(false),
+    m_downSampleFactor(4),
     m_camera(0)
 {
 }
@@ -44,6 +47,10 @@ bool Screen::Initialize() {
     result = result && m_renderTexture->Initialize();
 
     // Set up glow map texture
+    m_glowMapTexture = new Texture;
+    result = result && m_glowMapTexture->Initialize();
+
+    // Set up glow texture
     m_glowTexture = new Texture;
     result = result && m_glowTexture->Initialize();
 
@@ -70,6 +77,10 @@ bool Screen::Initialize() {
     m_downSampleImage->SetScale(Coord(1/(float)m_downSampleFactor,1/(float)m_downSampleFactor,1.0f));
     m_downSampleImage->SetPosition(Coord((SCREEN_WIDTH - SCREEN_WIDTH / m_downSampleFactor)/2,(SCREEN_HEIGHT - SCREEN_HEIGHT / m_downSampleFactor)/2,1.0f));
     result = result && m_downSampleImage->Initialize();
+    
+    // Set up upsample texture
+    m_upSampleTexture = new Texture;
+    result = result && m_upSampleTexture->Initialize();
 
     return result;
 }
@@ -101,6 +112,12 @@ bool Screen::Shutdown() {
     m_downSampleTexture = 0;
     delete m_downSampleImage;
     m_downSampleImage = 0;
+    delete m_glowMapTexture;
+    m_glowMapTexture = 0;
+    delete m_glowTexture;
+    m_glowTexture = 0;
+    delete m_upSampleTexture;
+    m_upSampleTexture = 0;
 
     return result;
 }
@@ -146,12 +163,80 @@ bool Screen::Draw()
          result = result && (*it)->Draw();
 
     // Apply Post-Processing
-    ApplyGlowMask();
-    if (m_blur) 
+    if (m_blur) // Full-screen blur
     {
+
+        // blur from the glow mapped texture
+        m_downSampleImage->SetTexture(m_renderTexture);
+
+        // Render the upsampled texture back to the to_render texture
+        m_renderTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+        m_postProcessing->SetTexture(m_upSampleTexture);
+        m_postProcessing->SetShader("Texture");
+        m_postProcessing->SetRenderToBackBuffer(false);
+        m_postProcessing->SetRenderTarget(m_renderTexture);
+        m_postProcessing->Render();
+        m_postProcessing->SetTexture(m_renderTexture);
+        m_postProcessing->SetRenderTarget(0);
+        m_postProcessing->SetRenderToBackBuffer(true);  
+    }
+    if (m_glow) // Glow in bright items
+    {
+        ApplyGlowMask();
+
+        // Blur
+        m_downSampleFactor = 64;
+        m_downSampleImage->SetTexture(m_glowMapTexture);
+        DownSampleTexture();
+        BlurDownsampledTexture(10);
+        UpSampleTexture();
+
+        m_downSampleFactor = 32;
+        m_downSampleImage->SetTexture(m_upSampleTexture);
+        DownSampleTexture();
+        BlurDownsampledTexture(8);
+        UpSampleTexture();
+
+        m_downSampleFactor = 16;
+        m_downSampleImage->SetTexture(m_upSampleTexture);
+        DownSampleTexture();
+        BlurDownsampledTexture(6);
+        UpSampleTexture();
+
+        m_downSampleFactor = 8;
+        m_downSampleImage->SetTexture(m_upSampleTexture);
+        DownSampleTexture();
+        BlurDownsampledTexture(4);
+        UpSampleTexture();
+
+        m_downSampleFactor = 4;
+        m_downSampleImage->SetTexture(m_upSampleTexture);
+        DownSampleTexture();
+        BlurDownsampledTexture(2);
+        UpSampleTexture();
+
+        // Inner blur
+        m_downSampleFactor = 2;
+        m_downSampleImage->SetTexture(m_upSampleTexture);
         DownSampleTexture();
         BlurDownsampledTexture();
         UpSampleTexture();
+
+        // Combine the glow texture and the scene
+        m_postProcessing->SetGlowStrength(3.0f);
+        CombineGlowTexture();
+
+        // Render the processed texture back to the to_render texture
+        m_renderTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+        m_postProcessing->SetTexture(m_glowTexture);
+        m_postProcessing->SetShader("Texture");
+        m_postProcessing->SetAlphaBlend(true);
+        m_postProcessing->SetRenderToBackBuffer(false);
+        m_postProcessing->SetRenderTarget(m_renderTexture);
+        m_postProcessing->Render();
+        m_postProcessing->SetTexture(m_renderTexture);
+        m_postProcessing->SetRenderTarget(0);
+        m_postProcessing->SetRenderToBackBuffer(true);  
     }
 
     // Render the post-processed scene to the backbuffer
@@ -170,15 +255,15 @@ bool Screen::Draw()
 // |----------------------------------------------------------------------------|
 bool Screen::ApplyGlowMask()
 { 
-	DebugLog ("Screen: DownSampleTexture() called.", DB_GRAPHICS, 10);
+	DebugLog ("Screen: ApplyGlowMask() called.", DB_GRAPHICS, 10);
     bool result = true;
 
     // Prepare the render to texture for rendering
-    m_glowTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+    m_glowMapTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
     m_postProcessing->SetTexture(m_renderTexture);
     m_postProcessing->SetShader("GlowMap");
     m_postProcessing->SetRenderToBackBuffer(false);
-    m_postProcessing->SetRenderTarget(m_glowTexture);
+    m_postProcessing->SetRenderTarget(m_glowMapTexture);
     m_postProcessing->Render();
 
     return result;
@@ -188,40 +273,44 @@ bool Screen::ApplyGlowMask()
 // |----------------------------------------------------------------------------|
 // |                                  Blur                                      |
 // |----------------------------------------------------------------------------|
-bool Screen::BlurDownsampledTexture()
+bool Screen::BlurDownsampledTexture(int numTimes)
 { 
 	DebugLog ("Screen: BlurDownsampledTexture() called.", DB_GRAPHICS, 10);
     bool result = true;
 
-    // Prepare the render to texture for rendering
-    m_intermediate->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
-    
-    // Horizontal Blur
-    m_downSampleTexture->SetWidth(SCREEN_WIDTH);
-    m_downSampleTexture->SetHeight(SCREEN_HEIGHT);
-    m_intermediate->SetWidth(SCREEN_WIDTH/m_downSampleFactor);
-    m_intermediate->SetHeight(SCREEN_HEIGHT/m_downSampleFactor);
-    m_downSampleImage->SetTexture(m_downSampleTexture);
-    m_downSampleImage->SetShader("Blur");
-    m_downSampleImage->SetRenderToBackBuffer(false);
-    m_downSampleImage->SetRenderTarget(m_intermediate);
-    m_downSampleImage->Render();
+    for (int i=0; i<numTimes; ++i)
+    {
 
-    // Prepare the render to texture for rendering
-    m_downSampleTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+        // Prepare the render to texture for rendering
+        m_intermediate->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
     
-    // Vertical Blur
-    m_intermediate->SetWidth(SCREEN_WIDTH);
-    m_intermediate->SetHeight(SCREEN_HEIGHT);
-    m_downSampleTexture->SetWidth(SCREEN_WIDTH/m_downSampleFactor);
-    m_downSampleTexture->SetHeight(SCREEN_HEIGHT/m_downSampleFactor);
-    m_downSampleImage->SetReBlur(true);
-    m_downSampleImage->SetTexture(m_intermediate);
-    m_downSampleImage->SetRenderToBackBuffer(false);
-    m_downSampleImage->SetRenderTarget(m_downSampleTexture);
-    m_downSampleImage->Render();
-    m_downSampleImage->SetReBlur(false);
+        // Horizontal Blur
+        m_downSampleTexture->SetWidth(SCREEN_WIDTH);
+        m_downSampleTexture->SetHeight(SCREEN_HEIGHT);
+        m_intermediate->SetWidth(SCREEN_WIDTH/m_downSampleFactor);
+        m_intermediate->SetHeight(SCREEN_HEIGHT/m_downSampleFactor);
+        m_downSampleImage->SetTexture(m_downSampleTexture);
+        m_downSampleImage->SetShader("Blur");
+        m_downSampleImage->SetRenderToBackBuffer(false);
+        m_downSampleImage->SetRenderTarget(m_intermediate);
+        m_downSampleImage->Render();
 
+        // Prepare the render to texture for rendering
+        m_downSampleTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+    
+        // Vertical Blur
+        m_intermediate->SetWidth(SCREEN_WIDTH);
+        m_intermediate->SetHeight(SCREEN_HEIGHT);
+        m_downSampleTexture->SetWidth(SCREEN_WIDTH/m_downSampleFactor);
+        m_downSampleTexture->SetHeight(SCREEN_HEIGHT/m_downSampleFactor);
+        m_downSampleImage->SetReBlur(true);
+        m_downSampleImage->SetTexture(m_intermediate);
+        m_downSampleImage->SetRenderToBackBuffer(false);
+        m_downSampleImage->SetRenderTarget(m_downSampleTexture);
+        m_downSampleImage->Render();
+        m_downSampleImage->SetReBlur(false);
+
+    }
     return result;
 }
 
@@ -238,7 +327,6 @@ bool Screen::DownSampleTexture()
     m_downSampleTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
     m_downSampleTexture->SetWidth(SCREEN_WIDTH/m_downSampleFactor);
     m_downSampleTexture->SetHeight(SCREEN_HEIGHT/m_downSampleFactor);
-    m_downSampleImage->SetTexture(m_glowTexture);
     m_downSampleImage->SetShader("Texture");
     m_downSampleImage->SetRenderToBackBuffer(false);
     m_downSampleImage->SetRenderTarget(m_downSampleTexture);
@@ -257,20 +345,36 @@ bool Screen::UpSampleTexture()
     bool result = true;
 
     // Prepare the render to texture for rendering
-    m_renderTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+    m_upSampleTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
     
-    D3DManager::GetRef()->ResetViewport();
     m_downSampleTexture->SetWidth(SCREEN_WIDTH);
     m_downSampleTexture->SetHeight(SCREEN_HEIGHT);
     m_postProcessing->SetTexture(m_downSampleTexture);
     m_postProcessing->SetShader("Texture");
     m_postProcessing->SetRenderToBackBuffer(false);
-    m_postProcessing->SetRenderTarget(m_renderTexture);
+    m_postProcessing->SetRenderTarget(m_upSampleTexture);
     m_postProcessing->Render();
 
+    return result;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                          CombineGlowTexture                                |
+// |----------------------------------------------------------------------------|
+bool Screen::CombineGlowTexture()
+{ 
+	DebugLog ("Screen: CombineGlowTexture() called.", DB_GRAPHICS, 10);
+    bool result = true;
+
+    // Prepare the render to texture for rendering
+    m_glowTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
     m_postProcessing->SetTexture(m_renderTexture);
-    m_postProcessing->SetRenderTarget(0);
-    m_postProcessing->SetRenderToBackBuffer(true);
+    m_postProcessing->SetGlowTexture(m_upSampleTexture);
+    m_postProcessing->SetShader("Glow");
+    m_postProcessing->SetRenderToBackBuffer(false);
+    m_postProcessing->SetRenderTarget(m_glowTexture);
+    m_postProcessing->Render();
 
     return result;
 }

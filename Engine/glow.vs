@@ -3,8 +3,8 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// glowmap.vs
-//      Vector shader for creating a glow mask
+// glow.vs
+//      Vector shader for adding two textures to create glow
 
 
 // |----------------------------------------------------------------------------|
@@ -32,14 +32,13 @@ struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
-    float3 normal : NORMAL;
 };
 
 
 // |----------------------------------------------------------------------------|
 // |                              Vertex Shader                                 |
 // |----------------------------------------------------------------------------|
-PixelInputType GlowMapVertexShader(VertexInputType input)
+PixelInputType GlowVertexShader(VertexInputType input)
 {
     PixelInputType output;
     
@@ -53,9 +52,6 @@ PixelInputType GlowMapVertexShader(VertexInputType input)
 
     // Store the texture coordinates for the pixel shader.
     output.tex = input.tex;
-
-    // Store the texture coordinates for the pixel shader.
-    output.normal = input.normal;
     
     return output;
 }

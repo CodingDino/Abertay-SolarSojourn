@@ -3,7 +3,7 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// GlowMapShader
+// GlowShader
 //      Wraps and interacts with vertex and pixel shader.
 #pragma once
 
@@ -14,9 +14,9 @@
 #include "Shader.h"
 
 // |----------------------------------------------------------------------------|
-// |                            Class: GlowMapShader                            |
+// |                            Class: GlowShader                               |
 // |----------------------------------------------------------------------------|
-class GlowMapShader: public Shader
+class GlowShader: public Shader
 {
 protected:
 
@@ -30,7 +30,8 @@ protected:
 
     struct PSBufferType
     {
-		D3DXVECTOR4 color;
+		float glowStrength;
+		D3DXVECTOR3 padding;
     };
 
 public:
@@ -38,8 +39,9 @@ public:
     //|-------------------------------Public Functions--------------------------|
     
     // Constructors and Destructors
-    GlowMapShader() : 
-        m_sampleState(0) 
+    GlowShader() : 
+        m_sampleState(0),
+        m_glowBuffer(0) 
     {}
     
     // Initialization and shutdown
@@ -67,6 +69,8 @@ protected:
 
 	// Sampler state
 	ID3D11SamplerState* m_sampleState;
-
+    
+    // Extra buffer for the glow texture
+	ID3D11Buffer* m_glowBuffer;
 
 };

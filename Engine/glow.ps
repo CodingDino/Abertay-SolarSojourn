@@ -3,24 +3,21 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// glowmap.ps
-//      Pixel shader for creating a glow mask
-
-
-// |----------------------------------------------------------------------------|
-// |                                 Defines                                    |
-// |----------------------------------------------------------------------------|
-#define LUM_LIMIT 0.4
+// glow.ps
+//      Pixel shader for adding two textures to create glow
 
 
 // |----------------------------------------------------------------------------|
 // |                                 Globals                                    |
 // |----------------------------------------------------------------------------|
-Texture2D shaderTexture;
+Texture2D sceneTexture;
+Texture2D glowTexture;
 SamplerState SampleType;
-cbuffer ColorBuffer
+
+cbuffer GlowBuffer
 {
-    float4 tint;
+    float glowStrength;
+    float3 padding;
 };
 
 
@@ -31,30 +28,25 @@ struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
-    float3 normal : NORMAL;
 };
 
 // |----------------------------------------------------------------------------|
 // |                              Pixel Shader                                  |
 // |----------------------------------------------------------------------------|
-float4 GlowMapPixelShader(PixelInputType input) : SV_TARGET
+float4 GlowPixelShader(PixelInputType input) : SV_TARGET
 {
+    float4 textureColor;
+    float4 glowColor;
     float4 color;
 
     // Sample the pixel color from the texture using the sampler at this texture coordinate location.
-    color = shaderTexture.Sample(SampleType, input.tex);
+    textureColor = sceneTexture.Sample(SampleType, input.tex);
 
-    // Determine luminosity
-    float lum = dot(color.rgb, float3(0.333f,0.333f,0.333f));
+    // Sample the glow texture.
+    glowColor = glowTexture.Sample(SampleType, input.tex);
 
-    // For under set luminosity, set alpha to 0
-    if (lum < LUM_LIMIT)
-        color.a = 0.0f;
-    else
-        color.a = lum;
-
-	// Calculate the tinted color
-	color = color * tint;
+    // Add the texture color to the glow color multiplied by the glow stength.
+    color = saturate(textureColor + (glowColor * glowStrength));
 
     return color;
 }
