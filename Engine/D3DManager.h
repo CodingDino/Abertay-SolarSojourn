@@ -77,6 +77,7 @@ public:
     // Render to Texture utility
     ID3D11DepthStencilView* GetDepthStencilView();
     void SetAsRenderTarget();
+    void ResetViewport();
     
 private:
 
@@ -107,6 +108,7 @@ private:
     ID3D11BlendState* m_alphaEnableBlendingState;
     ID3D11BlendState* m_particleAlphaEnableBlendingState;
     ID3D11BlendState* m_alphaDisableBlendingState;
+	D3D11_VIEWPORT m_viewport;
 
     // Matrices
     D3DXMATRIX m_projectionMatrix;

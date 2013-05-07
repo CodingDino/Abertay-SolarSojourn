@@ -22,8 +22,11 @@ Screen::Screen() :
     m_nextScreen(SCREEN_QUIT),
     m_renderTexture(0),
     m_intermediate(0),
+    m_downSampleTexture(0),
     m_postProcessing(0),
+    m_downSampleImage(0),
     m_blur(false),
+    m_downSampleFactor(2),
     m_camera(0)
 {
 }
@@ -35,17 +38,33 @@ Screen::Screen() :
 bool Screen::Initialize() {
     bool result = true;
 
+    // Set up render texture
     m_renderTexture = new Texture;
     result = result && m_renderTexture->Initialize();
 
-    m_intermediate = new Texture;
-    result = result && m_intermediate->Initialize();
-
+    // Set up post processing image
     m_postProcessing = new Image;
     m_postProcessing->SetTexture(m_renderTexture);
     m_postProcessing->SetShader("Texture");
+    m_postProcessing->Initialize();
     m_postProcessing->SetRenderToBackBuffer(true);
+    m_postProcessing->SetTexOrtho(true);
     result = result && m_postProcessing->Initialize();
+
+    // Set up downsample
+    m_downSampleTexture = new Texture;
+    result = result && m_downSampleTexture->Initialize(SCREEN_WIDTH / m_downSampleFactor, SCREEN_HEIGHT / m_downSampleFactor);
+    m_intermediate = new Texture;
+    result = result && m_intermediate->Initialize(SCREEN_WIDTH / m_downSampleFactor, SCREEN_HEIGHT / m_downSampleFactor);
+    m_downSampleImage = new Image;
+    m_downSampleImage->SetTexture(m_downSampleTexture);
+    m_downSampleImage->SetShader("Texture");
+    m_downSampleImage->Initialize();
+    m_downSampleImage->SetRenderToBackBuffer(false);
+    m_downSampleImage->SetTexOrtho(true);
+    m_downSampleImage->SetScale(Coord(1/(float)m_downSampleFactor,1/(float)m_downSampleFactor,1.0f));
+    m_downSampleImage->SetPosition(Coord((SCREEN_WIDTH - SCREEN_WIDTH / m_downSampleFactor)/2,(SCREEN_HEIGHT - SCREEN_HEIGHT / m_downSampleFactor)/2,1.0f));
+    result = result && m_downSampleImage->Initialize();
 
     return result;
 }
@@ -73,6 +92,10 @@ bool Screen::Shutdown() {
     m_intermediate = 0;
     delete m_postProcessing;
     m_postProcessing = 0;
+    delete m_downSampleTexture;
+    m_downSampleTexture = 0;
+    delete m_downSampleImage;
+    m_downSampleImage = 0;
 
     return result;
 }
@@ -130,6 +153,7 @@ bool Screen::Draw()
     return result;
 }
 
+
 // |----------------------------------------------------------------------------|
 // |                                  Blur                                      |
 // |----------------------------------------------------------------------------|
@@ -137,19 +161,89 @@ bool Screen::Blur()
 { 
 	DebugLog ("Screen: Blur() called.", DB_GRAPHICS, 10);
     bool result = true;
+
+    DownSampleTexture();
+
+    // Prepare the render to texture for rendering
+    m_intermediate->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
     
-    m_postProcessing->SetShader("Blur");
+    // Horizontal Blur
+    m_downSampleTexture->SetWidth(SCREEN_WIDTH);
+    m_downSampleTexture->SetHeight(SCREEN_HEIGHT);
+    m_intermediate->SetWidth(SCREEN_WIDTH/m_downSampleFactor);
+    m_intermediate->SetHeight(SCREEN_HEIGHT/m_downSampleFactor);
+    m_downSampleImage->SetTexture(m_downSampleTexture);
+    m_downSampleImage->SetShader("Blur");
+    m_downSampleImage->SetRenderToBackBuffer(false);
+    m_downSampleImage->SetRenderTarget(m_intermediate);
+    m_downSampleImage->Render();
+
+    // Prepare the render to texture for rendering
+    m_downSampleTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+    
+    // Vertical Blur
+    m_intermediate->SetWidth(SCREEN_WIDTH);
+    m_intermediate->SetHeight(SCREEN_HEIGHT);
+    m_downSampleTexture->SetWidth(SCREEN_WIDTH/m_downSampleFactor);
+    m_downSampleTexture->SetHeight(SCREEN_HEIGHT/m_downSampleFactor);
+    m_downSampleImage->SetReBlur(true);
+    m_downSampleImage->SetTexture(m_intermediate);
+    m_downSampleImage->SetRenderToBackBuffer(false);
+    m_downSampleImage->SetRenderTarget(m_downSampleTexture);
+    m_downSampleImage->Render();
+    m_downSampleImage->SetReBlur(false);
+    
+    UpSampleTexture();
+
+    return result;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                          DownSampleTexture                                 |
+// |----------------------------------------------------------------------------|
+bool Screen::DownSampleTexture()
+{ 
+	DebugLog ("Screen: DownSampleTexture() called.", DB_GRAPHICS, 10);
+    bool result = true;
+
+    // Prepare the render to texture for rendering
+    m_downSampleTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+    m_downSampleTexture->SetWidth(SCREEN_WIDTH/m_downSampleFactor);
+    m_downSampleTexture->SetHeight(SCREEN_HEIGHT/m_downSampleFactor);
+    m_downSampleImage->SetTexture(m_renderTexture);
+    m_downSampleImage->SetShader("Texture");
+    m_downSampleImage->SetRenderToBackBuffer(false);
+    m_downSampleImage->SetRenderTarget(m_downSampleTexture);
+    m_downSampleImage->Render();
+
+    return result;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                           UpSampleTexture                                  |
+// |----------------------------------------------------------------------------|
+bool Screen::UpSampleTexture()
+{ 
+	DebugLog ("Screen: UpSampleTexture() called.", DB_GRAPHICS, 10);
+    bool result = true;
+
+    // Prepare the render to texture for rendering
+    m_renderTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+    
+    D3DManager::GetRef()->ResetViewport();
+    m_downSampleTexture->SetWidth(SCREEN_WIDTH);
+    m_downSampleTexture->SetHeight(SCREEN_HEIGHT);
+    m_postProcessing->SetTexture(m_downSampleTexture);
+    m_postProcessing->SetShader("Texture");
     m_postProcessing->SetRenderToBackBuffer(false);
-    m_postProcessing->SetRenderTarget(m_intermediate);
-    m_postProcessing->Render();
-    m_postProcessing->SetReBlur(true);
-    m_postProcessing->SetTexture(m_intermediate);
     m_postProcessing->SetRenderTarget(m_renderTexture);
     m_postProcessing->Render();
-    m_postProcessing->SetReBlur(false);
+
     m_postProcessing->SetTexture(m_renderTexture);
-    m_postProcessing->SetRenderToBackBuffer(true);
     m_postProcessing->SetRenderTarget(0);
+    m_postProcessing->SetRenderToBackBuffer(true);
 
     return result;
 }

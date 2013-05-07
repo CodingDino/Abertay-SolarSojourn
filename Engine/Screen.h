@@ -63,6 +63,8 @@ protected:
 
     // PostProcessing
     bool Blur();
+	bool DownSampleTexture();
+	bool UpSampleTexture();
 	
 protected:
     
@@ -73,11 +75,14 @@ protected:
 
     // Render texture for post-processing
     Texture* m_renderTexture;
+    Texture* m_downSampleTexture;
     Texture* m_intermediate;
     Graphic* m_postProcessing;
+    Graphic* m_downSampleImage;
 
     // Post processing options
     bool m_blur;
+    int m_downSampleFactor;
 
     // GameObject Array
     std::list<GameObject*> m_backgroundObjects;
@@ -85,6 +90,6 @@ protected:
     std::list<GameObject*> m_overlayObjects;
 
     // Special game objects
-    GameObject* m_camera; // TODO: Make a game object camera base class
+    GameObject* m_camera;
 
 };

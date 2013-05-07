@@ -484,6 +484,17 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, bool 
         return false;
     }
 
+	// Setup the viewport for rendering.
+    m_viewport.Width = (float)screenWidth;
+    m_viewport.Height = (float)screenHeight;
+    m_viewport.MinDepth = 0.0f;
+    m_viewport.MaxDepth = 1.0f;
+    m_viewport.TopLeftX = 0.0f;
+    m_viewport.TopLeftY = 0.0f;
+
+	// Create the viewport.
+    m_deviceContext->RSSetViewports(1, &m_viewport);
+
     return true;
 }
 
@@ -790,6 +801,18 @@ void D3DManager::SetAsRenderTarget()
 {
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+
+	return;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                               ResetViewport                                |
+// |----------------------------------------------------------------------------|
+void D3DManager::ResetViewport()
+{
+	// Set the viewport.
+    m_deviceContext->RSSetViewports(1, &m_viewport);
 
 	return;
 }

@@ -160,24 +160,25 @@ bool TitleScreen::Initialize() {
     graphic = new Billboard;
     graphic->SetTint(01.0f,0.4f,0.0f,1.0f);
     graphic->SetShader("Texture");
-    graphic->SetRenderTarget(m_renderTexture);
     graphic->SetAlphaBlend(true);
     graphic->SetTexture("particle_point");
     graphic->Initialize();
+    //graphic->SetRenderTarget(m_renderTexture);
+    graphic->SetRenderToBackBuffer(true);
     // Set up transforms
     graphic->SetScale(Coord(0.005f,0.005f,0.005f));
     // Add graphic to game object
     particleSystem->SetGraphic(graphic);
     particleSystem->SetParticleVelocity(Coord(0.0f,0.0f,0.0f));
     particleSystem->SetParticleVelocityVariation(Coord(1.0f,0.5f,1.0f));
-    particleSystem->SetParticleSpawnFrequency(0.1f);
+    particleSystem->SetParticleSpawnFrequency(1.0f);
     particleSystem->SetParticleLifetime(100.0f);
     particleSystem->SetParticleFadeout(5.0f);
     particleSystem->SetMaxParticles(100);
     particleSystem->SetTint(1.0f,1.0f,1.0f);
     particleSystem->SetTintVar(0.5f,0.5f,0.5f);
     // Add to list
-    m_gameObjects.push_back(particleSystem);
+    //m_overlayObjects.push_back(particleSystem);
 
 
     // Coordinate display

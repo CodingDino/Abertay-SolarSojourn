@@ -49,7 +49,8 @@ public:
         m_zBuffer(true),
         m_baseView(false),
         m_ortho(false),
-        m_reBlur(false)
+        m_reBlur(false),
+        m_texOrtho(false)
     {}
 
     // Getters
@@ -68,6 +69,7 @@ public:
     bool GetBaseView() {return m_baseView; }
     bool GetOrtho() {return m_ortho; }
     bool GetReBlur() {return m_reBlur; }
+    bool GetTexOrtho() {return m_texOrtho; }
 
     // Setters
     void SetShader(Shader* shader) {m_shader = shader;}
@@ -88,6 +90,7 @@ public:
     void SetBaseView(bool value){m_baseView = value;}
     void SetOrtho(bool value){m_ortho = value;}
     void SetReBlur(bool value){m_reBlur = value;}
+    void SetTexOrtho(bool value){m_texOrtho = value;}
 
 protected:
 
@@ -104,5 +107,6 @@ protected:
     bool m_baseView;
     bool m_ortho;
     bool m_reBlur;
+    bool m_texOrtho;
 
 };

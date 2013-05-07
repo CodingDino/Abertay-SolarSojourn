@@ -90,8 +90,8 @@ void Graphic::Render(Coord position)
 {
 	DebugLog ("Graphic::Render() called.", DB_GRAPHICS, 10);
 
-    // Get correct shader to use from material
-    Shader* shader = m_shader;
+    // Check for shader
+    if (!m_shader) return;
 
     // Pipeline settings
     if (m_alphaBlend)
@@ -112,7 +112,8 @@ void Graphic::Render(Coord position)
 
     // Determine projection matrix to use
     D3DXMATRIX projMatrix = GraphicsManager::GetRef()->GetProjectionMatrix();
-    if (m_ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
+    if (m_texOrtho && m_renderTarget) projMatrix = m_renderTarget->GetOrthoMatrix();
+    else if (m_ortho) projMatrix = GraphicsManager::GetRef()->GetOrthoMatrix();
     
     // Put the model in the buffer
     if(m_model) m_model->Render();
@@ -124,7 +125,7 @@ void Graphic::Render(Coord position)
         m_renderTarget->SetAsRenderTarget();
 
         // Render using the shader and a self pointer.
-        shader->Render(D3DManager::GetRef()->GetDeviceContext(),
+        m_shader->Render(D3DManager::GetRef()->GetDeviceContext(),
             m_model->GetIndexCount(),
             worldMatrix,
             viewMatrix,
@@ -133,11 +134,16 @@ void Graphic::Render(Coord position)
 
         // Reset backbuffer as render target
         D3DManager::GetRef()->SetAsRenderTarget();
+
+	    // Reset the viewport back to the original.
+	    D3DManager::GetRef()->ResetViewport();
+
     }
     if (m_renderToBackBuffer)
     {
+
         // Render using the shader and a self pointer.
-        shader->Render(D3DManager::GetRef()->GetDeviceContext(),
+        m_shader->Render(D3DManager::GetRef()->GetDeviceContext(),
             m_model->GetIndexCount(),
             worldMatrix,
             viewMatrix,
