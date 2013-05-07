@@ -3,8 +3,8 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// TitleScreen
-//      Splash screen shown at the start of the game
+// LevelScreen
+//      Main game screen. properties can be customized to change level appearance.
 #pragma once
 
 
@@ -24,18 +24,18 @@
 
 
 // |----------------------------------------------------------------------------|
-// |						  Class Definition: TitleScreen						|
+// |						  Class Definition: LevelScreen						|
 // |----------------------------------------------------------------------------|
-class TitleScreen : public Screen {
+class LevelScreen : public Screen {
 
 public:
     
     //|-------------------------------Public Functions--------------------------|
 
 	// Constructors and Destructors
-	TitleScreen();
-	TitleScreen(const TitleScreen&);
-	virtual ~TitleScreen();
+	LevelScreen();
+	LevelScreen(const LevelScreen&);
+	virtual ~LevelScreen();
 
     // Initialization and shutdown
 	bool virtual Initialize();

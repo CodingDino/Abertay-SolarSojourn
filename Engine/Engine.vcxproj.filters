@@ -155,6 +155,9 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Graphics\Graphic Types</Filter>
     </ClCompile>
+    <ClCompile Include="LevelScreen.cpp">
+      <Filter>Game\Screens</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -268,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="SkyBox.h">
       <Filter>Graphics\Graphic Types</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelScreen.h">
+      <Filter>Game\Screens</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

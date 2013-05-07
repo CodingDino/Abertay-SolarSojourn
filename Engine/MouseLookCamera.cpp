@@ -19,7 +19,7 @@
 MouseLookCamera::MouseLookCamera() :
     m_active(true),
     m_mouseSensitivity(10.0f),
-	m_speed(10.0f),
+	m_speed(100.0f),
     GameObject()
 {
 	DebugLog ("MouseLookCamera: object instantiated.");

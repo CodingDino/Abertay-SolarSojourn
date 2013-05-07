@@ -3,49 +3,49 @@
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
 //
-// TitleScreen
-//      Splash screen shown at the start of the game
+// LevelScreen
+//      Main game screen. properties can be customized to change level appearance.
 
 
 // |----------------------------------------------------------------------------|
 // |								Includes									|
 // |----------------------------------------------------------------------------|
-#include "TitleScreen.h"
+#include "LevelScreen.h"
 
 
 // |----------------------------------------------------------------------------|
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
-TitleScreen::TitleScreen() :
+LevelScreen::LevelScreen() :
     Screen(),
     m_position(0),
     m_rotation(0),
     m_particles(0)
 {
-	DebugLog ("TitleScreen: object instantiated.");
+	DebugLog ("LevelScreen: object instantiated.");
 }
      
 
 // |----------------------------------------------------------------------------|
 // |							  Copy Constructor								|
 // |----------------------------------------------------------------------------|
-TitleScreen::TitleScreen(const TitleScreen&) {
-	DebugLog ("TitleScreen: object copied.");
+LevelScreen::LevelScreen(const LevelScreen&) {
+	DebugLog ("LevelScreen: object copied.");
 }
 
 
 // |----------------------------------------------------------------------------|
 // |							   Destructor									|
 // |----------------------------------------------------------------------------|
-TitleScreen::~TitleScreen() {
-	DebugLog ("TitleScreen: object destroyed.");
+LevelScreen::~LevelScreen() {
+	DebugLog ("LevelScreen: object destroyed.");
 }
 
 
 // |----------------------------------------------------------------------------|
 // |							   Initialize									|
 // |----------------------------------------------------------------------------|
-bool TitleScreen::Initialize() {
+bool LevelScreen::Initialize() {
 
     // Initialize parent class
     Screen::Initialize();
@@ -76,7 +76,8 @@ bool TitleScreen::Initialize() {
     m_camera->SetPosition(Coord(0.0f, 0.0f, -10.0f));
 
     // Set up skybox
-    m_skybox->SetTexture("skybox_starfield");
+    m_skybox->SetTexture("default");
+    m_skybox->SetTint(0.8f,0.6f,0.6f);
 
     // Set up sun
     m_sun->SetTint(1.0f,1.0f,0.8f,1.0f);
@@ -217,7 +218,7 @@ bool TitleScreen::Initialize() {
 	gameObject->SetPosition(Coord(0.0f,30.0f,0.0f));
     m_overlayObjects.push_back(gameObject);
 
-	DebugLog ("TitleScreen: object initialized.");
+	DebugLog ("LevelScreen: object initialized.");
 	return true;
 }
 
@@ -225,9 +226,9 @@ bool TitleScreen::Initialize() {
 // |----------------------------------------------------------------------------|
 // |							    Shutdown									|
 // |----------------------------------------------------------------------------|
-bool TitleScreen::Shutdown() {
+bool LevelScreen::Shutdown() {
 
-	DebugLog ("TitleScreen: object shutdown.");
+	DebugLog ("LevelScreen: object shutdown.");
 	return true;
 }
 
@@ -236,8 +237,8 @@ bool TitleScreen::Shutdown() {
 // |							     Logic()									|
 // |----------------------------------------------------------------------------|
 // The logic function, which will be called by the main game loop.
-bool TitleScreen::Logic() {
-	DebugLog ("TitleScreen: Logic() called.", DB_LOGIC, 10);
+bool LevelScreen::Logic() {
+	DebugLog ("LevelScreen: Logic() called.", DB_LOGIC, 10);
 
     Screen::Logic();
 
@@ -255,8 +256,8 @@ bool TitleScreen::Logic() {
 // |							     Draw()										|
 // |----------------------------------------------------------------------------|
 // The draw function, which will be called by the main game loop.
-bool TitleScreen::Draw() {
-	DebugLog ("TitleScreen: Draw() called.", DB_GRAPHICS, 10);
+bool LevelScreen::Draw() {
+	DebugLog ("LevelScreen: Draw() called.", DB_GRAPHICS, 10);
 
     Screen::Draw();
 
@@ -267,8 +268,8 @@ bool TitleScreen::Draw() {
 // |							    OnLoad()									|
 // |----------------------------------------------------------------------------|
 // Called when the screen is loaded.
-bool TitleScreen::OnLoad() {
-	DebugLog("TitleScreen: OnLoad called");
+bool LevelScreen::OnLoad() {
+	DebugLog("LevelScreen: OnLoad called");
 
 	m_done = false;
 
@@ -279,9 +280,9 @@ bool TitleScreen::OnLoad() {
 // |							    OnExit()									|
 // |----------------------------------------------------------------------------|
 // Called when switching to a different screen
-bool TitleScreen::OnExit() {
+bool LevelScreen::OnExit() {
 
-	DebugLog ("TitleScreen: OnExit called.");
+	DebugLog ("LevelScreen: OnExit called.");
 
 	return true;
 }

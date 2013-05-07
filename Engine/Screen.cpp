@@ -211,39 +211,38 @@ bool Screen::Draw()
         m_downSampleFactor = 64;
         m_downSampleImage->SetTexture(m_glowMapTexture);
         DownSampleTexture();
-        BlurDownsampledTexture(10);
+        BlurDownsampledTexture(3);
         UpSampleTexture();
 
-        m_downSampleFactor = 32;
-        m_downSampleImage->SetTexture(m_upSampleTexture);
-        DownSampleTexture();
-        BlurDownsampledTexture(8);
-        UpSampleTexture();
+        //m_downSampleFactor = 32;
+        //m_downSampleImage->SetTexture(m_upSampleTexture);
+        //DownSampleTexture();
+        //BlurDownsampledTexture(1);
+        //UpSampleTexture();
 
-        m_downSampleFactor = 16;
-        m_downSampleImage->SetTexture(m_upSampleTexture);
-        DownSampleTexture();
-        BlurDownsampledTexture(6);
-        UpSampleTexture();
+        //m_downSampleFactor = 16;
+        //m_downSampleImage->SetTexture(m_upSampleTexture);
+        //DownSampleTexture();
+        //BlurDownsampledTexture(1);
+        //UpSampleTexture();
 
-        m_downSampleFactor = 8;
-        m_downSampleImage->SetTexture(m_upSampleTexture);
-        DownSampleTexture();
-        BlurDownsampledTexture(4);
-        UpSampleTexture();
+        //m_downSampleFactor = 8;
+        //m_downSampleImage->SetTexture(m_upSampleTexture);
+        //DownSampleTexture();
+        //BlurDownsampledTexture(1);
+        //UpSampleTexture();
 
-        m_downSampleFactor = 4;
-        m_downSampleImage->SetTexture(m_upSampleTexture);
-        DownSampleTexture();
-        BlurDownsampledTexture(2);
-        UpSampleTexture();
+        //m_downSampleFactor = 4;
+        //m_downSampleImage->SetTexture(m_upSampleTexture);
+        //DownSampleTexture();
+        //BlurDownsampledTexture(1);
+        //UpSampleTexture();
 
-        // Inner blur
-        m_downSampleFactor = 2;
-        m_downSampleImage->SetTexture(m_upSampleTexture);
-        DownSampleTexture();
-        BlurDownsampledTexture();
-        UpSampleTexture();
+        //m_downSampleFactor = 2;
+        //m_downSampleImage->SetTexture(m_upSampleTexture);
+        //DownSampleTexture();
+        //BlurDownsampledTexture();
+        //UpSampleTexture();
 
         // Combine the glow texture and the scene
         m_postProcessing->SetGlowStrength(3.0f);
