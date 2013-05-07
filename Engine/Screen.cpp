@@ -21,6 +21,7 @@ Screen::Screen() :
     m_done(0), 
     m_nextScreen(SCREEN_QUIT),
     m_renderTexture(0),
+    m_glowTexture(0),
     m_intermediate(0),
     m_downSampleTexture(0),
     m_postProcessing(0),
@@ -41,6 +42,10 @@ bool Screen::Initialize() {
     // Set up render texture
     m_renderTexture = new Texture;
     result = result && m_renderTexture->Initialize();
+
+    // Set up glow map texture
+    m_glowTexture = new Texture;
+    result = result && m_glowTexture->Initialize();
 
     // Set up post processing image
     m_postProcessing = new Image;
@@ -141,7 +146,13 @@ bool Screen::Draw()
          result = result && (*it)->Draw();
 
     // Apply Post-Processing
-    if (m_blur) Blur();
+    ApplyGlowMask();
+    if (m_blur) 
+    {
+        DownSampleTexture();
+        BlurDownsampledTexture();
+        UpSampleTexture();
+    }
 
     // Render the post-processed scene to the backbuffer
     m_postProcessing->Render();
@@ -155,14 +166,32 @@ bool Screen::Draw()
 
 
 // |----------------------------------------------------------------------------|
-// |                                  Blur                                      |
+// |                            ApplyGlowMask                                   |
 // |----------------------------------------------------------------------------|
-bool Screen::Blur()
+bool Screen::ApplyGlowMask()
 { 
-	DebugLog ("Screen: Blur() called.", DB_GRAPHICS, 10);
+	DebugLog ("Screen: DownSampleTexture() called.", DB_GRAPHICS, 10);
     bool result = true;
 
-    DownSampleTexture();
+    // Prepare the render to texture for rendering
+    m_glowTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+    m_postProcessing->SetTexture(m_renderTexture);
+    m_postProcessing->SetShader("GlowMap");
+    m_postProcessing->SetRenderToBackBuffer(false);
+    m_postProcessing->SetRenderTarget(m_glowTexture);
+    m_postProcessing->Render();
+
+    return result;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                                  Blur                                      |
+// |----------------------------------------------------------------------------|
+bool Screen::BlurDownsampledTexture()
+{ 
+	DebugLog ("Screen: BlurDownsampledTexture() called.", DB_GRAPHICS, 10);
+    bool result = true;
 
     // Prepare the render to texture for rendering
     m_intermediate->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
@@ -192,8 +221,6 @@ bool Screen::Blur()
     m_downSampleImage->SetRenderTarget(m_downSampleTexture);
     m_downSampleImage->Render();
     m_downSampleImage->SetReBlur(false);
-    
-    UpSampleTexture();
 
     return result;
 }
@@ -211,7 +238,7 @@ bool Screen::DownSampleTexture()
     m_downSampleTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
     m_downSampleTexture->SetWidth(SCREEN_WIDTH/m_downSampleFactor);
     m_downSampleTexture->SetHeight(SCREEN_HEIGHT/m_downSampleFactor);
-    m_downSampleImage->SetTexture(m_renderTexture);
+    m_downSampleImage->SetTexture(m_glowTexture);
     m_downSampleImage->SetShader("Texture");
     m_downSampleImage->SetRenderToBackBuffer(false);
     m_downSampleImage->SetRenderTarget(m_downSampleTexture);

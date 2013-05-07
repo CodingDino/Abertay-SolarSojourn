@@ -85,6 +85,7 @@
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="BlurShader.cpp" />
+    <ClCompile Include="GlowMapShader.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Coord.cpp" />
@@ -119,6 +120,7 @@
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="BlurShader.h" />
+    <ClInclude Include="GlowMapShader.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Coord.h" />
@@ -154,6 +156,8 @@
   <ItemGroup>
     <None Include="blur.ps" />
     <None Include="blur.vs" />
+    <None Include="glowmap.ps" />
+    <None Include="glowmap.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
     <None Include="texture.ps" />

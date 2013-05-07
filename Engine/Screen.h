@@ -62,7 +62,8 @@ protected:
     //|------------------------------Protected Functions------------------------|
 
     // PostProcessing
-    bool Blur();
+    bool ApplyGlowMask();
+    bool BlurDownsampledTexture();
 	bool DownSampleTexture();
 	bool UpSampleTexture();
 	
@@ -75,6 +76,7 @@ protected:
 
     // Render texture for post-processing
     Texture* m_renderTexture;
+    Texture* m_glowTexture;
     Texture* m_downSampleTexture;
     Texture* m_intermediate;
     Graphic* m_postProcessing;

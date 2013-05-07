@@ -42,6 +42,9 @@
     <Filter Include="Graphics\Shader Files\BlurShader">
       <UniqueIdentifier>{4ac081f2-8975-4137-a4ec-698f6c0cf8a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Shader Files\GlowMapShader">
+      <UniqueIdentifier>{b909c97d-7db3-4f14-81d0-f23ac80e6f69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -139,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="BlurShader.cpp">
       <Filter>Graphics\Shader Files\BlurShader</Filter>
+    </ClCompile>
+    <ClCompile Include="GlowMapShader.cpp">
+      <Filter>Graphics\Shader Files\GlowMapShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +251,9 @@
     <ClInclude Include="BlurShader.h">
       <Filter>Graphics\Shader Files\BlurShader</Filter>
     </ClInclude>
+    <ClInclude Include="GlowMapShader.h">
+      <Filter>Graphics\Shader Files\GlowMapShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="texture.ps">
@@ -264,6 +273,12 @@
     </None>
     <None Include="blur.vs">
       <Filter>Graphics\Shader Files\BlurShader</Filter>
+    </None>
+    <None Include="glowmap.ps">
+      <Filter>Graphics\Shader Files\GlowMapShader</Filter>
+    </None>
+    <None Include="glowmap.vs">
+      <Filter>Graphics\Shader Files\GlowMapShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

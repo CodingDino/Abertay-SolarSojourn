@@ -23,6 +23,7 @@ GraphicsManager::GraphicsManager() :
     m_textureShader(0),
     m_lightShader(0),
     m_blurShader(0),
+    m_glowMapShader(0),
     m_screen(0),
     m_screenCounter(0),
     m_screenWidth(0),
@@ -114,6 +115,12 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
         DebugPopup(L"Could not create BlurShader.");
         return false;
     }
+    m_glowMapShader = new GlowMapShader;
+    if(!m_glowMapShader)
+    {
+        DebugPopup(L"Could not create GlowMapShader.");
+        return false;
+    }
     
     // Initialize the shader objects.
     result = m_textureShader->Initialize();
@@ -132,6 +139,12 @@ bool GraphicsManager::Initialize(int screenWidth, int screenHeight)
     if(!result)
     {
         DebugPopup(L"Could not initialize BlurShader.");
+        return false;
+    }
+    result = m_glowMapShader->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize GlowMapShader.");
         return false;
     }
 
@@ -162,6 +175,12 @@ void GraphicsManager::Shutdown()
         m_blurShader->Shutdown();
         delete m_blurShader;
         m_blurShader = 0;
+    }
+    if(m_glowMapShader)
+    {
+        m_glowMapShader->Shutdown();
+        delete m_glowMapShader;
+        m_glowMapShader = 0;
     }
 
     // Release the camera object.
@@ -334,6 +353,10 @@ Shader* GraphicsManager::GetShader(const std::string key)
     else if (key == "Blur")
     {
         return m_blurShader;
+    }
+    else if (key == "GlowMap")
+    {
+        return m_glowMapShader;
     }
     else return 0;
 }
