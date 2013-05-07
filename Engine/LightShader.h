@@ -35,11 +35,8 @@ protected:
         D3DXMATRIX view;
         D3DXMATRIX projection;
 		D3DXVECTOR3 cameraPosition;
-		float padding;
+		float fogDensity;
 		D3DXVECTOR4 pointLightPosition[NUM_LIGHTS];
-		float fogStart;
-		float fogEnd;
-		float padding1, padding2;
     };
 
     struct PSBufferType

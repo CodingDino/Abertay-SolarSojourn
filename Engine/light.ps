@@ -114,7 +114,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
     color = saturate(color + specular);
 
     // Calculate the final color using the fog effect equation.
-    color = input.fogFactor * color + (1.0 - input.fogFactor) * fogColor;
+    color = input.fogFactor * fogColor + (1.0 - input.fogFactor) * color;
 
     return color;
 }

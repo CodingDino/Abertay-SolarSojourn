@@ -65,6 +65,10 @@ bool TitleScreen::Initialize() {
 
     // Set lighting
     LightManager::GetRef()->SetAmbient(0.15f,0.15f,0.15f);
+
+    // Set fog
+    LightManager::GetRef()->SetFogColor(0.8f,0.6f,0.6f);
+    LightManager::GetRef()->SetFogDensity(0.05f);
     
     // Set up camera
     m_camera = new MouseLookCamera;

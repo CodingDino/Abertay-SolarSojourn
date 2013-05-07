@@ -22,8 +22,7 @@ LightManager::LightManager() :
     m_diffuseColor(0.0f,0.0f,0.0f,1.0f),
     m_diffuseDirection(0.0f,0.0f,0.0f),
     m_fogColor(0.0f,0.0f,0.0f,1.0f),
-    m_fogStart(0.0f),
-    m_fogEnd(0.0f)
+    m_fogDensity(0.0f)
 {
 	DebugLog ("LightManager: object instantiated.");
 }

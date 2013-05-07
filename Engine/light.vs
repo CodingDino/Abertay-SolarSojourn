@@ -20,12 +20,8 @@ cbuffer MatrixBuffer
 	matrix viewMatrix;
 	matrix projectionMatrix;
     float3 cameraPosition;
-    float padding;
+    float fogDensity;
     float4 pointLightPosition[NUM_LIGHTS];
-    float fogStart;
-    float fogEnd;
-    float padding1;
-    float padding2;
 };
 
 // |----------------------------------------------------------------------------|
@@ -56,6 +52,7 @@ PixelInputType LightVertexShader(VertexInputType input)
 {
     PixelInputType output;
     float4 worldPosition;
+    float4 fogPosition;
     
     // Change the position vector to be 4 units for proper matrix calculations.
     input.position.w = 1.0f;
@@ -93,14 +90,13 @@ PixelInputType LightVertexShader(VertexInputType input)
         // Normalize the light position vectors.
         output.pointLightPos[i] = normalize(output.pointLightPos[i]);
     }
-
     
     // Calculate the camera position.
-    cameraPosition = mul(input.position, worldMatrix);
-    cameraPosition = mul(cameraPosition, viewMatrix);
+    fogPosition = mul(input.position, worldMatrix);
+    fogPosition = mul(fogPosition, viewMatrix);
 
     // Calculate linear fog.    
-    output.fogFactor = saturate((fogEnd - cameraPosition.z) / (fogEnd - fogStart));
-    
-    return output;
+    output.fogFactor = 1.0f - 1.0 / pow (2.71828, (fogPosition.z * (fogDensity / 10)));
+
+    return output; 
 }

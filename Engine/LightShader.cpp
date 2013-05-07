@@ -120,7 +120,6 @@ bool LightShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
     t_vsbuffer->view = viewMatrix;
     t_vsbuffer->projection = projectionMatrix;
     t_vsbuffer->cameraPosition = D3DXVECTOR3(camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
-    t_vsbuffer->padding = 0.0f;
     
     // Point Lights
     std::list<PointLight*> pointLights = LightManager::GetRef()->GetLights(graphic->GetPosition(),NUM_LIGHTS);
@@ -138,9 +137,7 @@ bool LightShader::SetVSBuffer(ID3D11DeviceContext* deviceContext,
     }
 
     // Fog
-    // TODO
-    t_vsbuffer->fogStart = 0.0f;
-    t_vsbuffer->fogEnd = 0.0f;
+    t_vsbuffer->fogDensity = LightManager::GetRef()->GetFogDensity();
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_vsBuffer, 0);
@@ -208,8 +205,7 @@ bool LightShader::SetPSBuffer(ID3D11DeviceContext* deviceContext,
     }
     
     // Fog Color
-    // TODO
-    t_psbuffer->fogColor = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+    t_psbuffer->fogColor = LightManager::GetRef()->GetFogColor();
 
  
 	// Unlock the constant buffer.

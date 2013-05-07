@@ -70,8 +70,7 @@ public:
     D3DXVECTOR4 GetDiffuseColor() {return m_diffuseColor;}
     D3DXVECTOR3 GetDiffuseDirection() {return m_diffuseDirection;}
     D3DXVECTOR4 GetFogColor() {return m_fogColor;}
-    float GetFogStart() {return m_fogStart;}
-    float GetFogEnd() {return m_fogEnd;}
+    float GetFogDensity() {return m_fogDensity;}
 
     // Setters
     void SetAmbient(float r, float g, float b) {m_ambient = D3DXVECTOR4(r,g,b,1.0f);}
@@ -79,8 +78,7 @@ public:
     void SetDiffuseDirection(float x, float y, float z) {m_diffuseDirection = D3DXVECTOR3(x,y,z);}
     void SetDiffuseDirection(Coord coord) {m_diffuseDirection = D3DXVECTOR3(coord.x,coord.y,coord.z);}
     void SetFogColor(float r, float g, float b) {m_fogColor = D3DXVECTOR4(r,g,b,1.0f);}
-    void SetFogStart(float val) {m_fogStart = val;}
-    void SetFogEnd(float val) {m_fogEnd = val;}
+    void SetFogDensity(float val) {m_fogDensity = val;}
 
     // Point light managers
     void AddLight(PointLight to_add);
@@ -102,7 +100,6 @@ private:
 
     // Fog
     D3DXVECTOR4 m_fogColor;
-    float m_fogStart;
-    float m_fogEnd;
+    float m_fogDensity;
 
 };
