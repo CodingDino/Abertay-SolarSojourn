@@ -18,6 +18,7 @@
 #include <list>
 #include "Image.h"
 #include "MouseLookCamera.h"
+#include "SkyBox.h"
 
 // |----------------------------------------------------------------------------|
 // |						  Class Definition: Screen							|
@@ -97,5 +98,7 @@ protected:
 
     // Special game objects
     GameObject* m_camera;
+    SkyBox* m_skybox;
+    SkyBox* m_sun;
 
 };

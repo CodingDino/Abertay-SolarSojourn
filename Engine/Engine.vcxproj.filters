@@ -152,6 +152,9 @@
     <ClCompile Include="GlowShader.cpp">
       <Filter>Graphics\Shader Files\GlowShader</Filter>
     </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Graphics\Graphic Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -262,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="GlowShader.h">
       <Filter>Graphics\Shader Files\GlowShader</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>Graphics\Graphic Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

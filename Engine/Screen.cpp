@@ -31,7 +31,9 @@ Screen::Screen() :
     m_blur(false),
     m_glow(false),
     m_downSampleFactor(4),
-    m_camera(0)
+    m_camera(0),
+    m_skybox(0),
+    m_sun(0)
 {
 }
 
@@ -82,6 +84,11 @@ bool Screen::Initialize() {
     m_upSampleTexture = new Texture;
     result = result && m_upSampleTexture->Initialize();
 
+    // Set up default skybox
+    m_skybox = new SkyBox;
+    m_skybox->Initialize();
+    m_skybox->SetRenderTarget(m_renderTexture);
+
     return result;
 }
 
@@ -118,6 +125,17 @@ bool Screen::Shutdown() {
     m_glowTexture = 0;
     delete m_upSampleTexture;
     m_upSampleTexture = 0;
+    
+    if(m_skybox)
+    {
+        delete m_skybox;
+        m_skybox = 0;
+    }
+    if(m_sun)
+    {
+        delete m_sun;
+        m_sun = 0;
+    }
 
     return result;
 }
@@ -153,6 +171,11 @@ bool Screen::Draw()
 
     // Prepare the render to texture for rendering
     m_renderTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
+
+    // Draw skybox
+    m_skybox->Render();
+    // Draw sun
+    if (m_sun) m_sun->Render();
 
     // Draw Background objects
     for (std::list<GameObject*>::iterator it=m_backgroundObjects.begin(); it != m_backgroundObjects.end(); ++it)

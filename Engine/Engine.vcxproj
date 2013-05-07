@@ -108,6 +108,7 @@
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Sentence.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Sentence.h" />

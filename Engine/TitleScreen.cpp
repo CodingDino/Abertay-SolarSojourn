@@ -64,35 +64,32 @@ bool TitleScreen::Initialize() {
     m_glow = true;
 
     // Set lighting
-    LightManager::GetRef()->SetAmbient(0.05f,0.05f,0.05f);
-    LightManager::GetRef()->SetDiffuseColor(0.7f,0.7f,0.7f);
-    LightManager::GetRef()->SetDiffuseDirection(1.0f,-0.5f,0.0f);
+    LightManager::GetRef()->SetAmbient(0.15f,0.15f,0.15f);
     
     // Set up camera
     m_camera = new MouseLookCamera;
     m_camera->SetPosition(Coord(0.0f, 0.0f, -10.0f));
 
+    // Set up skybox
+    m_skybox->SetTint(0.8f,0.6f,0.6f);
+
     // Set up sun
-    planet = new Planet;
-    planet->Initialize();
-    // Add graphic to game object
-    graphic = new Graphic;
-    graphic->SetTint(1.0f,1.0f,0.8f,1.0f);
-    graphic->SetRenderTarget(m_renderTexture);
-    graphic->SetShader("Texture");
-    graphic->Initialize();
-    planet->SetGraphic(graphic);
-    // Set up game object as planet
-    planet->SetOrbitRadius(0);
-    planet->SetOrbitSpeed(0.1f);
-    // Add planet to list
-    m_gameObjects.push_back(planet);
+    m_sun = new SkyBox;
+    m_sun->SetTint(1.0f,1.0f,0.8f,1.0f);
+    m_sun->SetRenderTarget(m_renderTexture);
+    m_sun->SetShader("Texture");
+    m_sun->SetModel("sphere");
+    m_sun->Initialize();
+    m_sun->SetPosition(Coord(10.0f,5.0f,10.0f));
+    float intensity = 0.07;
+    LightManager::GetRef()->SetDiffuseColor(m_sun->GetTintR(),m_sun->GetTintG(),m_sun->GetTintB());
+    LightManager::GetRef()->SetDiffuseDirection(-1*intensity*m_sun->GetPosition().x,-1*intensity*m_sun->GetPosition().y,-1*intensity*m_sun->GetPosition().z);
 
     // Sun Light
     pLight.SetPosition(Coord(0.0f,0.0f,0.0f));
     pLight.SetColor(1.0f,1.0f,1.0f,1.0f);
     pLight.SetBrightness(3.0f);
-    LightManager::GetRef()->AddLight(pLight);
+    //LightManager::GetRef()->AddLight(pLight);
 
     // Set up planet
     planet = new Planet;
@@ -103,7 +100,7 @@ bool TitleScreen::Initialize() {
     graphic->SetRenderTarget(m_renderTexture);
     graphic->SetShader("Light");
     graphic->Initialize();
-    graphic->SetReflectiveness(0.9f);
+    graphic->SetReflectiveness(0.98f);
     planet->SetGraphic(graphic);
     // Set up transforms
     graphic->SetScale(Coord(0.2f,0.2f,0.2f));
@@ -111,7 +108,7 @@ bool TitleScreen::Initialize() {
     planet->SetOrbitRadius(2.0);
     planet->SetOrbitSpeed(1.0f);
     // Add planet to list
-    m_gameObjects.push_back(planet);
+    //m_gameObjects.push_back(planet);
 
     // Set up planet "health bar"
     planet = new Planet;
@@ -132,16 +129,17 @@ bool TitleScreen::Initialize() {
     planet->SetOrbitSpeed(1.0f);
     planet->SetOrbitCenter(Coord(0.0f,0.3f,0.0f));
     // Add planet to array
-    m_overlayObjects.push_back(planet);
+    //m_overlayObjects.push_back(planet);
  
 
     // Set up floor
     gameObject = new GameObject;
     gameObject->Initialize();
     graphic = new Graphic;
-    graphic->SetTint(0.5f,0.5f,0.3f,1.0f);
+    graphic->SetTint(0.8f,0.6f,0.4f,1.0f);
     graphic->SetShader("Light");
     graphic->SetRenderTarget(m_renderTexture);
+    graphic->SetReflectiveness(0.0f);
     // Create mesh
     Mesh* mesh = new Mesh;
     mesh->Initialize(1000,1000,10.0f);
@@ -165,20 +163,23 @@ bool TitleScreen::Initialize() {
     graphic->SetTexture("particle_point");
     graphic->Initialize();
     //graphic->SetRenderTarget(m_renderTexture);
-    graphic->SetRenderToBackBuffer(true);
+    graphic->SetRenderToBackBuffer(false);
+    graphic->SetRenderTarget(m_renderTexture);
     // Set up transforms
     graphic->SetScale(Coord(0.005f,0.005f,0.005f));
     // Add graphic to game object
     particleSystem->SetGraphic(graphic);
     particleSystem->SetParticleVelocity(Coord(0.0f,0.0f,0.0f));
-    particleSystem->SetParticleVelocityVariation(Coord(1.0f,0.5f,1.0f));
-    particleSystem->SetParticleSpawnFrequency(1.0f);
+    particleSystem->SetParticleVelocityVariation(Coord(1.0f,1.0f,1.0f));
+    particleSystem->SetParticleSpawnFrequency(0.1f);
+    particleSystem->SetParticleDeviation(Coord(10.0f,10.0f,10.0f));
     particleSystem->SetParticleLifetime(100.0f);
     particleSystem->SetParticleFadeout(5.0f);
-    particleSystem->SetMaxParticles(100);
+    particleSystem->SetMaxParticles(1000);
     particleSystem->SetTint(1.0f,1.0f,1.0f);
     particleSystem->SetTintVar(0.5f,0.5f,0.5f);
     // Add to list
+    m_gameObjects.push_back(particleSystem);
     //m_overlayObjects.push_back(particleSystem);
 
 
