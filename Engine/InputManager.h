@@ -71,9 +71,12 @@ public:
     bool GetButtonPressed(BUTTON_IDENT toCheck);
     bool GetButtonReleased(BUTTON_IDENT toCheck);
 
-    // Gets mouse position
+    // Gets mouse information
     void GetMouseLocation(int& mouseX, int& mouseY);
     void GetMouseChange(int& mouseX, int& mouseY);
+	bool IsMouseButtonDown(int button) {if (button >= 0 && button < 4) return m_mouseDown; else return false;}
+	bool IsMouseButtonPressed(int button) {if (button >= 0 && button < 4) return m_mousePressed; else return false;}
+
 
 private:
 
@@ -105,9 +108,10 @@ private:
     // screen dimensions for use with mouse
     int m_screenWidth, m_screenHeight;
 
-    // mouse coordinates
+    // mouse information
     int m_mouseX, m_mouseY;
     int m_mouseChangeX, m_mouseChangeY;
+	bool m_mouseDown, m_mousePressed;
 
     // Keybindings
     int m_keybindings[NUM_BUTTONS];

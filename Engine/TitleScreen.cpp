@@ -56,8 +56,8 @@ bool TitleScreen::Initialize() {
     ParticleSystem* particleSystem;
     Text* text;
 
-    // Set next screen to SCREEN_QUIT
-	SetNextScreen(SCREEN_QUIT);
+    // Set next screen to SCREEN_LEVEL
+	SetNextScreen(SCREEN_LEVEL);
 
     // Set Post-Processing Effects
     m_glow = true;
@@ -69,6 +69,7 @@ bool TitleScreen::Initialize() {
     m_camera = new MouseLookCamera;
     m_camera->SetPosition(Coord(0.0f, 0.0f, -10.0f));
 	((MouseLookCamera*)m_camera)->SetSpeed(0.0f);
+	((MouseLookCamera*)m_camera)->SetSensitivity(0.0f);
 
     // Set up skybox
     m_skybox->SetTexture("skybox_starfield");
@@ -82,7 +83,7 @@ bool TitleScreen::Initialize() {
     planet = new Planet;
     planet->Initialize();
 	planet->SetGraphic(graphic);
-    planet->SetOrbitCenter(Coord(-5.0f,-2.0f,2.0f));
+    planet->SetOrbitCenter(Coord(-5.5f,-2.5f,0.0f));
     m_gameObjects.push_back(planet);
 	GameObject* sun = planet;
 
@@ -130,9 +131,100 @@ bool TitleScreen::Initialize() {
     m_particles = particleSystem;
     m_gameObjects.push_back(particleSystem);
 
+	
+
+    // Title display
+    text = new Text;
+    text->SetFont("space_age_regular_128");
+    text->Initialize();
+    text->SetRenderToBackBuffer(true);
+	text->SetText("SOLAR");
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(text);
+	gameObject->SetPosition(Coord(100.0f,120.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
+	//
+    text = new Text;
+    text->SetFont("space_age_regular_128");
+    text->Initialize();
+    text->SetRenderToBackBuffer(true);
+	text->SetText("SOJOURN");
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(text);
+	gameObject->SetPosition(Coord(100.0f,240.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
+	//
+    text = new Text;
+    text->SetFont("radio_space_regular_20");
+    text->Initialize();
+    text->SetRenderToBackBuffer(true);
+	text->SetText("created by Sarah Herzog");
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(text);
+	gameObject->SetPosition(Coord(100.0f,400.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
+
+	// Instructions display
+    text = new Text;
+    text->SetFont("radio_space_regular_20");
+    text->Initialize();
+    text->SetRenderToBackBuffer(true);
+	text->SetText("Use the mouse to look around");
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(text);
+	gameObject->SetPosition(Coord(300.0f,500.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
+	//
+    text = new Text;
+    text->SetFont("radio_space_regular_20");
+    text->Initialize();
+    text->SetRenderToBackBuffer(true);
+	text->SetText("Use WASD to move and space/alt to change altitude");
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(text);
+	gameObject->SetPosition(Coord(300.0f,530.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
+	//
+    text = new Text;
+    text->SetFont("radio_space_regular_20");
+    text->Initialize();
+    text->SetRenderToBackBuffer(true);
+	text->SetText("Left mouse button to shoot");
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(text);
+	gameObject->SetPosition(Coord(300.0f,560.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
+	//
+    text = new Text;
+    text->SetFont("radio_space_regular_20");
+    text->Initialize();
+    text->SetRenderToBackBuffer(true);
+	text->SetText("Shoot all the objectives before time runs out");
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(text);
+	gameObject->SetPosition(Coord(300.0f,590.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
+	//
+    text = new Text;
+    text->SetFont("radio_space_regular_20");
+    text->Initialize();
+    text->SetRenderToBackBuffer(true);
+	text->SetText("Click to start");
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(text);
+	gameObject->SetPosition(Coord(600.0f,800.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
+
 	// Temporarily Disable Post-Processing
 	DisablePostProcessing();
-	//EnablePostProcessing();
 
 	DebugLog ("TitleScreen: object initialized.");
 	return true;
@@ -161,6 +253,11 @@ bool TitleScreen::Logic() {
     // Update particle location
     if (m_particles && m_camera) m_particles->SetPosition(m_camera->GetPosition());
 
+	// Check for mouse click, move to next screen
+	if(InputManager::GetRef()->IsMouseButtonDown(1))
+	{
+		m_done = true;
+	}
 	return true;
 }
 
