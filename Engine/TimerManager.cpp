@@ -20,7 +20,10 @@ TimerManager::TimerManager() :
     m_frequency(0),
     m_ticksPerMs(0),
     m_startTime(0),
-    m_frameTime(0)
+    m_frameTime(0),
+    m_frameCount(0),
+    m_fps(0),
+    m_fpsCurrentTime(0)
 {
 }
 
@@ -57,6 +60,9 @@ bool TimerManager::Initialize()
 	m_ticksPerMs = (float)(m_frequency / 1000);
 
 	QueryPerformanceCounter((LARGE_INTEGER*)&m_startTime);
+	
+	// Initialize fps start time
+	m_fpsCurrentTime = 0;
 
 	return true;
 }
@@ -87,15 +93,18 @@ bool TimerManager::Frame()
 	m_frameTime = timeDifference / m_ticksPerMs;
 
 	m_startTime = currentTime;
+	
+	// FPS calculations
+	m_frameCount++;
+	m_fpsCurrentTime += m_frameTime;
+
+	if(m_fpsCurrentTime >= 1000)
+	{
+		m_fps = m_frameCount;
+		m_frameCount = 0;
+		
+		m_fpsCurrentTime = 0;
+	}
 
 	return true;
-}
-
-
-// |----------------------------------------------------------------------------|
-// |								 GetTime									|
-// |----------------------------------------------------------------------------|
-float TimerManager::GetTime()
-{
-	return m_frameTime;
 }

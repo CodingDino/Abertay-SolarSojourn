@@ -37,7 +37,8 @@ public:
     bool Frame();
 
     // Getter functions
-    float GetTime();
+    float GetTime(){return m_frameTime;}
+	int GetFPS() {return m_fps;}
     
 private:
 
@@ -47,11 +48,14 @@ private:
 
     //|-----------------------------Private Data Members------------------------|
     
-    // Screens
+    // Timers
 	INT64 m_frequency;
 	float m_ticksPerMs;
 	INT64 m_startTime;
 	float m_frameTime;
 
-
+	// FPS counting
+	int m_frameCount;
+	int m_fps;
+	float m_fpsCurrentTime;
 };

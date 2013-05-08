@@ -58,7 +58,5 @@ protected:
     //|----------------------------Protected Data Members-----------------------|
     
     // Special game objects
-    Text* m_position;
-    Text* m_rotation;
     GameObject* m_particles;
 };

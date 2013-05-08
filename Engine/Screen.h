@@ -19,6 +19,7 @@
 #include "Image.h"
 #include "MouseLookCamera.h"
 #include "SkyBox.h"
+#include "Text.h"
 
 // |----------------------------------------------------------------------------|
 // |						  Class Definition: Screen							|
@@ -57,6 +58,10 @@ public:
 	// Setetter Functions
 	void virtual SetNextScreen(SCREEN new_next) { m_nextScreen= new_next; }
 	void virtual SetDone(bool new_done) { m_done = new_done; }
+
+	// Enable / Disable post processing
+	void EnablePostProcessing();
+	void DisablePostProcessing();
 	
 protected:
     
@@ -87,6 +92,7 @@ protected:
     Graphic* m_downSampleImage;
 
     // Post processing options
+	bool m_postProcessingEnabled;
     bool m_blur;
     bool m_glow;
     int m_downSampleFactor;
@@ -100,5 +106,9 @@ protected:
     GameObject* m_camera;
     SkyBox* m_skybox;
     SkyBox* m_sun;
+    Text* m_position;
+    Text* m_rotation;
+    Text* m_fpsDisplay;
+    Text* m_cpuDisplay;
 
 };

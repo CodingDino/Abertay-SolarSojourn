@@ -28,11 +28,14 @@ Screen::Screen() :
     m_upSampleTexture(0),
     m_postProcessing(0),
     m_downSampleImage(0),
+	m_postProcessingEnabled(true),
     m_blur(false),
     m_glow(false),
     m_downSampleFactor(4),
     m_camera(0),
     m_skybox(0),
+    m_position(0),
+    m_rotation(0),
     m_sun(0)
 {
 }
@@ -42,7 +45,10 @@ Screen::Screen() :
 // |                              Initialize                                    |
 // |----------------------------------------------------------------------------|
 bool Screen::Initialize() {
+
+    // Define Variables
     bool result = true;
+    GameObject* gameObject;
 
     // Set up render texture
     m_renderTexture = new Texture;
@@ -87,7 +93,48 @@ bool Screen::Initialize() {
     // Set up default skybox
     m_skybox = new SkyBox;
     m_skybox->Initialize();
-    m_skybox->SetRenderTarget(m_renderTexture);
+    //m_skybox->SetRenderTarget(m_renderTexture);
+    m_skybox->SetRenderToBackBuffer(true);
+	
+    // Coordinate display
+    m_position = new Text;
+    m_position->SetFont("radio_space_regular_20");
+    m_position->Initialize();
+    m_position->SetRenderToBackBuffer(true);
+	if (m_camera)
+		m_position->SetText(("pos: "+m_camera->GetPosition().ToString()).c_str());
+    // Set up game object
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(m_position);
+    m_overlayObjects.push_back(gameObject);
+
+    // Rotation display
+    m_rotation = new Text;
+    m_rotation->SetFont("radio_space_regular_20");
+    m_rotation->Initialize();
+    m_rotation->SetRenderToBackBuffer(true);
+	if (m_camera)
+		m_rotation->SetText(("rot: "+m_camera->GetOrientation().ToString()).c_str());
+    // Set up game object
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(m_rotation);
+	gameObject->SetPosition(Coord(0.0f,30.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
+
+    // FPS display
+    m_fpsDisplay = new Text;
+    m_fpsDisplay->SetFont("radio_space_regular_20");
+    m_fpsDisplay->Initialize();
+    m_fpsDisplay->SetRenderToBackBuffer(true);
+	m_fpsDisplay->SetText("fps: 0");
+    // Set up game object
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(m_fpsDisplay);
+	gameObject->SetPosition(Coord(0.0f,60.0f,0.0f));
+    m_overlayObjects.push_back(gameObject);
 
     return result;
 }
@@ -148,7 +195,8 @@ bool Screen::Logic()
 { 
     bool result = true;
 
-    m_camera->Logic();
+    if(m_camera)
+		m_camera->Logic();
 
     for (std::list<GameObject*>::iterator it=m_backgroundObjects.begin(); it != m_backgroundObjects.end(); ++it)
          result = result && (*it)->Logic();
@@ -156,7 +204,21 @@ bool Screen::Logic()
          result = result && (*it)->Logic();
     for (std::list<GameObject*>::iterator it=m_overlayObjects.begin(); it != m_overlayObjects.end(); ++it)
          result = result && (*it)->Logic();
-
+	
+    // Update position / rotation readout
+	if (m_camera && m_position && m_rotation)
+	{
+		m_position->SetText(("pos: "+m_camera->GetPosition().ToString()).c_str());
+		m_rotation->SetText(("rot: "+m_camera->GetOrientation().ToString()).c_str());
+	}
+	// Update fps
+	if (m_fpsDisplay)
+	{
+		std::string string = "";
+		string += "fps: ";
+		string += std::to_string(static_cast<long long>(TimerManager::GetRef()->GetFPS()));
+		m_fpsDisplay->SetText(string.c_str());
+	}
     return result;
 }
 
@@ -173,7 +235,7 @@ bool Screen::Draw()
     m_renderTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
 
     // Draw skybox
-    m_skybox->Render();
+    if (m_skybox) m_skybox->Render();
     // Draw sun
     if (m_sun) m_sun->Render();
 
@@ -186,11 +248,14 @@ bool Screen::Draw()
          result = result && (*it)->Draw();
 
     // Apply Post-Processing
-    if (m_blur) // Full-screen blur
+    if (m_postProcessingEnabled && m_blur) // Full-screen blur
     {
-
-        // blur from the glow mapped texture
+        // Blur
+        m_downSampleFactor = 2;
         m_downSampleImage->SetTexture(m_renderTexture);
+        DownSampleTexture();
+        BlurDownsampledTexture(1);
+        UpSampleTexture();
 
         // Render the upsampled texture back to the to_render texture
         m_renderTexture->ClearRenderTarget(0.0f,0.0f,0.0f,0.0f);
@@ -203,7 +268,7 @@ bool Screen::Draw()
         m_postProcessing->SetRenderTarget(0);
         m_postProcessing->SetRenderToBackBuffer(true);  
     }
-    if (m_glow) // Glow in bright items
+    if (m_postProcessingEnabled && m_glow) // Glow in bright items
     {
         ApplyGlowMask();
 
@@ -211,38 +276,8 @@ bool Screen::Draw()
         m_downSampleFactor = 64;
         m_downSampleImage->SetTexture(m_glowMapTexture);
         DownSampleTexture();
-        BlurDownsampledTexture(3);
+        BlurDownsampledTexture(1);
         UpSampleTexture();
-
-        //m_downSampleFactor = 32;
-        //m_downSampleImage->SetTexture(m_upSampleTexture);
-        //DownSampleTexture();
-        //BlurDownsampledTexture(1);
-        //UpSampleTexture();
-
-        //m_downSampleFactor = 16;
-        //m_downSampleImage->SetTexture(m_upSampleTexture);
-        //DownSampleTexture();
-        //BlurDownsampledTexture(1);
-        //UpSampleTexture();
-
-        //m_downSampleFactor = 8;
-        //m_downSampleImage->SetTexture(m_upSampleTexture);
-        //DownSampleTexture();
-        //BlurDownsampledTexture(1);
-        //UpSampleTexture();
-
-        //m_downSampleFactor = 4;
-        //m_downSampleImage->SetTexture(m_upSampleTexture);
-        //DownSampleTexture();
-        //BlurDownsampledTexture(1);
-        //UpSampleTexture();
-
-        //m_downSampleFactor = 2;
-        //m_downSampleImage->SetTexture(m_upSampleTexture);
-        //DownSampleTexture();
-        //BlurDownsampledTexture();
-        //UpSampleTexture();
 
         // Combine the glow texture and the scene
         m_postProcessing->SetGlowStrength(3.0f);
@@ -262,13 +297,90 @@ bool Screen::Draw()
     }
 
     // Render the post-processed scene to the backbuffer
-    m_postProcessing->Render();
+    if (m_postProcessingEnabled) 
+		m_postProcessing->Render();
 
     // Draw Overlay
     for (std::list<GameObject*>::iterator it=m_overlayObjects.begin(); it != m_overlayObjects.end(); ++it)
          result = result && (*it)->Draw();
 
     return result;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                            EnablePostProcessing                            |
+// |----------------------------------------------------------------------------|
+void Screen::EnablePostProcessing()
+{ 
+	DebugLog ("Screen: EnablePostProcessing() called.", DB_GRAPHICS, 1);
+	
+	m_postProcessingEnabled = true;
+
+	// Skybox
+    if (m_skybox) 
+	{
+    	m_skybox->SetRenderTarget(m_renderTexture);
+		m_skybox->SetRenderToBackBuffer(false);
+	}
+	// Sun
+    if (m_sun) 
+	{
+    	m_sun->SetRenderTarget(m_renderTexture);
+		m_sun->SetRenderToBackBuffer(false);
+	}
+
+    // Background objects
+    for (std::list<GameObject*>::iterator it=m_backgroundObjects.begin(); it != m_backgroundObjects.end(); ++it)
+    {
+    	(*it)->GetGraphic()->SetRenderTarget(m_renderTexture);
+		(*it)->GetGraphic()->SetRenderToBackBuffer(false);
+	}
+
+    // main objects
+    for (std::list<GameObject*>::iterator it=m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
+    {
+    	(*it)->GetGraphic()->SetRenderTarget(m_renderTexture);
+		(*it)->GetGraphic()->SetRenderToBackBuffer(false);
+	}
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                           DisablePostProcessing                            |
+// |----------------------------------------------------------------------------|
+void Screen::DisablePostProcessing()
+{ 
+	DebugLog ("Screen: DisablePostProcessing() called.", DB_GRAPHICS, 1);
+
+	m_postProcessingEnabled = false;
+
+	// Skybox
+    if (m_skybox) 
+	{
+    	m_skybox->SetRenderTarget(0);
+		m_skybox->SetRenderToBackBuffer(true);
+	}
+	// Sun
+    if (m_sun) 
+	{
+    	m_sun->SetRenderTarget(0);
+		m_sun->SetRenderToBackBuffer(true);
+	}
+
+    // Background objects
+    for (std::list<GameObject*>::iterator it=m_backgroundObjects.begin(); it != m_backgroundObjects.end(); ++it)
+    {
+    	(*it)->GetGraphic()->SetRenderTarget(0);
+		(*it)->GetGraphic()->SetRenderToBackBuffer(true);
+	}
+
+    // main objects
+    for (std::list<GameObject*>::iterator it=m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
+    {
+    	(*it)->GetGraphic()->SetRenderTarget(0);
+		(*it)->GetGraphic()->SetRenderToBackBuffer(true);
+	}
 }
 
 

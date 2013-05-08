@@ -41,6 +41,10 @@ public:
     // Renders camera
     bool virtual Draw();
 
+	// Setters
+	void SetSpeed(float val) { m_speed = val; }
+	void SetSensitivity(float val) { m_mouseSensitivity = val; }
+
 protected:
     
     //|---------------------------Protected Data Members-----------------------|
