@@ -82,6 +82,7 @@ protected:
     int m_meshWidth;
     int m_meshLength;
     float m_meshHeight;
+    float m_quadSize;
     HeightMapType* m_heightMap;
 
     int m_textureRepeat;

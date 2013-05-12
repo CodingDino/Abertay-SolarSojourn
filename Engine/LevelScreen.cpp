@@ -67,7 +67,7 @@ bool LevelScreen::Initialize() {
 
     // Set fog
     LightManager::GetRef()->SetFogColor(0.8f,0.6f,0.6f);
-    LightManager::GetRef()->SetFogDensity(0.07f);
+    LightManager::GetRef()->SetFogDensity(0.03f);
     
     // Set up camera
     m_camera = new MouseLookCamera;
@@ -98,7 +98,7 @@ bool LevelScreen::Initialize() {
     graphic->SetTint(0.8f,0.6f,0.4f,1.0f);
     graphic->SetShader("Light");
     Mesh* mesh = new Mesh;
-    mesh->Initialize(100,100,10.0f);
+    mesh->Initialize(300,300,10.0f);
     graphic->SetModel(mesh);
     graphic->Initialize();
     gameObject->SetGraphic(graphic);
@@ -126,8 +126,8 @@ bool LevelScreen::Initialize() {
     particleSystem->SetMaxParticles(100);
     particleSystem->SetTint(1.0f,1.0f,1.0f);
     particleSystem->SetTintVar(0.5f,0.5f,0.5f);
-    //m_particles = particleSystem;
-    //m_gameObjects.push_back(particleSystem);
+    m_particles = particleSystem;
+    m_gameObjects.push_back(particleSystem);
 
 	// Temporarily Disable Post-Processing
 	DisablePostProcessing();
@@ -157,7 +157,7 @@ bool LevelScreen::Logic() {
     Screen::Logic();
 
     // Update coord location
-    if (m_particles)
+    if (m_particles && m_camera)
 		m_particles->SetPosition(m_camera->GetPosition());
 
 	return true;

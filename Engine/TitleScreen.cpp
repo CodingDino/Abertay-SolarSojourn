@@ -60,7 +60,7 @@ bool TitleScreen::Initialize() {
 	SetNextScreen(SCREEN_LEVEL);
 
     // Set Post-Processing Effects
-    m_glow = true;
+    m_glow = false;
 
     // Set lighting
     LightManager::GetRef()->SetAmbient(0.05f,0.05f,0.05f);
@@ -74,39 +74,63 @@ bool TitleScreen::Initialize() {
     // Set up skybox
     m_skybox->SetTexture("skybox_starfield");
 
-    // Set up sun
+    // Set up ship
 	graphic = new Graphic;
     graphic->SetTint(1.0f,1.0f,0.8f,1.0f);
     graphic->SetShader("Texture");
-    graphic->SetModel("sphere");
-    graphic->Initialize();
-    planet = new Planet;
-    planet->Initialize();
-	planet->SetGraphic(graphic);
-    planet->SetOrbitCenter(Coord(-5.5f,-2.5f,0.0f));
-    m_gameObjects.push_back(planet);
-	GameObject* sun = planet;
-
-    // Sun Light
-    pLight.SetPosition(planet->GetOrbitCenter());
-    pLight.SetColor(graphic->GetTintR(),graphic->GetTintG(),graphic->GetTintB(),1.0f);
-    pLight.SetBrightness(10.0f);
-    LightManager::GetRef()->AddLight(pLight);
-
-    // Set up planet
-    graphic = new Graphic;
     graphic->SetShader("Light");
-	graphic->SetTexture("planet_02_venus");
-    graphic->SetReflectiveness(0.98f);
-    graphic->SetScale(Coord(0.2f,0.2f,0.2f));
+	graphic->SetTexture("shiptexture");
+    graphic->SetModel("ship");
+    graphic->SetScale(Coord(0.01f,0.01f,0.01f));
     graphic->Initialize();
-    planet = new Planet;
-    planet->Initialize();
-    planet->SetGraphic(graphic);
-    planet->SetOrbitRadius(1.5);
-    planet->SetOrbitSpeed(1.0f);
-	planet->SetOrbitCenter(sun);
-    m_gameObjects.push_back(planet);
+    gameObject = new GameObject;
+    gameObject->Initialize();
+	gameObject->SetGraphic(graphic);
+    gameObject->SetPosition(Coord(-5.0f,-2.5f,0.0f));
+    gameObject->SetOrientation(Coord(0.0f,-1*(3.14f/6.0f),0.0f));
+    m_gameObjects.push_back(gameObject);
+    // Set up left thruster
+    particleSystem = new ParticleSystem;
+    particleSystem->Initialize();
+    graphic = new Billboard;
+    graphic->SetShader("Texture");
+    graphic->SetTexture("particle_point");
+    graphic->SetAlphaBlend(true);
+    graphic->SetScale(Coord(0.01f,0.01f,0.01f));
+    graphic->Initialize();
+    particleSystem->SetGraphic(graphic);
+    particleSystem->SetPosition(Coord(-5.5f,-2.8f,-0.8f));
+    particleSystem->SetParticleVelocity(Coord(0.0f,-0.5f,-2.0f));
+    particleSystem->SetParticleVelocityVariation(Coord(0.5f,0.5f,0.5f));
+    particleSystem->SetParticleSpawnFrequency(0.01f);
+    particleSystem->SetParticleDeviation(Coord(0.0f,0.0f,0.0f));
+    particleSystem->SetParticleLifetime(0.5f);
+    particleSystem->SetParticleFadeout(0.2f);
+    particleSystem->SetMaxParticles(100);
+    particleSystem->SetTint(0.8f,0.9f,1.0f);
+    particleSystem->SetTintVar(0.2f,0.2f,0.2f);
+    m_gameObjects.push_back(particleSystem);
+    // Set up right thruster
+    particleSystem = new ParticleSystem;
+    particleSystem->Initialize();
+    graphic = new Billboard;
+    graphic->SetShader("Texture");
+    graphic->SetTexture("particle_point");
+    graphic->SetAlphaBlend(true);
+    graphic->SetScale(Coord(0.01f,0.01f,0.01f));
+    graphic->Initialize();
+    particleSystem->SetGraphic(graphic);
+    particleSystem->SetPosition(Coord(-4.35f,-2.8f,-0.7f));
+    particleSystem->SetParticleVelocity(Coord(0.0f,-0.5f,-2.0f));
+    particleSystem->SetParticleVelocityVariation(Coord(0.5f,0.5f,0.5f));
+    particleSystem->SetParticleSpawnFrequency(0.001f);
+    particleSystem->SetParticleDeviation(Coord(0.0f,0.0f,0.0f));
+    particleSystem->SetParticleLifetime(0.5f);
+    particleSystem->SetParticleFadeout(0.2f);
+    particleSystem->SetMaxParticles(100);
+    particleSystem->SetTint(0.8f,0.9f,1.0f);
+    particleSystem->SetTintVar(0.2f,0.2f,0.2f);
+    m_gameObjects.push_back(particleSystem);
     
     // Set up particle system
     particleSystem = new ParticleSystem;

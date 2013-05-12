@@ -20,6 +20,7 @@ Mesh::Mesh() :
     m_meshWidth(0),
     m_meshLength(0),
     m_meshHeight(0),
+    m_quadSize(0),
     m_heightMap(0),
     m_textureRepeat(0),
     Model()
@@ -49,6 +50,9 @@ bool Mesh::Initialize()
 {
 	DebugLog ("Mesh::Initialize() called.", DB_GRAPHICS, 1);
 	bool result;
+
+	// Set quad size (determines overal size of mesh)
+	m_quadSize = 8.0f;
 
     // Set texture repeat if not provided
     if(!m_textureRepeat) m_textureRepeat = ((m_meshWidth+m_meshLength)/2)/4;
@@ -258,8 +262,8 @@ void Mesh::InitializeHeightMap()
 {
 	int i, j, index;
     // Initialize starting position
-    float startX = 0.0f - m_meshWidth/2;
-    float startZ = 0.0f - m_meshLength/2;
+    float startX = 0.0f - m_quadSize*m_meshWidth/2;
+    float startZ = 0.0f - m_quadSize*m_meshLength/2;
 
     m_heightMap = new HeightMapType[m_meshWidth*m_meshLength];
     
@@ -270,9 +274,9 @@ void Mesh::InitializeHeightMap()
 		{
 			index = (m_meshWidth * j) + i;
 
-			m_heightMap[index].x = startX+(float)i;
+			m_heightMap[index].x = startX+(float)i*m_quadSize;
 			m_heightMap[index].y = (float)0;
-			m_heightMap[index].z = startZ+(float)j;
+			m_heightMap[index].z = startZ+(float)j*m_quadSize;
 
 			m_heightMap[index].nx = (float)0;
 			m_heightMap[index].ny = (float)1;
@@ -322,7 +326,7 @@ void Mesh::PerlinNoiseHeightMap()
 		{
 			index = (m_meshLength * j) + i;
 
-			m_heightMap[index].y = 4*exp(2*libnoisePerlin.GetValue (m_heightMap[index].x/200,m_heightMap[index].z/200,0.5))-8;
+			m_heightMap[index].y = 4*exp(3*libnoisePerlin.GetValue (m_heightMap[index].x/600,m_heightMap[index].z/600,0.5))-8;
 		}
 	}
 }
