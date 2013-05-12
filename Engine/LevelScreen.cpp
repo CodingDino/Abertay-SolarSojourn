@@ -104,7 +104,12 @@ bool LevelScreen::Initialize() {
     gameObject->SetGraphic(graphic);
     gameObject->SetPosition(Coord(0.0f,-5.0f,0.0f));
     m_gameObjects.push_back(gameObject);
-    
+
+	// Set up player
+	gameObject = new Player;
+    gameObject->Initialize();
+    m_gameObjects.push_back(gameObject);
+
     // Set up particle system
     particleSystem = new ParticleSystem;
     particleSystem->Initialize();

@@ -77,9 +77,6 @@ bool MouseLookCamera::Logic() {
     // Get mouse input for orientation
     int mouseX, mouseY;
     InputManager::GetRef()->GetMouseChange(mouseX, mouseY);
-	// TODO: Change to setting rotational velocity, automatically moves and stops.
-	// TODO: Stop mouselook at set angles
-	// TODO: This just turns x / y based on origin, need to rotate based on current orientation in space.
     m_orientation.x += m_mouseSensitivity * mouseY * time;
     m_orientation.y += m_mouseSensitivity * mouseX * time;
 
@@ -109,9 +106,6 @@ bool MouseLookCamera::Logic() {
 	else if(InputManager::GetRef()->GetButtonDown(BUTTON_DESCEND))
 		up = -1;
 	
-	// TODO: When strafing left or right, roll left or right slightly.
-    // TODO: Set camera position
-    // TODO: Scale by elapsed time
     Coord vel = Coord(
 		forward * sin(m_orientation.y * PI / 180) 
             + right * sin(PI / 2 + m_orientation.y * PI / 180),
@@ -119,9 +113,6 @@ bool MouseLookCamera::Logic() {
             + up,
 		forward * cos(m_orientation.y * PI / 180) * cos(m_orientation.x * PI / 180)
             + right * cos(PI / 2 + m_orientation.y * PI / 180) );
-    // TODO: Normallization not working?
-    //float velMag = sqrt (vel.x * vel.x + vel.y * vel.y + vel.z * vel.z);
-    //vel /= velMag;
     vel *= m_speed * time;
 	m_linearVelocity = vel;
 	m_position += m_linearVelocity; 

@@ -38,7 +38,7 @@ public:
         m_shader(0),
         m_renderTarget(0),
         m_glowTexture(0),
-        m_renderToBackBuffer(false),
+        m_renderToBackBuffer(true),
         m_reflectiveness(0.0f),
         m_tintR(1.0f),
         m_tintG(1.0f),

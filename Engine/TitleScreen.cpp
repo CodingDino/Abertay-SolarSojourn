@@ -76,7 +76,7 @@ bool TitleScreen::Initialize() {
 
     // Set up ship
 	graphic = new Graphic;
-    graphic->SetTint(1.0f,1.0f,0.8f,1.0f);
+    graphic->SetTint(1.0f,1.0f,1.0f,1.0f);
     graphic->SetShader("Texture");
     graphic->SetShader("Light");
 	graphic->SetTexture("shiptexture");

@@ -333,15 +333,21 @@ void Screen::EnablePostProcessing()
     // Background objects
     for (std::list<GameObject*>::iterator it=m_backgroundObjects.begin(); it != m_backgroundObjects.end(); ++it)
     {
-    	(*it)->GetGraphic()->SetRenderTarget(m_renderTexture);
-		(*it)->GetGraphic()->SetRenderToBackBuffer(false);
+		if ((*it)->GetGraphic())
+		{
+    		(*it)->GetGraphic()->SetRenderTarget(m_renderTexture);
+			(*it)->GetGraphic()->SetRenderToBackBuffer(false);
+		}
 	}
 
     // main objects
     for (std::list<GameObject*>::iterator it=m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
     {
-    	(*it)->GetGraphic()->SetRenderTarget(m_renderTexture);
-		(*it)->GetGraphic()->SetRenderToBackBuffer(false);
+		if ((*it)->GetGraphic())
+		{
+    		(*it)->GetGraphic()->SetRenderTarget(m_renderTexture);
+			(*it)->GetGraphic()->SetRenderToBackBuffer(false);
+		}
 	}
 }
 
@@ -371,15 +377,21 @@ void Screen::DisablePostProcessing()
     // Background objects
     for (std::list<GameObject*>::iterator it=m_backgroundObjects.begin(); it != m_backgroundObjects.end(); ++it)
     {
-    	(*it)->GetGraphic()->SetRenderTarget(0);
-		(*it)->GetGraphic()->SetRenderToBackBuffer(true);
+		if ((*it)->GetGraphic())
+		{
+    		(*it)->GetGraphic()->SetRenderTarget(0);
+			(*it)->GetGraphic()->SetRenderToBackBuffer(true);
+		}
 	}
 
     // main objects
     for (std::list<GameObject*>::iterator it=m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
     {
-    	(*it)->GetGraphic()->SetRenderTarget(0);
-		(*it)->GetGraphic()->SetRenderToBackBuffer(true);
+		if ((*it)->GetGraphic())
+		{
+    		(*it)->GetGraphic()->SetRenderTarget(0);
+			(*it)->GetGraphic()->SetRenderToBackBuffer(true);
+		}
 	}
 }
 

@@ -158,6 +158,9 @@
     <ClCompile Include="LevelScreen.cpp">
       <Filter>Game\Screens</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemManager.h">
@@ -274,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="LevelScreen.h">
       <Filter>Game\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Game\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

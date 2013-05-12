@@ -21,6 +21,7 @@
 #include "ParticleSystem.h"
 #include "LightManager.h"
 #include "Mesh.h"
+#include "Player.h"
 
 
 // |----------------------------------------------------------------------------|
