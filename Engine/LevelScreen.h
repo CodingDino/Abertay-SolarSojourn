@@ -71,6 +71,9 @@ protected:
 	Planet* m_objective2;
 	Planet* m_objective3;
     std::list<Bullet*> m_bullets;
+	Graphic* m_dialogue;
+	Text* m_loss;
+	Text* m_win;
 
 	// Gameplay parameters
 	

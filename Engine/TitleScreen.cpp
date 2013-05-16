@@ -206,7 +206,7 @@ bool TitleScreen::Initialize() {
     text->SetFont("radio_space_regular_20");
     text->Initialize();
     text->SetRenderToBackBuffer(true);
-	text->SetText("Use WASD to move and space/alt to change altitude");
+	text->SetText("You can turn with AD as well. W speeds up, and S slows down.");
     gameObject = new GameObject;
     gameObject->Initialize();
     gameObject->SetGraphic(text);
@@ -228,7 +228,7 @@ bool TitleScreen::Initialize() {
     text->SetFont("radio_space_regular_20");
     text->Initialize();
     text->SetRenderToBackBuffer(true);
-	text->SetText("Shoot all the objectives before time runs out");
+	text->SetText("Shoot all the objectives to win, and don't crash into the ground!");
     gameObject = new GameObject;
     gameObject->Initialize();
     gameObject->SetGraphic(text);

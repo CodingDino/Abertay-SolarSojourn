@@ -51,6 +51,7 @@ public:
     // Setter functions
     void virtual SetPosition(Coord position);
     void virtual SetOrientation(Coord orientation);
+	void virtual Reset() {m_crashed = false; }
 
 protected:
    
