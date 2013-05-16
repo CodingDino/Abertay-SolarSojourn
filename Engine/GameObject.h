@@ -42,6 +42,20 @@ public:
     bool virtual Draw();
     bool virtual Draw(Texture* renderTexture);
 
+	// Enable or disable post processing
+	void virtual EnablePostProcessing(Texture* renderTexture) 
+	{
+		if(!m_graphic) return;
+    	m_graphic->SetRenderTarget(renderTexture);
+		m_graphic->SetRenderToBackBuffer(false);
+	}
+	void virtual DisablePostProcessing() 
+	{ 
+		if(!m_graphic) return;
+    	m_graphic->SetRenderTarget(0);
+		m_graphic->SetRenderToBackBuffer(true);
+	}
+
     // Getter functions
     Coord virtual GetPosition() {return m_position; }
     Coord virtual GetOrientation() {return m_orientation; }

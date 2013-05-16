@@ -22,7 +22,6 @@
 #include "LightManager.h"
 #include "Mesh.h"
 #include "AudioSample.h"
-#include "Explosion.h"
 
 
 // |----------------------------------------------------------------------------|

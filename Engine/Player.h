@@ -41,6 +41,19 @@ public:
     
     // Renders camera
     bool virtual Draw();
+	// Enable or disable post processing
+	void virtual EnablePostProcessing(Texture* renderTexture) 
+	{
+		if(m_ship) m_ship->EnablePostProcessing(renderTexture);
+		if(m_leftThruster) m_ship->EnablePostProcessing(renderTexture);
+		if(m_rightThruster) m_ship->EnablePostProcessing(renderTexture);
+	}
+	void virtual DisablePostProcessing() 
+	{ 
+		if(m_ship) m_ship->DisablePostProcessing();
+		if(m_leftThruster) m_ship->DisablePostProcessing();
+		if(m_rightThruster) m_ship->DisablePostProcessing();
+	}
 
 	// Player functions
 	void virtual Crash() {m_crashed = true;}

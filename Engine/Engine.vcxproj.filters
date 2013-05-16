@@ -170,9 +170,6 @@
     <ClCompile Include="AudioSample.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Explosion.cpp">
-      <Filter>Game\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>Game\Objects</Filter>
     </ClCompile>
@@ -301,9 +298,6 @@
     </ClInclude>
     <ClInclude Include="AudioSample.h">
       <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Explosion.h">
-      <Filter>Game\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>Game\Objects</Filter>
