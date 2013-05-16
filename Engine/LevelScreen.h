@@ -22,6 +22,8 @@
 #include "LightManager.h"
 #include "Mesh.h"
 #include "Player.h"
+#include "Explosion.h"
+
 
 
 // |----------------------------------------------------------------------------|
@@ -60,4 +62,11 @@ protected:
     
     // Special game objects
     GameObject* m_particles;
+	ParticleSystem* m_fireball;
+	ParticleSystem* m_flash;
+	Player* m_player;
+	Mesh* m_terrain;
+
+	// Gameplay parameters
+	
 };

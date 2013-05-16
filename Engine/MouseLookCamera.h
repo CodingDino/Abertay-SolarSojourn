@@ -44,11 +44,13 @@ public:
 	// Setters
 	void SetSpeed(float val) { m_speed = val; }
 	void SetSensitivity(float val) { m_mouseSensitivity = val; }
+	void SetActive(bool val) { m_active = val; }
 
 protected:
     
     //|---------------------------Protected Data Members-----------------------|
     bool m_active;
     float m_mouseSensitivity;
+    float m_maxTurnSpeed;
 	float m_speed;
 };

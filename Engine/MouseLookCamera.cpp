@@ -17,10 +17,12 @@
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
 MouseLookCamera::MouseLookCamera() :
+    GameObject(),
     m_active(true),
     m_mouseSensitivity(10.0f),
-	m_speed(100.0f),
-    GameObject()
+    m_maxTurnSpeed(5.0f),
+	//m_speed(50.0f),
+	m_speed(25.0f)
 {
 	DebugLog ("MouseLookCamera: object instantiated.");
 }
@@ -77,19 +79,6 @@ bool MouseLookCamera::Logic() {
     // Get mouse input for orientation
     int mouseX, mouseY;
     InputManager::GetRef()->GetMouseChange(mouseX, mouseY);
-    m_orientation.x += m_mouseSensitivity * mouseY * time;
-    m_orientation.y += m_mouseSensitivity * mouseX * time;
-
-    // Clamp x orientation to -90 to 90 range
-    if(m_orientation.x > 90)
-        m_orientation.x = 90;
-    if(m_orientation.x < -90)
-        m_orientation.x = -90;
-    // Cycle y orientation within 0 to 360 range
-    if(m_orientation.y > 360)
-        m_orientation.y -=360;
-    if(m_orientation.y < 0)
-        m_orientation.y += 360;
 	
     // Get keyboard input for movement
 	int forward(0), right(0), up(0);
@@ -106,13 +95,31 @@ bool MouseLookCamera::Logic() {
 	else if(InputManager::GetRef()->GetButtonDown(BUTTON_DESCEND))
 		up = -1;
 	
+	// Determine orientationChange based on mouse
+	float orientationChangeX = m_mouseSensitivity * mouseY * time;
+	float orientationChangeY = m_mouseSensitivity * mouseX * time;
+	// Determine orientationChange based on keyboard (trumps mouse control)
+	if (right) orientationChangeY = right*m_maxTurnSpeed;
+	// Clamp orientation change to maxTurnSpeed
+    m_orientation.x += Clamp(orientationChangeX,-1*m_maxTurnSpeed,m_maxTurnSpeed);
+    m_orientation.y += Clamp(orientationChangeY,-1*m_maxTurnSpeed,m_maxTurnSpeed);
+
+    // Clamp x orientation to -90 to 90 range
+    if(m_orientation.x > 90)
+        m_orientation.x = 90;
+    if(m_orientation.x < -90)
+        m_orientation.x = -90;
+    // Cycle y orientation within 0 to 360 range
+    if(m_orientation.y > 360)
+        m_orientation.y -=360;
+    if(m_orientation.y < 0)
+        m_orientation.y += 360;
+	
+	
     Coord vel = Coord(
-		forward * sin(m_orientation.y * PI / 180) 
-            + right * sin(PI / 2 + m_orientation.y * PI / 180),
-		forward * -1 * sin(m_orientation.x * PI / 180)
-            + up,
-		forward * cos(m_orientation.y * PI / 180) * cos(m_orientation.x * PI / 180)
-            + right * cos(PI / 2 + m_orientation.y * PI / 180) );
+		(forward*0.5+1) * sin(m_orientation.y * PI / 180),
+		(forward*0.5+1) * -1 * sin(m_orientation.x * PI / 180),
+		(forward*0.5+1) * cos(m_orientation.y * PI / 180) * cos(m_orientation.x * PI / 180) );
     vel *= m_speed * time;
 	m_linearVelocity = vel;
 	m_position += m_linearVelocity; 

@@ -80,11 +80,19 @@ void AssetManager::Shutdown()
         delete it->second;
         it->second = 0;
     }
+    // De-allocate all AudioSample
+    for (std::map<string,AudioSample*>::iterator it=m_samples.begin(); it!=m_samples.end(); ++it)
+    {
+        it->second->Shutdown();
+        delete it->second;
+        it->second = 0;
+    }
     
     // Clear maps
     m_textures.clear();
     m_fonts.clear();
     m_models.clear();
+    m_samples.clear();
     return;
 }
 
@@ -203,4 +211,41 @@ Model* AssetManager::GetModel(std::string name)
     m_models[name] = model;
 	DebugLog ("AssetManager: model loaded.", DB_GRAPHICS, 1);
     return model;
+}
+
+
+// |----------------------------------------------------------------------------|
+// |                              GetAudioSample                                |
+// |----------------------------------------------------------------------------|
+AudioSample* AssetManager::GetAudioSample(std::string name)
+{
+	DebugLog ("AssetManager::GetAudioSample called.", DB_GRAPHICS, 1);
+
+    // If the sample is already in the map, just return it
+    if (m_samples.count(name)) 
+    {
+	    DebugLog ("AssetManager: audio sample found.", DB_GRAPHICS, 1);
+        return m_samples[name];
+    }
+
+    // If not, try loading it from file.
+    // Construct string name
+    std::string filePath = "../Engine/data/audio/";
+    filePath += name;
+    filePath += ".wav";
+    const char* filtPathC = filePath.c_str();
+
+    // Attempt to load
+    AudioSample* audiosample = new AudioSample;
+    bool result = audiosample->Initialize(filtPathC);
+    if (!result)
+    {
+	    DebugLog ("AssetManager: Unable to load audio sample.", DB_GRAPHICS, 1);
+        return 0;
+    }
+
+    // If it was loaded, add it to the map and return it.
+    m_samples[name] = audiosample;
+	DebugLog ("AssetManager: audio sample loaded.");
+    return audiosample;
 }

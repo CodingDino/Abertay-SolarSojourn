@@ -48,6 +48,9 @@
     <Filter Include="Graphics\Shader Files\GlowShader">
       <UniqueIdentifier>{9ddc5589-5d3f-483d-a144-39d2f2c0f324}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{b239b5e5-9102-42ed-8ba2-50075a8cbcb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -159,6 +162,15 @@
       <Filter>Game\Screens</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
+      <Filter>Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSample.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion.cpp">
       <Filter>Game\Objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -279,6 +291,15 @@
       <Filter>Game\Screens</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
+      <Filter>Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSample.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion.h">
       <Filter>Game\Objects</Filter>
     </ClInclude>
   </ItemGroup>

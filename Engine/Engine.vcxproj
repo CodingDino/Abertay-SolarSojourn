@@ -82,7 +82,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="AudioSample.cpp" />
     <ClCompile Include="Billboard.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="BlurShader.cpp" />
     <ClCompile Include="GlowShader.cpp" />
@@ -111,6 +113,7 @@
     <ClCompile Include="Sentence.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -121,7 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="AudioSample.h" />
     <ClInclude Include="Billboard.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="BlurShader.h" />
     <ClInclude Include="GlowShader.h" />
@@ -151,6 +156,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SkyBox.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Sentence.h" />

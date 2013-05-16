@@ -18,7 +18,10 @@
 // |----------------------------------------------------------------------------|
 LevelScreen::LevelScreen() :
     Screen(),
-    m_particles(0)
+    m_particles(0),
+	m_fireball(0),
+	m_flash(0),
+	m_player(0)
 {
 	DebugLog ("LevelScreen: object instantiated.");
 }
@@ -71,7 +74,7 @@ bool LevelScreen::Initialize() {
     
     // Set up camera
     m_camera = new MouseLookCamera;
-    m_camera->SetPosition(Coord(0.0f, 0.0f, -10.0f));
+    m_camera->SetPosition(Coord(0.0f, 15.0f, -10.0f));
 
     // Set up skybox
     m_skybox->SetTexture("default");
@@ -104,11 +107,54 @@ bool LevelScreen::Initialize() {
     gameObject->SetGraphic(graphic);
     gameObject->SetPosition(Coord(0.0f,-5.0f,0.0f));
     m_gameObjects.push_back(gameObject);
+	m_terrain = mesh;
+	
+	
+    // Set up explosion
+    particleSystem = new ParticleSystem;
+    particleSystem->Initialize();
+    graphic = new Billboard;
+    graphic->SetShader("Texture");
+    graphic->SetTexture("fireball");
+    graphic->SetAlphaBlend(true);
+    graphic->SetScale(Coord(0.05f,0.05f,0.05f));
+    graphic->Initialize();
+    particleSystem->SetGraphic(graphic);
+	particleSystem->SetSpawnParticles(false);
+    particleSystem->SetParticleVelocity(Coord(0.0f,0.1f,0.0f));
+    particleSystem->SetParticleVelocityVariation(Coord(0.05f,0.05f,0.05f));
+    particleSystem->SetParticleDeviation(Coord(0.1f,0.1f,0.1f));
+    particleSystem->SetParticleLifetime(10.0f);
+    particleSystem->SetParticleFadeout(5.0f);
+	particleSystem->SetParticleDarken(0.08f);
+    particleSystem->SetMaxParticles(10);
+    particleSystem->SetTint(1.0f,0.7f,0.4f);
+    particleSystem->SetTintVar(0.3f,0.3f,0.3f);
+    m_gameObjects.push_back(particleSystem);
+	m_fireball = particleSystem;
+	// Flash
+    particleSystem = new ParticleSystem;
+    particleSystem->Initialize();
+    graphic = new Billboard;
+    graphic->SetShader("Texture");
+    graphic->SetTexture("flash");
+    graphic->SetAlphaBlend(true);
+    graphic->SetScale(Coord(0.05f,0.05f,0.05f));
+    graphic->Initialize();
+	graphic->SetZBuffer(false);
+    particleSystem->SetGraphic(graphic);
+	particleSystem->SetSpawnParticles(false);
+    particleSystem->SetParticleLifetime(0.4f);
+    particleSystem->SetParticleFadeout(0.2f);
+    particleSystem->SetMaxParticles(1);
+    particleSystem->SetTint(1.0f,1.0f,0.9f);
+    m_gameObjects.push_back(particleSystem);
+	m_flash = particleSystem;
 
 	// Set up player
-	gameObject = new Player;
-    gameObject->Initialize();
-    m_gameObjects.push_back(gameObject);
+	m_player = new Player;
+    m_player->Initialize();
+    m_gameObjects.push_back(m_player);
 
     // Set up particle system
     particleSystem = new ParticleSystem;
@@ -124,15 +170,28 @@ bool LevelScreen::Initialize() {
     particleSystem->SetGraphic(graphic);
     particleSystem->SetParticleVelocity(Coord(0.0f,0.0f,0.0f));
     particleSystem->SetParticleVelocityVariation(Coord(1.0f,1.0f,1.0f));
-    particleSystem->SetParticleSpawnFrequency(0.1f);
-    particleSystem->SetParticleDeviation(Coord(10.0f,10.0f,10.0f));
-    particleSystem->SetParticleLifetime(10.0f);
-    particleSystem->SetParticleFadeout(5.0f);
+    particleSystem->SetParticleSpawnFrequency(0.01f);
+    particleSystem->SetParticleDeviation(Coord(5.0f,5.0f,5.0f));
+    particleSystem->SetParticleLifetime(1.0f);
+    particleSystem->SetParticleFadeout(0.5f);
     particleSystem->SetMaxParticles(100);
-    particleSystem->SetTint(1.0f,1.0f,1.0f);
-    particleSystem->SetTintVar(0.5f,0.5f,0.5f);
+    particleSystem->SetTint(1.0f,0.7f,0.4f);
+    particleSystem->SetTintVar(0.3f,0.3f,0.3f);
     m_particles = particleSystem;
     m_gameObjects.push_back(particleSystem);
+
+	// Set up crosshair
+    graphic = new Image;
+    graphic->SetTexture("crosshair");
+    graphic->Initialize();
+	graphic->SetScale(Coord(0.1f,0.1f,1.0f));
+    graphic->SetRenderToBackBuffer(true);
+    gameObject = new GameObject;
+    gameObject->Initialize();
+    gameObject->SetGraphic(graphic);
+	gameObject->SetPosition(Coord(SCREEN_WIDTH/2 - 46.6/2,SCREEN_HEIGHT/2 - 46.6/2,0.0f));
+    m_overlayObjects.push_back(gameObject);
+
 
 	// Temporarily Disable Post-Processing
 	DisablePostProcessing();
@@ -161,9 +220,23 @@ bool LevelScreen::Logic() {
 
     Screen::Logic();
 
-    // Update coord location
+	if (m_player->HasCrashed())
+		return true;
+
+    // Update dust mote location
     if (m_particles && m_camera)
 		m_particles->SetPosition(m_camera->GetPosition());
+
+	// Determine if player has crashed
+	if ( m_player->GetPosition().y < m_terrain->GetHeight(m_player->GetPosition().x,m_player->GetPosition().z) )
+	{
+		m_player->Crash();
+		((MouseLookCamera*)m_camera)->SetActive(false);
+		m_fireball->SetPosition(m_player->GetPosition());
+		m_flash->SetPosition(m_player->GetPosition());
+		m_fireball->EmitAllParticles();
+		m_flash->EmitAllParticles();
+	}
 
 	return true;
 }

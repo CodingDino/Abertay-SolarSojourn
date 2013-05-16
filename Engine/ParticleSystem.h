@@ -56,7 +56,11 @@ public:
     // Renders camera
     bool virtual Draw();
 
+	// Emits all particles at once (as in an explosion)
+	void EmitAllParticles();
+
     // Setters
+	void SetSpawnParticles(bool val) {m_spawnParticles = val;}
     void SetParticleDeviation(Coord particleDeviation) { m_particleDeviation = particleDeviation; }
     void SetParticleVelocity(Coord particleVelocity) { m_particleVelocity = particleVelocity; }
     void SetParticleVelocityVariation(Coord particleVelocityVariation) { m_particleVelocityVariation = particleVelocityVariation; }
@@ -65,6 +69,7 @@ public:
     void SetParticleLifetime(float particleLifetime) { m_particleLifetime = particleLifetime; }
     void SetParticleFadeout(float particleFadeout) { m_particleFadeout = particleFadeout; }
     void SetMaxParticles(int maxParticles) { m_maxParticles = maxParticles; }
+	void SetParticleDarken(float val) {m_particleDarken = val; }
     
     void SetTint(float r, float g, float b, float a = 1.0f) {
         m_tintR = r;
@@ -83,7 +88,7 @@ protected:
    
     //|----------------------------Protected Functions-------------------------|
 
-	void EmitParticles();
+	void EmitParticle();
 	void UpdateParticles();
 	void KillParticles();
 
@@ -101,9 +106,11 @@ protected:
     float m_particleSpawnFrequency;
     float m_particleFadeout;
     float m_particleLifetime;
+	float m_particleDarken;
     int m_maxParticles;
 
     // Particle management data members
     float m_accumulatedTime;
+	bool m_spawnParticles;
     std::list<ParticleType> m_particles;
 };

@@ -23,7 +23,7 @@ SystemManager::SystemManager() :
     m_timer(0),
     m_assets(0),
     m_lights(0),
-    //m_sound(0),
+    m_sound(0),
     m_game(0)
 {
 }
@@ -94,19 +94,19 @@ bool SystemManager::Initialize()
     }
 
     // Create the sound object.
-    //m_sound = new SoundManager;
-    //if(!m_sound)
-    //{
-    //    return false;
-    //}
+    m_sound = new SoundManager;
+    if(!m_sound)
+    {
+        return false;
+    }
  
     // Initialize the sound object.
-    //result = m_sound->Initialize();
-    //if(!result)
-    //{
-    //    DebugPopup(L"Could not initialize Direct Sound.", L"Error", MB_OK);
-    //    return false;
-    //}
+    result = m_sound->Initialize();
+    if(!result)
+    {
+        DebugPopup(L"Could not initialize Direct Sound.");
+        return false;
+    }
 
     // Create the timer object.
     m_timer = new TimerManager();
@@ -182,6 +182,15 @@ bool SystemManager::Initialize()
 // |----------------------------------------------------------------------------|
 void SystemManager::Shutdown()
 {
+
+    // Release the assets object.
+    if(m_assets)
+    {
+        m_assets->Shutdown();
+        delete m_assets;
+        m_assets = 0;
+    }
+
     // Release the graphics object.
     if(m_graphics)
     {
@@ -198,13 +207,13 @@ void SystemManager::Shutdown()
         m_input = 0;
     }
 
-    //// Release the sound object.
-    //if(m_sound)
-    //{
-    //    m_sound->Shutdown();
-    //    delete m_sound;
-    //    m_sound = 0;
-    //}
+    // Release the sound object.
+    if(m_sound)
+    {
+        m_sound->Shutdown();
+        delete m_sound;
+        m_sound = 0;
+    }
 
     // Release the timer object.
     if(m_timer)
@@ -212,14 +221,6 @@ void SystemManager::Shutdown()
         m_timer->Shutdown();
         delete m_timer;
         m_timer = 0;
-    }
-
-    // Release the assets object.
-    if(m_assets)
-    {
-        m_assets->Shutdown();
-        delete m_assets;
-        m_assets = 0;
     }
 
     // Release the lights object.

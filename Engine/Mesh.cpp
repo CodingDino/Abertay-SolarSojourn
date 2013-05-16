@@ -251,7 +251,6 @@ void Mesh::GenerateHeightMap()
     InitializeHeightMap();
     PerlinNoiseHeightMap();
     SmoothHeightMap(0);
-    //NormalizeHeightMap();
 }
 
 
@@ -333,7 +332,7 @@ void Mesh::PerlinNoiseHeightMap()
 
 
 // |----------------------------------------------------------------------------|
-// |						  RandomizeHeightMap								|
+// |						     SmoothHeightMap								|
 // |----------------------------------------------------------------------------|
 void Mesh::SmoothHeightMap(int smoothFactor)
 {

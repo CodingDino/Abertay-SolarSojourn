@@ -21,6 +21,8 @@
 #include "ParticleSystem.h"
 #include "LightManager.h"
 #include "Mesh.h"
+#include "AudioSample.h"
+#include "Explosion.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -59,4 +61,7 @@ protected:
     
     // Special game objects
     GameObject* m_particles;
+
+	// Sounds
+	AudioSample* m_music;
 };

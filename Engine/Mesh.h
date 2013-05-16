@@ -53,6 +53,21 @@ public:
         return Initialize(); 
     }
     virtual void Shutdown();
+
+	// Getters
+	virtual float GetHeight(float realX, float realZ)
+	{
+		int mapX = m_meshWidth / 2 // 0 point
+			+ realX / m_quadSize;  // scaling factor
+		mapX = Clamp(mapX,0,m_meshWidth);
+		int mapZ = m_meshLength / 2 // 0 point
+			+ realZ / m_quadSize;  // scaling factor
+		mapZ = Clamp(mapZ,0,m_meshLength);
+
+		int index = (m_meshWidth * mapZ) + mapX;
+
+		return m_heightMap[index].y;
+	}
 	
 protected:
 

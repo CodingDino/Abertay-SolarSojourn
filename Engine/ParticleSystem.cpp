@@ -17,6 +17,7 @@
 // |							   Constructor									|
 // |----------------------------------------------------------------------------|
 ParticleSystem::ParticleSystem() :
+    GameObject(),
     m_tintR(1.0f),
     m_tintG(1.0f),
     m_tintB(1.0f),
@@ -35,7 +36,8 @@ ParticleSystem::ParticleSystem() :
     m_maxParticles(0),
     m_accumulatedTime(0),
     m_particles(0),
-    GameObject()
+	m_spawnParticles(true),
+	m_particleDarken(0.0f)
 {
 	DebugLog ("ParticleSystem: object instantiated.");
 }
@@ -94,9 +96,26 @@ bool ParticleSystem::Shutdown() {
 // |----------------------------------------------------------------------------|
 bool ParticleSystem::Logic() {
 	DebugLog ("ParticleSystem: Logic() called.", DB_LOGIC, 10);
+	
+	// Increment the frame time.
+    float time = TimerManager::GetRef()->GetTime() / 1000;
+	m_accumulatedTime += time;
+
+	// Set emit particle to false for now.
+	bool emitParticle = false;
     
-	// Emit new particles.
-	EmitParticles();
+	// Check if it is time to emit a new particle or not.
+	if(m_accumulatedTime > (m_particleSpawnFrequency))
+	{
+		m_accumulatedTime = 0.0f;
+		emitParticle = true;
+	}
+    
+	if(m_spawnParticles && (emitParticle == true) && (m_particles.size() < (m_maxParticles - 1)))
+    {   
+		// Emit new particles.
+		EmitParticle();
+	}
 	
 	// Update the position of the particles.
 	UpdateParticles();
@@ -106,6 +125,24 @@ bool ParticleSystem::Logic() {
 
 	return true;
 }
+
+
+
+// |----------------------------------------------------------------------------|
+// |					     EmitAllParticles()									|
+// |----------------------------------------------------------------------------|
+void ParticleSystem::EmitAllParticles() {
+	DebugLog ("ParticleSystem: EmitAllParticles() called.", DB_LOGIC, 10);
+    
+	while(m_particles.size() < m_maxParticles)
+    {   
+		// Emit new particles.
+		EmitParticle();
+	}
+	
+	return;
+}
+
 
 
 // |----------------------------------------------------------------------------|
@@ -128,52 +165,34 @@ bool ParticleSystem::Draw() {
 // |----------------------------------------------------------------------------|
 // |						   EmitParticles()			    					|
 // |----------------------------------------------------------------------------|
-void ParticleSystem::EmitParticles() {
-	DebugLog ("ParticleSystem: EmitParticles() called.", DB_LOGIC, 10);
+void ParticleSystem::EmitParticle() {
+	DebugLog ("ParticleSystem: EmitParticle() called.", DB_LOGIC, 10);
     
-	// Increment the frame time.
-    float time = TimerManager::GetRef()->GetTime() / 1000;
-	m_accumulatedTime += time;
 
-	// Set emit particle to false for now.
-	bool emitParticle = false;
-    
-	// Check if it is time to emit a new particle or not.
-	if(m_accumulatedTime > (m_particleSpawnFrequency))
-	{
-		m_accumulatedTime = 0.0f;
-		emitParticle = true;
-	}
-    else return;
-    
-	if((emitParticle == true) && (m_particles.size() < (m_maxParticles - 1)))
-    {
-	    DebugLog ("ParticleSystem: Emitting Particle.", DB_LOGIC, 9);
+	// Now generate the randomized particle properties.
+    ParticleType newParticle;
+	newParticle.position.x = m_position.x + (((float)rand()-(float)rand())/RAND_MAX) * m_particleDeviation.x;
+	newParticle.position.y = m_position.y + (((float)rand()-(float)rand())/RAND_MAX) * m_particleDeviation.y;
+	newParticle.position.z = m_position.z + (((float)rand()-(float)rand())/RAND_MAX) * m_particleDeviation.z;
 
-		// Now generate the randomized particle properties.
-        ParticleType newParticle;
-		newParticle.position.x = m_position.x + (((float)rand()-(float)rand())/RAND_MAX) * m_particleDeviation.x;
-		newParticle.position.y = m_position.y + (((float)rand()-(float)rand())/RAND_MAX) * m_particleDeviation.y;
-		newParticle.position.z = m_position.z + (((float)rand()-(float)rand())/RAND_MAX) * m_particleDeviation.z;
-
-		newParticle.velocity.x = m_particleVelocity.x + (((float)rand()-(float)rand())/RAND_MAX) * m_particleVelocityVariation.x;
-        newParticle.velocity.y = m_particleVelocity.y + (((float)rand()-(float)rand())/RAND_MAX) * m_particleVelocityVariation.y;
-		newParticle.velocity.z = m_particleVelocity.z + (((float)rand()-(float)rand())/RAND_MAX) * m_particleVelocityVariation.z;
+	newParticle.velocity.x = m_particleVelocity.x + (((float)rand()-(float)rand())/RAND_MAX) * m_particleVelocityVariation.x;
+    newParticle.velocity.y = m_particleVelocity.y + (((float)rand()-(float)rand())/RAND_MAX) * m_particleVelocityVariation.y;
+	newParticle.velocity.z = m_particleVelocity.z + (((float)rand()-(float)rand())/RAND_MAX) * m_particleVelocityVariation.z;
         
-		newParticle.red   = Clamp(m_tintR + (((float)rand()-(float)rand())/RAND_MAX) * m_tintRVar,0.0f,1.0f);
-		newParticle.green = Clamp(m_tintG + (((float)rand()-(float)rand())/RAND_MAX) * m_tintGVar,0.0f,1.0f);
-		newParticle.blue  = Clamp(m_tintB + (((float)rand()-(float)rand())/RAND_MAX) * m_tintBVar,0.0f,1.0f);
-		newParticle.alpha = Clamp(m_alpha + (((float)rand()-(float)rand())/RAND_MAX) * m_alphaVar,0.0f,1.0f);
+	newParticle.red   = Clamp(m_tintR + (((float)rand()-(float)rand())/RAND_MAX) * m_tintRVar,0.0f,1.0f);
+	newParticle.green = Clamp(m_tintG + (((float)rand()-(float)rand())/RAND_MAX) * m_tintGVar,0.0f,1.0f);
+	newParticle.blue  = Clamp(m_tintB + (((float)rand()-(float)rand())/RAND_MAX) * m_tintBVar,0.0f,1.0f);
+	newParticle.alpha = Clamp(m_alpha + (((float)rand()-(float)rand())/RAND_MAX) * m_alphaVar,0.0f,1.0f);
 
-		newParticle.lifetime = 0.0f;
-        newParticle.maxLife = m_particleLifetime;
+	newParticle.lifetime = 0.0f;
+    newParticle.maxLife = m_particleLifetime;
 
-        // Update to current camera
-        newParticle.camera = GraphicsManager::GetRef()->GetCamera();
+    // Update to current camera
+    newParticle.camera = GraphicsManager::GetRef()->GetCamera();
 
-        // Add the new particle to the list
-        m_particles.push_back(newParticle);
-    }
+    // Add the new particle to the list
+    m_particles.push_back(newParticle);
+   
 
 	return;
 }
@@ -200,6 +219,11 @@ void ParticleSystem::UpdateParticles() {
         // Update particle alpha
         if (it->lifetime > m_particleFadeout)
             it->alpha = m_alpha * (m_particleLifetime - it->lifetime) / (m_particleLifetime - m_particleFadeout);
+
+		// Update tints
+		it->red = Clamp(it->red - m_particleDarken*time,0.0f,1.0f);
+		it->green = Clamp(it->green - m_particleDarken*time,0.0f,1.0f);
+		it->blue = Clamp(it->blue - m_particleDarken*time,0.0f,1.0f);
     }
 
     // Sort particles based on distance from camera

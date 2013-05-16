@@ -22,7 +22,8 @@ Player::Player() :
 	m_leftThruster(0),
 	m_rightThruster(0),
 	m_direction(0.0f,0.0f,1.0f),
-	m_speed(0.0f)
+	m_speed(25.0f),
+	m_crashed(false)
 {
 	DebugLog ("Player: object instantiated.");
 }
@@ -71,9 +72,9 @@ bool Player::Initialize() {
     m_leftThruster->Initialize();
     graphic = new Billboard;
     graphic->SetShader("Texture");
-    graphic->SetTexture("particle_point");
+    graphic->SetTexture("fireball");
     graphic->SetAlphaBlend(true);
-    graphic->SetScale(Coord(0.01f,0.01f,0.01f));
+    graphic->SetScale(Coord(0.003f,0.003f,0.003f));
     graphic->Initialize();
     m_leftThruster->SetGraphic(graphic);
     m_leftThruster->SetPosition(Coord(-0.6f,0.0f,-0.7f));
@@ -92,9 +93,9 @@ bool Player::Initialize() {
     m_rightThruster->Initialize();
     graphic = new Billboard;
     graphic->SetShader("Texture");
-    graphic->SetTexture("particle_point");
+    graphic->SetTexture("fireball");
     graphic->SetAlphaBlend(true);
-    graphic->SetScale(Coord(0.01f,0.01f,0.01f));
+    graphic->SetScale(Coord(0.003f,0.003f,0.003f));
     graphic->Initialize();
     m_rightThruster->SetGraphic(graphic);
     m_rightThruster->SetPosition(Coord(0.6f,0.0f,-0.7f));
@@ -131,47 +132,54 @@ bool Player::Shutdown() {
 bool Player::Logic() {
 	DebugLog ("Player: Logic() called.", DB_LOGIC, 10);
 
+	// If crashed, don't process
+	if (m_crashed) return true;
+
     // Get time for this frame
     float time = TimerManager::GetRef()->GetTime() / 1000;
 
 	// TODO: Get player input (Update direction, speed), set camera based on this
 	// For now, keep using mouselookcamera and get it from the camera
     Camera* camera = GraphicsManager::GetRef()->GetCamera();
+	Coord cameraOrientation = camera->GetOrientation();
 
-	// TODO: This position and orientation adjustment will have to change based on camera angle.
 	SetOrientation(Coord(
-		0.0f+camera->GetOrientation().y*3.14/180,
-		-1*(3.14f/6.0f)+camera->GetOrientation().x*3.14/180,
-		0.0f+camera->GetOrientation().z*3.14/180));
+		0.0f+cameraOrientation.y*3.14/180,
+		-1*(3.14f/6.0f)+cameraOrientation.x*3.14/180,
+		0.0f+cameraOrientation.z*3.14/180));
 
-	//Coord unbounded(camera->GetPosition()+Coord(0.0f,-2.0f,10.0f));
+	// Ship just stays with the camera
 	Coord localPos(
-		10.0f*sin(3.14/2-camera->GetOrientation().x*3.14/180-1*(3.14f/16.0f))*sin(camera->GetOrientation().y*3.14/180),
-		-10.0f*cos(3.14/2-camera->GetOrientation().x*3.14/180-1*(3.14f/16.0f)),
-		10.0f*sin(3.14/2-camera->GetOrientation().x*3.14/180-1*(3.14f/16.0f))*cos(camera->GetOrientation().y*3.14/180) );
+		10.0f*sin(3.14/2-cameraOrientation.x*3.14/180-1*(3.14f/16.0f))*sin(cameraOrientation.y*3.14/180),
+		-10.0f*cos(3.14/2-cameraOrientation.x*3.14/180-1*(3.14f/16.0f)),
+		10.0f*sin(3.14/2-cameraOrientation.x*3.14/180-1*(3.14f/16.0f))*cos(cameraOrientation.y*3.14/180) );
 	Coord unbounded = localPos + camera->GetPosition();
 	SetPosition(unbounded);
 	localPos = Coord(
-		9.3f*sin(3.14/2-camera->GetOrientation().x*3.14/180-1.25*(3.14f/16.0f))*sin(camera->GetOrientation().y*3.14/180-0.6*(3.14f/32.0f)),
-		-9.3f*cos(3.14/2-camera->GetOrientation().x*3.14/180-1.25*(3.14f/16.0f)),
-		9.3f*sin(3.14/2-camera->GetOrientation().x*3.14/180-1.25*(3.14f/16.0f))*cos(camera->GetOrientation().y*3.14/180-0.6*(3.14f/32.0f)) );
+		9.3f*sin(3.14/2-cameraOrientation.x*3.14/180-1.25*(3.14f/16.0f))*sin(cameraOrientation.y*3.14/180-0.6*(3.14f/32.0f)),
+		-9.3f*cos(3.14/2-cameraOrientation.x*3.14/180-1.25*(3.14f/16.0f)),
+		9.3f*sin(3.14/2-cameraOrientation.x*3.14/180-1.25*(3.14f/16.0f))*cos(cameraOrientation.y*3.14/180-0.6*(3.14f/32.0f)) );
     m_leftThruster->SetPosition(localPos+camera->GetPosition());
 	localPos = Coord(
-		9.3f*sin(3.14/2-camera->GetOrientation().x*3.14/180-1.25*(3.14f/16.0f))*sin(camera->GetOrientation().y*3.14/180+0.6*(3.14f/32.0f)),
-		-9.3f*cos(3.14/2-camera->GetOrientation().x*3.14/180-1.25*(3.14f/16.0f)),
-		9.3f*sin(3.14/2-camera->GetOrientation().x*3.14/180-1.25*(3.14f/16.0f))*cos(camera->GetOrientation().y*3.14/180+0.6*(3.14f/32.0f)) );
+		9.3f*sin(3.14/2-cameraOrientation.x*3.14/180-1.25*(3.14f/16.0f))*sin(cameraOrientation.y*3.14/180+0.6*(3.14f/32.0f)),
+		-9.3f*cos(3.14/2-cameraOrientation.x*3.14/180-1.25*(3.14f/16.0f)),
+		9.3f*sin(3.14/2-cameraOrientation.x*3.14/180-1.25*(3.14f/16.0f))*cos(cameraOrientation.y*3.14/180+0.6*(3.14f/32.0f)) );
     m_rightThruster->SetPosition(localPos+camera->GetPosition());
+	
+	// Alternate controlling method:
+	//Coord unbounded(camera->GetPosition()+Coord(0.0f,-2.0f,10.0f));
 	// If the position gets too far from the camera direction vector, move it to that point.
 	// Need bounding points to left, right, up, and down.
 	// Need to keep ship a certain distance from camera...
 
 	// TODO: Update velocity of thrusters to shoot backwards
-	localPos = Coord(
-		-2.0f*sin(3.14/2-camera->GetOrientation().x*3.14/180+1.25*(3.14f/16.0f))*sin(camera->GetOrientation().y*3.14/180),
-		2.0f*cos(3.14/2-camera->GetOrientation().x*3.14/180+1.25*(3.14f/16.0f)),
-		-2.0f*sin(3.14/2-camera->GetOrientation().x*3.14/180+1.25*(3.14f/16.0f))*cos(camera->GetOrientation().y*3.14/180) );
-    m_leftThruster->SetParticleVelocity(localPos);
-    m_rightThruster->SetParticleVelocity(localPos);
+	Coord thrusterVel = Coord(
+		sin(3.14/2-camera->GetOrientation().x*3.14/180+1.25*(3.14f/16.0f))*sin(camera->GetOrientation().y*3.14/180),
+		-1*cos(3.14/2-camera->GetOrientation().x*3.14/180+1.25*(3.14f/16.0f)),
+		sin(3.14/2-camera->GetOrientation().x*3.14/180+1.25*(3.14f/16.0f))*cos(camera->GetOrientation().y*3.14/180) );
+	thrusterVel *= -2.0f;
+    m_leftThruster->SetParticleVelocity(thrusterVel);
+    m_rightThruster->SetParticleVelocity(thrusterVel);
 
 	// Call logic functions for child objects
 	m_ship->Logic();
@@ -188,6 +196,9 @@ bool Player::Logic() {
 bool Player::Draw() {
 	DebugLog ("Player: Draw() called.", DB_LOGIC, 10);
 	
+	// If crashed, don't process
+	if (m_crashed) return true;
+
 	// Call draw functions for child objects
 	m_ship->Draw();
 	m_leftThruster->Draw();

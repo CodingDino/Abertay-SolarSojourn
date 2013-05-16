@@ -26,7 +26,7 @@
 #include "TimerManager.h"
 #include "AssetManager.h"
 #include "LightManager.h"
-//#include "SoundManager.h"
+#include "SoundManager.h"
 
 
 // |----------------------------------------------------------------------------|
@@ -82,7 +82,7 @@ private:
     GraphicsManager* m_graphics;  
 
     // Sound Manager
-    //SoundManager* m_sound;
+    SoundManager* m_sound;
 
     // Timer Manager
     TimerManager* m_timer;

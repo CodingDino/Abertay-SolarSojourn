@@ -18,7 +18,8 @@
 // |----------------------------------------------------------------------------|
 TitleScreen::TitleScreen() :
     Screen(),
-    m_particles(0)
+    m_particles(0),
+	m_music(0)
 {
 	DebugLog ("TitleScreen: object instantiated.");
 }
@@ -94,9 +95,9 @@ bool TitleScreen::Initialize() {
     particleSystem->Initialize();
     graphic = new Billboard;
     graphic->SetShader("Texture");
-    graphic->SetTexture("particle_point");
+    graphic->SetTexture("fireball");
     graphic->SetAlphaBlend(true);
-    graphic->SetScale(Coord(0.01f,0.01f,0.01f));
+    graphic->SetScale(Coord(0.003f,0.003f,0.003f));
     graphic->Initialize();
     particleSystem->SetGraphic(graphic);
     particleSystem->SetPosition(Coord(-5.5f,-2.8f,-0.8f));
@@ -115,9 +116,9 @@ bool TitleScreen::Initialize() {
     particleSystem->Initialize();
     graphic = new Billboard;
     graphic->SetShader("Texture");
-    graphic->SetTexture("particle_point");
+    graphic->SetTexture("fireball");
     graphic->SetAlphaBlend(true);
-    graphic->SetScale(Coord(0.01f,0.01f,0.01f));
+    graphic->SetScale(Coord(0.003f,0.003f,0.003f));
     graphic->Initialize();
     particleSystem->SetGraphic(graphic);
     particleSystem->SetPosition(Coord(-4.35f,-2.8f,-0.7f));
@@ -154,8 +155,6 @@ bool TitleScreen::Initialize() {
     particleSystem->SetTintVar(0.5f,0.5f,0.5f);
     m_particles = particleSystem;
     m_gameObjects.push_back(particleSystem);
-
-	
 
     // Title display
     text = new Text;
@@ -247,8 +246,14 @@ bool TitleScreen::Initialize() {
 	gameObject->SetPosition(Coord(600.0f,800.0f,0.0f));
     m_overlayObjects.push_back(gameObject);
 
+
+
 	// Temporarily Disable Post-Processing
 	DisablePostProcessing();
+
+	// Set up audio assets
+	m_music = AssetManager::GetRef()->GetAudioSample("music01");
+
 
 	DebugLog ("TitleScreen: object initialized.");
 	return true;
@@ -305,6 +310,8 @@ bool TitleScreen::OnLoad() {
 	DebugLog("TitleScreen: OnLoad called");
 
 	m_done = false;
+
+	if (m_music) m_music->PlaySoundLoop();
 
 	return true;
 }

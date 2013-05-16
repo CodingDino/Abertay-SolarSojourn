@@ -18,6 +18,7 @@
 #include "Model.h"
 #include "Quad.h"
 #include "Sentence.h"
+#include "AudioSample.h"
 #include <string>
 #include <map>
 
@@ -44,6 +45,7 @@ public:
     Texture* GetTexture(std::string name);
     Font* GetFont(std::string name);
     Model* GetModel(std::string name);
+	AudioSample* GetAudioSample(std::string name);
 
 private:
 
@@ -56,6 +58,6 @@ private:
     std::map<std::string,Texture*> m_textures;
     std::map<std::string,Font*> m_fonts;
     std::map<std::string,Model*> m_models;
-    //std::map<std::string,Sample*> m_samples;
+    std::map<std::string,AudioSample*> m_samples;
 
 };

@@ -41,6 +41,12 @@ public:
     
     // Renders camera
     bool virtual Draw();
+
+	// Player functions
+	void virtual Crash() {m_crashed = true;}
+
+	// Getter functions
+	bool virtual HasCrashed() { return m_crashed; }
 	
     // Setter functions
     void virtual SetPosition(Coord position);
@@ -61,4 +67,5 @@ protected:
 	// Player parameters
 	Coord m_direction;
 	float m_speed;
+	bool m_crashed;
 };
