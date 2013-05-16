@@ -154,6 +154,7 @@ bool Player::Logic() {
 		-10.0f*cos(3.14/2-cameraOrientation.x*3.14/180-1*(3.14f/16.0f)),
 		10.0f*sin(3.14/2-cameraOrientation.x*3.14/180-1*(3.14f/16.0f))*cos(cameraOrientation.y*3.14/180) );
 	Coord unbounded = localPos + camera->GetPosition();
+	m_linearVelocity = unbounded - m_position;
 	SetPosition(unbounded);
 	localPos = Coord(
 		9.3f*sin(3.14/2-cameraOrientation.x*3.14/180-1.25*(3.14f/16.0f))*sin(cameraOrientation.y*3.14/180-0.6*(3.14f/32.0f)),

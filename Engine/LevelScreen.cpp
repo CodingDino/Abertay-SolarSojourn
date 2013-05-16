@@ -21,7 +21,10 @@ LevelScreen::LevelScreen() :
     m_particles(0),
 	m_fireball(0),
 	m_flash(0),
-	m_player(0)
+	m_player(0),
+	m_objective1(0),
+	m_objective2(0),
+	m_objective3(0)
 {
 	DebugLog ("LevelScreen: object instantiated.");
 }
@@ -156,6 +159,56 @@ bool LevelScreen::Initialize() {
     m_player->Initialize();
     m_gameObjects.push_back(m_player);
 
+	// Set up Objectives
+	// Objective 1
+	m_objective1 = new Planet;
+	m_objective1->Initialize();
+	graphic = new Graphic;
+    graphic->SetTint(1.0f,0.0f,0.0f,1.0f);
+    graphic->SetShader("Light");
+	graphic->SetTexture("default");
+    graphic->SetModel("sphere");
+	graphic->SetReflectiveness(0.9f);
+    graphic->SetScale(Coord(1.0f,1.0f,1.0f));
+    graphic->Initialize();
+	m_objective1->SetGraphic(graphic);
+	m_objective1->SetOrbitCenter(Coord(0.0f,15.0f,200.0f));
+	m_objective1->SetOrbitRadius(2.0f);
+	m_objective1->SetOrbitSpeed(2.0f);
+	m_gameObjects.push_back(m_objective1);
+	// Objective 2
+	m_objective2 = new Planet;
+	m_objective2->Initialize();
+	graphic = new Graphic;
+    graphic->SetTint(0.0f,0.0f,1.0f,1.0f);
+    graphic->SetShader("Light");
+	graphic->SetTexture("default");
+    graphic->SetModel("sphere");
+	graphic->SetReflectiveness(0.9f);
+    graphic->SetScale(Coord(3.0f,3.0f,3.0f));
+    graphic->Initialize();
+	m_objective2->SetGraphic(graphic);
+	m_objective2->SetOrbitCenter(Coord(-100.0f,10.0f,150.0f));
+	m_objective2->SetOrbitRadius(50.0f);
+	m_objective2->SetOrbitSpeed(2.0f);
+	m_gameObjects.push_back(m_objective2);
+	// Objective 3
+	m_objective3 = new Planet;
+	m_objective3->Initialize();
+	graphic = new Graphic;
+    graphic->SetTint(0.0f,1.0f,0.0f,1.0f);
+    graphic->SetShader("Light");
+	graphic->SetTexture("default");
+    graphic->SetModel("sphere");
+	graphic->SetReflectiveness(0.9f);
+    graphic->SetScale(Coord(3.0f,3.0f,3.0f));
+    graphic->Initialize();
+	m_objective3->SetGraphic(graphic);
+	m_objective3->SetOrbitCenter(Coord(100.0f,20.0f,100.0f));
+	m_objective3->SetOrbitRadius(25.0f);
+	m_objective3->SetOrbitSpeed(0.5f);
+	m_gameObjects.push_back(m_objective3);
+
     // Set up particle system
     particleSystem = new ParticleSystem;
     particleSystem->Initialize();
@@ -236,6 +289,80 @@ bool LevelScreen::Logic() {
 		m_flash->SetPosition(m_player->GetPosition());
 		m_fireball->EmitAllParticles();
 		m_flash->EmitAllParticles();
+	}
+
+	// Check for mouse click, fire bullet
+	if(InputManager::GetRef()->IsMouseButtonDown(1))
+	{
+		Bullet* bullet = new Bullet;
+		bullet->Initialize();
+		bullet->SetPosition(m_player->GetPosition());
+		bullet->SetLinearVelocity(m_player->GetLinearVelocity()*100.0f);
+		m_bullets.push_back(bullet);
+		if (m_bullets.size() > 100)
+		{
+			m_gameObjects.remove( *(m_bullets.begin()) );
+			delete *(m_bullets.begin());
+			m_bullets.pop_front();
+		}
+		m_gameObjects.push_back(bullet);
+	}
+
+	// Check if bullets are colliding with objectives
+    std::list<Bullet*>::iterator it;
+    for (it=m_bullets.begin(); it!=m_bullets.end(); ++it)
+    {
+		if (m_objective1)
+		{
+			Coord direction = m_objective1->GetPosition() - (*it)->GetPosition();
+			float distance = direction.Magnitude();
+			if ((*it)->GetGraphic()->GetScale().x + m_objective1->GetGraphic()->GetScale().x > distance )
+			{
+				// blow up objective
+				m_fireball->SetPosition(m_objective1->GetPosition());
+				m_flash->SetPosition(m_objective1->GetPosition());
+				m_fireball->EmitAllParticles();
+				m_flash->EmitAllParticles();
+			
+				m_gameObjects.remove( m_objective1 );
+				delete m_objective1;
+				m_objective1 = 0;
+			}
+		}
+		if (m_objective2)
+		{
+			Coord direction = m_objective2->GetPosition() - (*it)->GetPosition();
+			float distance = direction.Magnitude();
+			if ((*it)->GetGraphic()->GetScale().x + m_objective2->GetGraphic()->GetScale().x > distance )
+			{
+				// blow up objective
+				m_fireball->SetPosition(m_objective2->GetPosition());
+				m_flash->SetPosition(m_objective2->GetPosition());
+				m_fireball->EmitAllParticles();
+				m_flash->EmitAllParticles();
+			
+				m_gameObjects.remove( m_objective2 );
+				delete m_objective2;
+				m_objective2 = 0;
+			}
+		}
+		if (m_objective3)
+		{
+			Coord direction = m_objective3->GetPosition() - (*it)->GetPosition();
+			float distance = direction.Magnitude();
+			if ((*it)->GetGraphic()->GetScale().x + m_objective3->GetGraphic()->GetScale().x > distance )
+			{
+				// blow up objective
+				m_fireball->SetPosition(m_objective3->GetPosition());
+				m_flash->SetPosition(m_objective3->GetPosition());
+				m_fireball->EmitAllParticles();
+				m_flash->EmitAllParticles();
+			
+				m_gameObjects.remove( m_objective3 );
+				delete m_objective3;
+				m_objective3 = 0;
+			}
+		}
 	}
 
 	return true;

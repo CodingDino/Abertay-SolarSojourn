@@ -84,6 +84,7 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AudioSample.cpp" />
     <ClCompile Include="Billboard.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="BlurShader.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="AudioSample.h" />
     <ClInclude Include="Billboard.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="BlurShader.h" />

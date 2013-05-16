@@ -22,7 +22,8 @@
 #include "LightManager.h"
 #include "Mesh.h"
 #include "Player.h"
-#include "Explosion.h"
+#include "Bullet.h"
+
 
 
 
@@ -66,6 +67,10 @@ protected:
 	ParticleSystem* m_flash;
 	Player* m_player;
 	Mesh* m_terrain;
+	Planet* m_objective1;
+	Planet* m_objective2;
+	Planet* m_objective3;
+    std::list<Bullet*> m_bullets;
 
 	// Gameplay parameters
 	

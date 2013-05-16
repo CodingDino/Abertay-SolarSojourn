@@ -50,7 +50,9 @@ public:
 
     // Comparison
     bool operator==(const Coord& rhs);
-
+	
+	// Other
+	float Magnitude();
 	
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~~   Data Members   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
