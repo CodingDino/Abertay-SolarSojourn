@@ -61,7 +61,7 @@ bool TitleScreen::Initialize() {
 	SetNextScreen(SCREEN_LEVEL);
 
     // Set Post-Processing Effects
-    m_glow = false;
+    m_glow = true;
 
     // Set lighting
     LightManager::GetRef()->SetAmbient(0.05f,0.05f,0.05f);
