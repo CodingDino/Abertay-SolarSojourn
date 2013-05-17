@@ -75,7 +75,5 @@ protected:
 	Graphic* m_dialogue;
 	Text* m_loss;
 	Text* m_win;
-
-	// Gameplay parameters
 	
 };

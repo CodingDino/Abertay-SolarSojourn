@@ -246,8 +246,8 @@ bool SoundManager::LoadWaveFile(const char* filename, IDirectSoundBuffer8** seco
 	if((waveFileHeader.dataChunkId[0] != 'd') || (waveFileHeader.dataChunkId[1] != 'a') ||
 	   (waveFileHeader.dataChunkId[2] != 't') || (waveFileHeader.dataChunkId[3] != 'a'))
 	{
-		//DebugPopup(L"Check for data chunk header failed.");
-		//return false;
+		DebugPopup(L"Check for data chunk header failed.");
+		return false;
 	}
 
 	// Set the wave format of secondary buffer that this wave file will be loaded onto.
