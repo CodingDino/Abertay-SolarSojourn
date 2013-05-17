@@ -20,7 +20,7 @@
 bool GlowMapShader::Initialize()
 {
     // Set up the shader files
-    return Shader::Initialize("GlowMapVertexShader", "GlowMapPixelShader", L"../Engine/glowmap.vs", L"../Engine/glowmap.ps");
+    return Shader::Initialize("GlowMapVertexShader", "GlowMapPixelShader", L"shaders/glowmap.vs", L"shaders/glowmap.ps");
 
 }
 

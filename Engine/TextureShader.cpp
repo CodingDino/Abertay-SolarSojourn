@@ -20,7 +20,7 @@
 bool TextureShader::Initialize()
 {
     // Set up the shader files
-    return Shader::Initialize("TextureVertexShader", "TexturePixelShader", L"../Engine/texture.vs", L"../Engine/texture.ps");
+    return Shader::Initialize("TextureVertexShader", "TexturePixelShader", L"shaders/texture.vs", L"shaders/texture.ps");
 
     // Initialize vertex shader buffers
     if (! InitializeVertexShaderBuffers(D3DManager::GetRef()->GetDevice()) )

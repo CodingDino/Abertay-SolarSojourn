@@ -304,40 +304,35 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="texture.ps">
-      <Filter>Graphics\Shader Files\TextureShader</Filter>
-    </None>
-    <None Include="texture.vs">
-      <Filter>Graphics\Shader Files\TextureShader</Filter>
-    </None>
-    <None Include="light.vs">
-      <Filter>Graphics\Shader Files\LightShader</Filter>
-    </None>
-    <None Include="light.ps">
-      <Filter>Graphics\Shader Files\LightShader</Filter>
-    </None>
-    <None Include="blur.ps">
+    <None Include="shaders\blur.ps">
       <Filter>Graphics\Shader Files\BlurShader</Filter>
     </None>
-    <None Include="blur.vs">
+    <None Include="shaders\blur.vs">
       <Filter>Graphics\Shader Files\BlurShader</Filter>
     </None>
-    <None Include="glowmap.ps">
-      <Filter>Graphics\Shader Files\GlowMapShader</Filter>
-    </None>
-    <None Include="glowmap.vs">
-      <Filter>Graphics\Shader Files\GlowMapShader</Filter>
-    </None>
-    <None Include="glow.ps">
+    <None Include="shaders\glow.ps">
       <Filter>Graphics\Shader Files\GlowShader</Filter>
     </None>
-    <None Include="glow.vs">
+    <None Include="shaders\glow.vs">
       <Filter>Graphics\Shader Files\GlowShader</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Engine.rc">
-      <Filter>Graphics\Shader Files</Filter>
-    </ResourceCompile>
+    <None Include="shaders\glowmap.ps">
+      <Filter>Graphics\Shader Files\GlowMapShader</Filter>
+    </None>
+    <None Include="shaders\glowmap.vs">
+      <Filter>Graphics\Shader Files\GlowMapShader</Filter>
+    </None>
+    <None Include="shaders\light.ps">
+      <Filter>Graphics\Shader Files\LightShader</Filter>
+    </None>
+    <None Include="shaders\light.vs">
+      <Filter>Graphics\Shader Files\LightShader</Filter>
+    </None>
+    <None Include="shaders\texture.ps">
+      <Filter>Graphics\Shader Files\TextureShader</Filter>
+    </None>
+    <None Include="shaders\texture.vs">
+      <Filter>Graphics\Shader Files\TextureShader</Filter>
+    </None>
   </ItemGroup>
 </Project>

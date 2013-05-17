@@ -168,19 +168,16 @@
     <ClInclude Include="VertexType.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="blur.ps" />
-    <None Include="blur.vs" />
-    <None Include="glow.ps" />
-    <None Include="glow.vs" />
-    <None Include="glowmap.ps" />
-    <None Include="glowmap.vs" />
-    <None Include="light.ps" />
-    <None Include="light.vs" />
-    <None Include="texture.ps" />
-    <None Include="texture.vs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Engine.rc" />
+    <None Include="shaders\blur.ps" />
+    <None Include="shaders\blur.vs" />
+    <None Include="shaders\glow.ps" />
+    <None Include="shaders\glow.vs" />
+    <None Include="shaders\glowmap.ps" />
+    <None Include="shaders\glowmap.vs" />
+    <None Include="shaders\light.ps" />
+    <None Include="shaders\light.vs" />
+    <None Include="shaders\texture.ps" />
+    <None Include="shaders\texture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

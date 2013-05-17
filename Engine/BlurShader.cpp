@@ -20,7 +20,7 @@
 bool BlurShader::Initialize()
 {
     // Set up the shader files
-    return Shader::Initialize("BlurVertexShader", "BlurPixelShader", L"../Engine/blur.vs", L"../Engine/blur.ps");
+    return Shader::Initialize("BlurVertexShader", "BlurPixelShader", L"shaders/blur.vs", L"shaders/blur.ps");
 
     // Initialize vertex shader buffers
     if (! InitializeVertexShaderBuffers(D3DManager::GetRef()->GetDevice()) )

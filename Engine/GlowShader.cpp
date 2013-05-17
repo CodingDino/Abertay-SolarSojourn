@@ -20,7 +20,7 @@
 bool GlowShader::Initialize()
 {
     // Set up the shader files
-    bool result = Shader::Initialize("GlowVertexShader", "GlowPixelShader", L"../Engine/glow.vs", L"../Engine/glow.ps");
+    bool result = Shader::Initialize("GlowVertexShader", "GlowPixelShader", L"shaders/glow.vs", L"shaders/glow.ps");
     
     return result;
 }

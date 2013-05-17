@@ -20,7 +20,7 @@
 bool LightShader::Initialize()
 {
     // Set up the shader files
-    return Shader::Initialize("LightVertexShader", "LightPixelShader", L"../Engine/light.vs", L"../Engine/light.ps");
+    return Shader::Initialize("LightVertexShader", "LightPixelShader", L"shaders/light.vs", L"shaders/light.ps");
 
     // Initialize vertex shader buffers
     if (! InitializeVertexShaderBuffers(D3DManager::GetRef()->GetDevice()) )
