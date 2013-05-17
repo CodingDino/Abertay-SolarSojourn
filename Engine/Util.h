@@ -1,4 +1,4 @@
-// Solar Exploration Sim
+// Solar Sojourn
 // Developed a coursework for Abertay University
 // Based on tutorials from http://www.rastertek.com
 // Copyright Sarah Herzog, 2013, all rights reserved.
@@ -16,7 +16,7 @@
 // |                                Constants                                   |
 // |----------------------------------------------------------------------------|
 enum DEBUG_TYPE {           DB_GENERAL, DB_COLLISION,   DB_LOGIC,   DB_GRAPHICS,   NUM_DEBUGS};
-const int DEBUG_MODE[] = {  1,          1,              1,          1 };
+const int DEBUG_MODE[] = {  0,          0,              0,          0 };
 enum SCREEN {SCREEN_TITLE, SCREEN_LEVEL, NUM_SCREENS, 
     SCREEN_QUIT};
 
