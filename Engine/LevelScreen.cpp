@@ -27,7 +27,8 @@ LevelScreen::LevelScreen() :
 	m_objective3(0),
 	m_dialogue(0),
 	m_loss(0),
-	m_win(0)
+	m_win(0),
+    m_crosshair(0)
 {
 	DebugLog ("LevelScreen: object instantiated.");
 }
@@ -115,7 +116,6 @@ bool LevelScreen::Initialize() {
     m_gameObjects.push_back(gameObject);
 	m_terrain = mesh;
 	
-	
     // Set up explosion
     particleSystem = new ParticleSystem;
     particleSystem->Initialize();
@@ -197,6 +197,7 @@ bool LevelScreen::Initialize() {
     gameObject->Initialize();
     gameObject->SetGraphic(graphic);
 	gameObject->SetPosition(Coord(SCREEN_WIDTH/2 - 46.6/2,SCREEN_HEIGHT/2 - 46.6/2,0.0f));
+    m_crosshair = gameObject;
     m_overlayObjects.push_back(gameObject);
 
 	// Set up dialoge box
@@ -225,7 +226,7 @@ bool LevelScreen::Initialize() {
 	m_loss->SetPosition(Coord(SCREEN_WIDTH / 2.0f - 50.0f,SCREEN_HEIGHT / 2.0f - 25.0f,0.0f));
 
 	// Temporarily Disable Post-Processing
-	DisablePostProcessing();
+	EnablePostProcessing();
 
 	DebugLog ("LevelScreen: object initialized.");
 	return true;
@@ -270,6 +271,7 @@ bool LevelScreen::Logic() {
 	// Determine if player has crashed
 	if ( m_player->GetPosition().y < m_terrain->GetHeight(m_player->GetPosition().x,m_player->GetPosition().z) )
 	{
+        m_crosshair->Disable();
 		m_player->Crash();
 		((MouseLookCamera*)m_camera)->SetActive(false);
 		m_fireball->SetPosition(m_player->GetPosition());
@@ -286,6 +288,8 @@ bool LevelScreen::Logic() {
 		bullet->SetPosition(m_player->GetPosition());
 		bullet->SetLinearVelocity(m_camera->GetLinearVelocity()*100.0f);
 		m_bullets.push_back(bullet);
+        if (m_postProcessingEnabled) bullet->EnablePostProcessing(m_renderTexture);
+        else bullet->DisablePostProcessing();
 		if (m_bullets.size() > 100)
 		{
 			m_gameObjects.remove( *(m_bullets.begin()) );
@@ -356,7 +360,10 @@ bool LevelScreen::Logic() {
 
 	// Check if there are any objectives left
 	if (!m_objective1 && !m_objective2 && !m_objective3)
+    {
+        m_crosshair->Disable();
 		((MouseLookCamera*)m_camera)->SetActive(false);
+    }
 
 	return true;
 }
@@ -395,6 +402,8 @@ bool LevelScreen::OnLoad() {
 
 	m_done = false;
 
+    m_crosshair->Enable();
+
 	m_player->Reset();
 	((MouseLookCamera*)m_camera)->SetActive(true);
     m_camera->SetPosition(Coord(0.0f, 20.0f, -10.0f));
@@ -418,6 +427,9 @@ bool LevelScreen::OnLoad() {
 	m_objective1->SetOrbitRadius(2.0f);
 	m_objective1->SetOrbitSpeed(2.0f);
 	m_gameObjects.push_back(m_objective1);
+    if (m_postProcessingEnabled) m_objective1->EnablePostProcessing(m_renderTexture);
+    else m_objective1->DisablePostProcessing();
+
 	// Objective 2
 	m_objective2 = new Planet;
 	m_objective2->Initialize();
@@ -434,6 +446,9 @@ bool LevelScreen::OnLoad() {
 	m_objective2->SetOrbitRadius(50.0f);
 	m_objective2->SetOrbitSpeed(2.0f);
 	m_gameObjects.push_back(m_objective2);
+    if (m_postProcessingEnabled) m_objective2->EnablePostProcessing(m_renderTexture);
+    else m_objective2->DisablePostProcessing();
+
 	// Objective 3
 	m_objective3 = new Planet;
 	m_objective3->Initialize();
@@ -450,6 +465,8 @@ bool LevelScreen::OnLoad() {
 	m_objective3->SetOrbitRadius(25.0f);
 	m_objective3->SetOrbitSpeed(0.5f);
 	m_gameObjects.push_back(m_objective3);
+    if (m_postProcessingEnabled) m_objective3->EnablePostProcessing(m_renderTexture);
+    else m_objective3->DisablePostProcessing();
 
 	return true;
 }

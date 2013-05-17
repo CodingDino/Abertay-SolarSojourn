@@ -69,6 +69,8 @@ public:
     void virtual SetLinearVelocity(Coord linearVelocity) {m_linearVelocity = linearVelocity;}
     void virtual SetAngularVelocity(Coord angularVelocity) {m_angularVelocity = angularVelocity;}
     void virtual SetGraphic(Graphic* graphic) {m_graphic = graphic; }
+    void virtual Enable() {m_active = true;}
+    void virtual Disable() {m_active = false;}
 
 protected:
     
@@ -80,5 +82,6 @@ protected:
 
     // Graphics
     Graphic* m_graphic;
+    bool m_active;
 
 };

@@ -45,14 +45,14 @@ public:
 	void virtual EnablePostProcessing(Texture* renderTexture) 
 	{
 		if(m_ship) m_ship->EnablePostProcessing(renderTexture);
-		if(m_leftThruster) m_ship->EnablePostProcessing(renderTexture);
-		if(m_rightThruster) m_ship->EnablePostProcessing(renderTexture);
+		if(m_leftThruster) m_leftThruster->EnablePostProcessing(renderTexture);
+		if(m_rightThruster) m_rightThruster->EnablePostProcessing(renderTexture);
 	}
 	void virtual DisablePostProcessing() 
 	{ 
 		if(m_ship) m_ship->DisablePostProcessing();
-		if(m_leftThruster) m_ship->DisablePostProcessing();
-		if(m_rightThruster) m_ship->DisablePostProcessing();
+		if(m_leftThruster) m_leftThruster->DisablePostProcessing();
+		if(m_rightThruster) m_rightThruster->DisablePostProcessing();
 	}
 
 	// Player functions

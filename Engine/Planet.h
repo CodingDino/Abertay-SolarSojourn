@@ -54,6 +54,20 @@ public:
     virtual void  SetOrbitTilt(float orbitTilt) {m_orbitTilt = orbitTilt;}
     virtual void  SetOrbitAngle(float orbitAngle) {m_orbitAngle = orbitAngle;}
 
+	// Enable or disable post processing
+	void virtual EnablePostProcessing(Texture* renderTexture) 
+	{
+		if(!m_graphic) return;
+    	m_graphic->SetRenderTarget(renderTexture);
+		m_graphic->SetRenderToBackBuffer(false);
+	}
+	void virtual DisablePostProcessing() 
+	{ 
+		if(!m_graphic) return;
+    	m_graphic->SetRenderTarget(0);
+		m_graphic->SetRenderToBackBuffer(true);
+	}
+
 protected:
     
     //|---------------------------Protected Data Members-----------------------|

@@ -249,7 +249,7 @@ bool TitleScreen::Initialize() {
 
 
 	// Temporarily Disable Post-Processing
-	DisablePostProcessing();
+	EnablePostProcessing();
 
 	// Set up audio assets
 	m_music = AssetManager::GetRef()->GetAudioSample("music01");

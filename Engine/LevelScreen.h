@@ -62,6 +62,7 @@ protected:
     //|----------------------------Protected Data Members-----------------------|
     
     // Special game objects
+    GameObject* m_crosshair;
     GameObject* m_particles;
 	ParticleSystem* m_fireball;
 	ParticleSystem* m_flash;

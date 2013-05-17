@@ -78,6 +78,8 @@ bool GameObject::Logic() {
 bool GameObject::Draw() {
 	DebugLog ("GameObject: Draw() called.", DB_GRAPHICS, 10);
 
+    if (!m_active) return true;
+
     if (m_graphic)
     {
         m_graphic->SetOrientation(m_orientation);
@@ -94,6 +96,8 @@ bool GameObject::Draw() {
 // |----------------------------------------------------------------------------|
 bool GameObject::Draw(Texture* renderTexture) {
 	DebugLog ("GameObject: Draw() called.", DB_GRAPHICS, 10);
+
+    if (!m_active) return true;
 
     if (m_graphic)
     {
